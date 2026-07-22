@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 
@@ -13,18 +13,6 @@ import Admin from './pages/Admin';
 export default function App() {
   const [activePage, setActivePage] = useState('home');
   const [toasts, setToasts] = useState([]);
-  const cursorDotRef = useRef(null);
-
-  // ── Cursor: CSS-only dot, no RAF ring loop ──────────────
-  useEffect(() => {
-    const dot = cursorDotRef.current;
-    if (!dot) return;
-    const onMove = (e) => {
-      dot.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
-    };
-    window.addEventListener('mousemove', onMove, { passive: true });
-    return () => window.removeEventListener('mousemove', onMove);
-  }, []);
 
   // ── Scroll progress bar (passive, minimal work) ─────────
   useEffect(() => {
@@ -133,11 +121,8 @@ export default function App() {
 
   return (
     <>
-      {/* Scroll bar — simple div, no animation overhead */}
+      {/* Scroll progress bar */}
       <div id="nrx-scroll-bar" />
-
-      {/* Cursor dot only — no RAF ring */}
-      <div id="nrx-cursor-dot" ref={cursorDotRef} />
 
       <Navbar activePage={activePage} setActivePage={changePage} />
 

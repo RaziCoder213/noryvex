@@ -348,20 +348,7 @@ textarea.form-control { resize: vertical; min-height: 120px; }
   pointer-events: none;
 }
 
-/* ─── Cursor dot (CSS-only, no RAF ring) ─────────────────── */
-#nrx-cursor-dot {
-  position: fixed;
-  top: 0; left: 0;
-  width: 8px; height: 8px;
-  background: var(--accent-neon);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9998;
-  /* Use transform only — compositor-only, zero repaint */
-  transform: translate(0, 0);
-  box-shadow: 0 0 8px rgba(199, 255, 61, 0.7);
-  transition: width 0.15s, height 0.15s;
-}
+
 
 /* ─── Stats strip ────────────────────────────────────────── */
 .nrx-stats-strip {
