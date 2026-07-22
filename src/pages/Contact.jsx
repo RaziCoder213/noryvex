@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Mail, Phone, Calendar, Clock, Send, CheckCircle2 } from 'lucide-react';
+import { dbSaveContact, dbSaveMeeting } from '../utils/dbHelper';
 
 export default function Contact({ addToast }) {
   const [contactData, setContactData] = useState({
@@ -47,22 +48,16 @@ export default function Contact({ addToast }) {
     setSubmittingContact(true);
 
     try {
-      const res = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(contactData)
-      });
-      const data = await res.json();
-      
-      if (res.ok) {
+      const result = dbSaveContact(contactData);
+      if (result.success) {
         addToast('Contact inquiry submitted successfully!', 'success');
         setContactData({ name: '', company: '', email: '', phone: '', service: 'AI Voice Agents', message: '' });
       } else {
-        addToast(data.error || 'Submission failed.', 'error');
+        addToast('Submission failed.', 'error');
       }
     } catch (err) {
       console.error(err);
-      addToast('Server connection failed.', 'error');
+      addToast('Submission failed.', 'error');
     } finally {
       setSubmittingContact(false);
     }
@@ -77,23 +72,17 @@ export default function Contact({ addToast }) {
     setSubmittingMeeting(true);
 
     try {
-      const res = await fetch('/api/meeting', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(meetingData)
-      });
-      const data = await res.json();
-
-      if (res.ok) {
+      const result = dbSaveMeeting(meetingData);
+      if (result.success) {
         addToast('Meeting scheduled successfully!', 'success');
         setMeetingSuccess(true);
         setMeetingData({ name: '', email: '', company: '', phone: '', date: '', time: '', notes: '' });
       } else {
-        addToast(data.error || 'Meeting scheduling failed.', 'error');
+        addToast('Meeting scheduling failed.', 'error');
       }
     } catch (err) {
       console.error(err);
-      addToast('Server connection failed.', 'error');
+      addToast('Meeting scheduling failed.', 'error');
     } finally {
       setSubmittingMeeting(false);
     }

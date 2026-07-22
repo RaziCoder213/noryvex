@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Shield, Lock, Mail, Calendar, LogOut, Check, Trash2, Eye } from 'lucide-react';
+import { 
+  dbGetContacts, 
+  dbGetMeetings, 
+  dbMarkContactRead, 
+  dbDeleteContact, 
+  dbMarkMeetingCompleted, 
+  dbDeleteMeeting, 
+  dbAdminLogin 
+} from '../utils/dbHelper';
 
 export default function Admin({ addToast }) {
   const [token, setToken] = useState(localStorage.getItem('noryvex_admin_token') || '');
@@ -18,28 +27,10 @@ export default function Admin({ addToast }) {
     if (!authToken) return;
     setLoadingData(true);
     try {
-      // Fetch contacts
-      const contactsRes = await fetch('/api/admin/contacts', {
-        headers: { 'Authorization': `Bearer ${authToken}` }
-      });
-      // Fetch meetings
-      const meetingsRes = await fetch('/api/admin/meetings', {
-        headers: { 'Authorization': `Bearer ${authToken}` }
-      });
-
-      if (contactsRes.status === 401 || contactsRes.status === 403 || meetingsRes.status === 401 || meetingsRes.status === 403) {
-        // Token expired or invalid
-        handleLogout();
-        addToast('Session expired. Please log in again.', 'error');
-        return;
-      }
-
-      if (contactsRes.ok && meetingsRes.ok) {
-        const contactsData = await contactsRes.json();
-        const meetingsData = await meetingsRes.json();
-        setContacts(contactsData);
-        setMeetings(meetingsData);
-      }
+      const contactsData = dbGetContacts();
+      const meetingsData = dbGetMeetings();
+      setContacts(contactsData);
+      setMeetings(meetingsData);
     } catch (err) {
       console.error(err);
       addToast('Error fetching dashboard records.', 'error');
@@ -63,23 +54,17 @@ export default function Admin({ addToast }) {
     setLoggingIn(true);
 
     try {
-      const res = await fetch('/api/admin/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
-      const data = await res.json();
-
-      if (res.ok) {
-        localStorage.setItem('noryvex_admin_token', data.token);
-        setToken(data.token);
+      const result = dbAdminLogin(email, password);
+      if (result.success) {
+        localStorage.setItem('noryvex_admin_token', result.token);
+        setToken(result.token);
         addToast('Welcome back, Admin!', 'success');
       } else {
-        addToast(data.error || 'Login failed.', 'error');
+        addToast(result.error || 'Login failed.', 'error');
       }
     } catch (err) {
       console.error(err);
-      addToast('Connection failed. Server might be offline.', 'error');
+      addToast('Login failed.', 'error');
     } finally {
       setLoggingIn(false);
     }
@@ -95,11 +80,8 @@ export default function Admin({ addToast }) {
   // Contact actions
   const handleMarkContactRead = async (id) => {
     try {
-      const res = await fetch(`/api/admin/contacts/${id}`, {
-        method: 'PATCH',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      if (res.ok) {
+      const result = dbMarkContactRead(id);
+      if (result.success) {
         setContacts((prev) => 
           prev.map((c) => c.id === id ? { ...c, status: 'read' } : c)
         );
@@ -114,11 +96,8 @@ export default function Admin({ addToast }) {
   const handleDeleteContact = async (id) => {
     if (!window.confirm('Are you sure you want to delete this inquiry?')) return;
     try {
-      const res = await fetch(`/api/admin/contacts/${id}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      if (res.ok) {
+      const result = dbDeleteContact(id);
+      if (result.success) {
         setContacts((prev) => prev.filter((c) => c.id !== id));
         addToast('Inquiry deleted.', 'success');
       }
@@ -131,11 +110,8 @@ export default function Admin({ addToast }) {
   // Meeting actions
   const handleMarkMeetingCompleted = async (id) => {
     try {
-      const res = await fetch(`/api/admin/meetings/${id}`, {
-        method: 'PATCH',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      if (res.ok) {
+      const result = dbMarkMeetingCompleted(id);
+      if (result.success) {
         setMeetings((prev) => 
           prev.map((m) => m.id === id ? { ...m, status: 'completed' } : m)
         );
@@ -150,11 +126,8 @@ export default function Admin({ addToast }) {
   const handleDeleteMeeting = async (id) => {
     if (!window.confirm('Are you sure you want to delete this meeting slot?')) return;
     try {
-      const res = await fetch(`/api/admin/meetings/${id}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      if (res.ok) {
+      const result = dbDeleteMeeting(id);
+      if (result.success) {
         setMeetings((prev) => prev.filter((m) => m.id !== id));
         addToast('Meeting deleted.', 'success');
       }
