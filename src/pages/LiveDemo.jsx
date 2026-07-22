@@ -1,932 +1,1003 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Phone, PhoneOff, Mic, MicOff, Volume2, Send, MessageSquare } from 'lucide-react';
+import {
+  Phone, PhoneOff, Mic, MicOff, Volume2, Send,
+  Zap, Calendar, Shield, Clock, ChevronRight,
+  Star, CheckCircle, ArrowRight, Bot, Headphones
+} from 'lucide-react';
 import AudioWaveform from '../components/AudioWaveform';
 
-export default function LiveDemo() {
-  const [callState, setCallState] = useState('idle'); // 'idle', 'dialing', 'connected', 'ended'
-  const [isMuted, setIsMuted] = useState(false);
+/* ─── Capability cards ──────────────────────────────────── */
+const CAPABILITIES = [
+  { icon: <Calendar size={20} />, title: 'Booking & Scheduling', desc: 'Books meetings directly into Calendly, HubSpot, or any CRM in real time.' },
+  { icon: <Shield  size={20} />, title: 'Lead Qualification',   desc: 'Asks smart questions to qualify leads before routing to your sales team.' },
+  { icon: <Zap     size={20} />, title: 'Instant Responses',    desc: 'Replies in under 800ms — no hold music, no lost leads, no frustration.' },
+  { icon: <Clock   size={20} />, title: '24 / 7 Availability',  desc: 'Never miss a call. Chloe handles every inquiry day and night, 365 days.' },
+];
+
+const STATS = [
+  { value: '<800ms', label: 'Response latency' },
+  { value: '24/7',   label: 'Availability'     },
+  { value: '98%',    label: 'Accuracy rate'    },
+  { value: '150+',   label: 'Agents deployed'  },
+];
+
+const QUICK_PROMPTS = [
+  "What services does Noryvex offer?",
+  "Can I book a strategy call?",
+  "Who founded Noryvex?",
+  "How does AI voice work?",
+  "What's the pricing?",
+  "Do you work with small businesses?",
+];
+
+const AI_REPLIES = {
+  default: "I didn't quite catch that — could you rephrase? You can ask about our services, scheduling a call, pricing, or who founded Noryvex.",
+  hello:   "Hi there! Great to connect. I'm Chloe, Noryvex's AI receptionist. I can book you a strategy call, explain our AI solutions, or answer any questions you have. What's on your mind?",
+  book:    "Absolutely! To schedule a strategy call with Muhammad Razi, head over to our Contact page. Would you like me to guide you there? The call is completely free and usually 20–30 minutes.",
+  service: "Noryvex builds AI Voice Agents, Business Automation pipelines, CRM integrations, and custom software. Our agents handle inbound calls, qualify leads, and book appointments — all automatically.",
+  price:   "Our solutions are fully custom-built, so pricing depends on scope and integrations. We don't do generic packages. Book a free strategy call and we'll give you a tailored quote with no pressure.",
+  founder: "Noryvex was founded by Muhammad Razi — a Full-Stack AI Developer specializing in intelligent workflow automation and custom AI systems.",
+  small:   "Absolutely! We work with businesses of all sizes. Whether you're a solo founder or a growing team, we can build an AI solution that fits your budget and scales with you.",
+  ai:      "AI voice agents use large language models combined with ultra-low-latency text-to-speech. They understand context, handle interruptions, and sound completely natural — under 800ms response time.",
+  thanks:  "You're very welcome! Feel free to reach out anytime at codingwithrazi@gmail.com. Have a fantastic day — and I hope to connect you with the Noryvex team soon! 👋",
+};
+
+function getReply(text) {
+  const t = text.toLowerCase();
+  if (/hello|hi |hey/.test(t))                                        return AI_REPLIES.hello;
+  if (/book|schedul|meeting|call|calendar|strategy/.test(t))          return AI_REPLIES.book;
+  if (/service|do you|build|capabilit|offer/.test(t))                 return AI_REPLIES.service;
+  if (/pric|cost|rate|package|budget/.test(t))                        return AI_REPLIES.price;
+  if (/founder|owner|razi|muhammad|who/.test(t))                      return AI_REPLIES.founder;
+  if (/small|startup|solo|size/.test(t))                              return AI_REPLIES.small;
+  if (/how.*work|latency|voice|800|ms|model|llm/.test(t))             return AI_REPLIES.ai;
+  if (/thank|bye|goodbye|great|awesome/.test(t))                      return AI_REPLIES.thanks;
+  return AI_REPLIES.default;
+}
+
+export default function LiveDemo({ setActivePage }) {
+  const [callState, setCallState]   = useState('idle');
+  const [isMuted, setIsMuted]       = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState([]);
-  const [duration, setDuration] = useState(0);
-  const [aiTyping, setAiTyping] = useState(false);
+  const [duration, setDuration]     = useState(0);
+  const [aiTyping, setAiTyping]     = useState(false);
   const [aiSpeaking, setAiSpeaking] = useState(false);
   const [speechSupported, setSpeechSupported] = useState(false);
-  const [textInput, setTextInput] = useState('');
-  
-  const timerRef = useRef(null);
-  const transcriptEndRef = useRef(null);
-  const chatLogRef = useRef(null);
-  const recognitionRef = useRef(null);
+  const [textInput, setTextInput]   = useState('');
+  const [activeCapability, setActiveCapability] = useState(0);
 
-  const initialGreeting = "Noryvex Systems, this is Chloe. Thanks for calling! How can I help automate your business today?";
+  const timerRef        = useRef(null);
+  const chatLogRef      = useRef(null);
+  const recognitionRef  = useRef(null);
 
-  // Check speech synthesis and recognition support
+  const GREETING = "Noryvex Systems, this is Chloe! Thanks for calling. How can I help automate your business today?";
+
+  /* ── Speech recognition ─────────────────────── */
   useEffect(() => {
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
       setSpeechSupported(true);
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      const rec = new SpeechRecognition();
-      rec.continuous = false;
-      rec.interimResults = false;
-      rec.lang = 'en-US';
-
-      rec.onstart = () => {
-        setIsListening(true);
-      };
-
-      rec.onerror = (e) => {
-        console.error('Speech recognition error', e);
-        setIsListening(false);
-      };
-
-      rec.onend = () => {
-        setIsListening(false);
-      };
-
-      rec.onresult = (event) => {
-        const text = event.results[0][0].transcript;
-        if (text.trim()) {
-          handleUserUtterance(text);
-        }
-      };
-
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const rec = new SR();
+      rec.continuous = false; rec.interimResults = false; rec.lang = 'en-US';
+      rec.onstart  = () => setIsListening(true);
+      rec.onerror  = () => setIsListening(false);
+      rec.onend    = () => setIsListening(false);
+      rec.onresult = (ev) => { const t = ev.results[0][0].transcript; if (t.trim()) handleUtterance(t); };
       recognitionRef.current = rec;
     }
   }, []);
 
-  // Scroll ONLY the chat log box — NOT the page
+  /* ── Scroll chat log ────────────────────────── */
   useEffect(() => {
-    if (chatLogRef.current) {
-      chatLogRef.current.scrollTop = chatLogRef.current.scrollHeight;
-    }
+    if (chatLogRef.current) chatLogRef.current.scrollTop = chatLogRef.current.scrollHeight;
   }, [transcript, aiTyping]);
 
-  // Call duration timer
+  /* ── Timer ──────────────────────────────────── */
   useEffect(() => {
     if (callState === 'connected') {
-      timerRef.current = setInterval(() => {
-        setDuration((prev) => prev + 1);
-      }, 1000);
-    } else {
-      clearInterval(timerRef.current);
-      setDuration(0);
-    }
+      timerRef.current = setInterval(() => setDuration(d => d + 1), 1000);
+    } else { clearInterval(timerRef.current); setDuration(0); }
     return () => clearInterval(timerRef.current);
   }, [callState]);
 
-  const formatTime = (secs) => {
-    const m = Math.floor(secs / 60).toString().padStart(2, '0');
-    const s = (secs % 60).toString().padStart(2, '0');
-    return `${m}:${s}`;
+  /* ── Capability auto-cycle ──────────────────── */
+  useEffect(() => {
+    if (callState !== 'idle') return;
+    const t = setInterval(() => setActiveCapability(c => (c + 1) % CAPABILITIES.length), 3000);
+    return () => clearInterval(t);
+  }, [callState]);
+
+  const fmt = (s) => `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+
+  const addMsg = (sender, text) => setTranscript(p => [...p, { sender, text, time: new Date() }]);
+
+  const speak = (text) => {
+    if (!('speechSynthesis' in window)) { setAiSpeaking(true); setTimeout(() => setAiSpeaking(false), 3000); return; }
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    const voices = window.speechSynthesis.getVoices();
+    const v = voices.find(v => v.name.includes('Google US English') || v.name.includes('Zira') || v.lang.startsWith('en-'));
+    if (v) u.voice = v;
+    u.rate = 1.0; u.pitch = 1.05;
+    u.onstart = () => setAiSpeaking(true);
+    u.onend   = () => { setAiSpeaking(false); if (!isMuted && recognitionRef.current) { try { recognitionRef.current.start(); } catch(e){} } };
+    window.speechSynthesis.speak(u);
+  };
+
+  const handleUtterance = (text) => {
+    addMsg('user', text);
+    setAiTyping(true);
+    setTimeout(() => {
+      const reply = getReply(text);
+      setAiTyping(false);
+      addMsg('agent', reply);
+      speak(reply);
+    }, 1200 + Math.random() * 400);
   };
 
   const startCall = () => {
     setCallState('dialing');
     setTranscript([]);
-    
-    // Simulate dialing lag
     setTimeout(() => {
       setCallState('connected');
       setAiTyping(true);
-      
-      // AI Greeting delay
-      setTimeout(() => {
-        setAiTyping(false);
-        addMessage('agent', initialGreeting);
-        speakResponse(initialGreeting);
-      }, 1200);
-    }, 2000);
+      setTimeout(() => { setAiTyping(false); addMsg('agent', GREETING); speak(GREETING); }, 1000);
+    }, 1800);
   };
 
   const endCall = () => {
-    if (window.speechSynthesis) {
-      window.speechSynthesis.cancel();
-    }
-    if (recognitionRef.current) {
-      recognitionRef.current.abort();
-    }
-    setCallState('ended');
-    setIsListening(false);
-    setAiSpeaking(false);
-    setAiTyping(false);
-  };
-
-  const addMessage = (sender, text) => {
-    setTranscript((prev) => [...prev, { sender, text, time: new Date() }]);
-  };
-
-  // Text-to-Speech synthesizer
-  const speakResponse = (text) => {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel(); // Stop any ongoing speech
-      const utterance = new SpeechSynthesisUtterance(text);
-      
-      // Find a clean female voice if possible
-      const voices = window.speechSynthesis.getVoices();
-      const femaleVoice = voices.find(v => 
-        v.name.includes('Google US English') || 
-        v.name.includes('Zira') || 
-        v.name.includes('Samantha') ||
-        v.lang.startsWith('en-')
-      );
-      if (femaleVoice) utterance.voice = femaleVoice;
-      
-      utterance.rate = 1.0;
-      utterance.pitch = 1.05;
-
-      utterance.onstart = () => {
-        setAiSpeaking(true);
-      };
-
-      utterance.onend = () => {
-        setAiSpeaking(false);
-        // Start listening after speaker finishes
-        if (!isMuted && recognitionRef.current) {
-          try {
-            recognitionRef.current.start();
-          } catch(e) {
-            console.log(e);
-          }
-        }
-      };
-
-      window.speechSynthesis.speak(utterance);
-    } else {
-      // Mock speaking animation if unsupported
-      setAiSpeaking(true);
-      setTimeout(() => setAiSpeaking(false), 3000);
-    }
-  };
-
-  // Process Chloe's replies
-  const handleUserUtterance = (text) => {
-    addMessage('user', text);
-    setAiTyping(true);
-
-    const inputLower = text.toLowerCase();
-    let reply = "I didn't quite catch that. Can you repeat it? You can ask me about scheduling a meeting, our services, or who founded Noryvex.";
-
-    if (inputLower.includes('hello') || inputLower.includes('hi') || inputLower.includes('hey')) {
-      reply = "Hi there! I can help you book a consultation, explain our AI voice solutions, or coordinate workflow pipelines. What is on your mind?";
-    } else if (inputLower.includes('book') || inputLower.includes('schedule') || inputLower.includes('meeting') || inputLower.includes('call') || inputLower.includes('calendar')) {
-      reply = "I would love to help you book a meeting! To schedule a consultation with Muhammad Razi, head over to the Contact page. Would you like me to guide you there?";
-    } else if (inputLower.includes('service') || inputLower.includes('do you do') || inputLower.includes('what do you build') || inputLower.includes('capabilities')) {
-      reply = "We design high-fidelity AI Voice Agents, CRM integrations, and customized software systems to automate workflows. Our agents connect to Calendly, HubSpot, and custom databases.";
-    } else if (inputLower.includes('pricing') || inputLower.includes('cost') || inputLower.includes('rate')) {
-      reply = "Because we build fully custom integrations and database syncs, we don't have standard packages. We discuss custom pricing during our free strategy call. Would you like to schedule one?";
-    } else if (inputLower.includes('founder') || inputLower.includes('owner') || inputLower.includes('razi') || inputLower.includes('muhammad')) {
-      reply = "Noryvex was founded by Muhammad Razi. He is a Full-Stack AI Developer who specializes in designing automated workflows and custom intelligent software.";
-    } else if (inputLower.includes('thank') || inputLower.includes('bye') || inputLower.includes('goodbye')) {
-      reply = "You're very welcome! Feel free to reach out to us at codingwithrazi@gmail.com. Have a fantastic day!";
-    }
-
-    setTimeout(() => {
-      setAiTyping(false);
-      addMessage('agent', reply);
-      speakResponse(reply);
-    }, 1500);
+    window.speechSynthesis?.cancel();
+    recognitionRef.current?.abort();
+    setCallState('ended'); setIsListening(false); setAiSpeaking(false); setAiTyping(false);
   };
 
   const triggerListening = () => {
-    if (isListening) {
-      recognitionRef.current?.stop();
-    } else {
-      if (window.speechSynthesis) {
-        window.speechSynthesis.cancel();
-      }
-      setAiSpeaking(false);
-      try {
-        recognitionRef.current?.start();
-      } catch (e) {
-        console.error(e);
-      }
-    }
+    if (isListening) { recognitionRef.current?.stop(); return; }
+    window.speechSynthesis?.cancel(); setAiSpeaking(false);
+    try { recognitionRef.current?.start(); } catch(e) {}
   };
 
-  const handleTextSubmit = (e) => {
-    e.preventDefault();
-    if (!textInput.trim()) return;
-    handleUserUtterance(textInput);
-    setTextInput('');
-  };
-
-  const quickPrompts = [
-    "What services does Noryvex offer?",
-    "Who is the founder of Noryvex?",
-    "How can I book a strategy call?",
-    "Do you do custom pricing?"
-  ];
+  const handleTextSubmit = (e) => { e.preventDefault(); if (!textInput.trim()) return; handleUtterance(textInput); setTextInput(''); };
 
   return (
-    <div className="live-demo-page page-enter">
-      <section className="demo-hero">
-        <div className="container">
-          <div className="section-header">
-            <span className="section-tag">Interactive Preview</span>
-            <h1 className="demo-title">Interact with Chloe</h1>
-            <p className="demo-subtitle">Experience our low-latency human-like voice receptionist. Click the call button below to start the live simulator.</p>
-          </div>
-        </div>
-      </section>
+    <div className="ld-page page-enter">
 
-      <section className="phone-simulation-section">
-        <div className="container phone-container">
-          
-          {/* Phone Frame Mockup */}
-          <div className="phone-wrapper">
-            <div className="phone-notch"></div>
-            <div className="phone-screen">
-              
-              {/* Phone Header */}
-              <div className="phone-header">
-                <div className="status-time">9:41</div>
-                <div className="agent-title-bar">
-                  <div className="agent-avatar-mini">
-                    <img src="/logo.png" alt="Chloe Logo" />
-                  </div>
-                  <div className="agent-meta">
-                    <span className="agent-name">Chloe</span>
-                    <span className="agent-title-label">Noryvex AI Agent</span>
+      {/* ═══════════════════════════════════════════════════
+          HERO — split layout
+      ═══════════════════════════════════════════════════ */}
+      <section className="ld-hero">
+        <div className="ld-hero-bg" />
+        <div className="container ld-hero-grid">
+
+          {/* LEFT ── value prop */}
+          <div className="ld-left">
+            <span className="section-tag ld-tag">Live Interactive Demo</span>
+            <h1 className="ld-headline">
+              Meet <span className="ld-name-highlight">Chloe</span> —<br />
+              Your AI Receptionist
+            </h1>
+            <p className="ld-sub">
+              Chloe handles inbound calls, qualifies leads, and books meetings — 24/7, under 800ms, completely autonomously. Click the phone to experience it yourself.
+            </p>
+
+            {/* Trust pills */}
+            <div className="ld-trust-row">
+              {STATS.map((s, i) => (
+                <div key={i} className="ld-trust-pill">
+                  <span className="ld-trust-val">{s.value}</span>
+                  <span className="ld-trust-lbl">{s.label}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Capability cards */}
+            <div className="ld-caps">
+              {CAPABILITIES.map((c, i) => (
+                <div
+                  key={i}
+                  className={`ld-cap-card ${i === activeCapability ? 'active' : ''}`}
+                  onClick={() => setActiveCapability(i)}
+                >
+                  <div className="ld-cap-icon">{c.icon}</div>
+                  <div>
+                    <div className="ld-cap-title">{c.title}</div>
+                    <div className="ld-cap-desc">{c.desc}</div>
                   </div>
                 </div>
-                <div className="phone-battery">100%</div>
-              </div>
-
-              {/* Phone Body / Screens */}
-              <div className="phone-body">
-                {callState === 'idle' && (
-                  <div className="phone-screen-idle">
-                    <div className="avatar-pulse-container">
-                      <div className="pulse-circle p-1"></div>
-                      <div className="pulse-circle p-2"></div>
-                      <div className="avatar-core-glow">
-                        <img src="/logo.png" alt="Noryvex Avatar" className="avatar-logo" />
-                      </div>
-                    </div>
-                    <h2>Chloe Receptionist</h2>
-                    <p>Ready to qualify calls and book calendars automatically.</p>
-                    <button onClick={startCall} className="btn btn-primary start-call-btn">
-                      <Phone size={18} /> Start Demo Call
-                    </button>
-                  </div>
-                )}
-
-                {callState === 'dialing' && (
-                  <div className="phone-screen-dialing">
-                    <div className="dial-pulse">
-                      <Phone size={36} className="dial-icon-spin" />
-                    </div>
-                    <h2>Calling Chloe...</h2>
-                    <p className="dialing-status">Connecting securely to Noryvex server</p>
-                    <button onClick={endCall} className="hang-up-btn">
-                      <PhoneOff size={24} />
-                    </button>
-                  </div>
-                )}
-
-                {(callState === 'connected' || callState === 'ended') && (
-                  <div className="phone-screen-connected">
-                    
-                    {/* Visualizer Display */}
-                    <div className="phone-visualizer-box">
-                      <span className="call-status">
-                        {callState === 'ended' ? 'Call Ended' : 'Live Call'}
-                      </span>
-                      <span className="call-timer">{formatTime(duration)}</span>
-                      <AudioWaveform active={aiSpeaking} barCount={18} />
-                      <span className="waveform-label">
-                        {aiSpeaking ? 'Chloe is speaking' : aiTyping ? 'Chloe is writing...' : 'Chloe is listening'}
-                      </span>
-                    </div>
-
-                    {/* Chat log / Transcript */}
-                    <div className="phone-chat-log" ref={chatLogRef}>
-                      {transcript.map((msg, idx) => (
-                        <div key={idx} className={`chat-bubble-wrapper ${msg.sender}`}>
-                          <div className="chat-bubble">
-                            {msg.text}
-                          </div>
-                        </div>
-                      ))}
-                      {aiTyping && (
-                        <div className="chat-bubble-wrapper agent">
-                          <div className="chat-bubble typing-bubble">
-                            <span className="dot"></span>
-                            <span className="dot"></span>
-                            <span className="dot"></span>
-                          </div>
-                        </div>
-                      )}
-                      <div ref={transcriptEndRef} />
-                    </div>
-
-                    {/* Interactive Controls */}
-                    <div className="phone-controls">
-                      {callState === 'connected' ? (
-                        <>
-                          <div className="speech-controls-row">
-                            {speechSupported ? (
-                              <button 
-                                onClick={triggerListening} 
-                                className={`control-circle-btn ${isListening ? 'active-listening' : ''}`}
-                                title={isListening ? "Stop listening" : "Speak into microphone"}
-                              >
-                                {isListening ? <Mic size={20} /> : <MicOff size={20} />}
-                              </button>
-                            ) : (
-                              <div className="mic-unsupported-tag">Mic input unsupported</div>
-                            )}
-                            
-                            <button onClick={endCall} className="control-circle-btn hang-up-btn-mini">
-                              <PhoneOff size={20} />
-                            </button>
-
-                            <button 
-                              onClick={() => setIsMuted(!isMuted)} 
-                              className={`control-circle-btn ${isMuted ? 'muted' : ''}`}
-                            >
-                              <Volume2 size={20} />
-                            </button>
-                          </div>
-
-                          {/* Quick prompts & Text Fallback */}
-                          <div className="quick-prompts-container">
-                            <span className="quick-prompt-label">Quick options to ask Chloe:</span>
-                            <div className="quick-prompts-grid">
-                              {quickPrompts.map((prompt, i) => (
-                                <button
-                                  key={i}
-                                  onClick={() => handleUserUtterance(prompt)}
-                                  disabled={aiTyping || aiSpeaking}
-                                  className="quick-prompt-btn"
-                                >
-                                  {prompt}
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-
-                          {/* Text input form for silent testing */}
-                          <form onSubmit={handleTextSubmit} className="text-chat-form">
-                            <input
-                              type="text"
-                              placeholder="Type a message..."
-                              value={textInput}
-                              onChange={(e) => setTextInput(e.target.value)}
-                              disabled={aiTyping || aiSpeaking}
-                              className="chat-input"
-                            />
-                            <button type="submit" className="chat-submit-btn" disabled={!textInput.trim()}>
-                              <Send size={16} />
-                            </button>
-                          </form>
-                        </>
-                      ) : (
-                        <div className="call-ended-options">
-                          <h3>Call Completed</h3>
-                          <button onClick={startCall} className="btn btn-outline-neon">
-                            Call Again
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
+              ))}
             </div>
+
+            {/* Social proof */}
+            <div className="ld-social">
+              <div className="ld-stars">
+                {[...Array(5)].map((_, i) => <Star key={i} size={14} fill="#C7FF3D" color="#C7FF3D" />)}
+              </div>
+              <span className="ld-social-text">"The AI sounded completely human — our clients couldn't even tell."</span>
+            </div>
+          </div>
+
+          {/* RIGHT ── phone */}
+          <div className="ld-right">
+
+            {/* Ambient glow behind phone */}
+            <div className="ld-phone-glow" />
+
+            <div className="ld-phone-frame">
+              {/* Notch */}
+              <div className="ld-notch" />
+
+              {/* Status bar */}
+              <div className="ld-status-bar">
+                <span>9:41</span>
+                <div className="ld-status-center">
+                  <div className={`ld-live-dot ${callState === 'connected' ? 'active' : ''}`} />
+                  {callState === 'connected' ? 'Live Call' : 'Noryvex AI'}
+                </div>
+                <span>100%</span>
+              </div>
+
+              {/* ── IDLE ── */}
+              {callState === 'idle' && (
+                <div className="ld-screen ld-screen-idle">
+                  <div className="ld-avatar-wrap">
+                    <div className="ld-avatar-ring r1" />
+                    <div className="ld-avatar-ring r2" />
+                    <div className="ld-avatar-core">
+                      <img src="/logo.png" alt="Chloe" />
+                    </div>
+                  </div>
+                  <h2 className="ld-chloe-name">Chloe</h2>
+                  <p className="ld-chloe-role">Noryvex AI Receptionist</p>
+                  <div className="ld-idle-features">
+                    {['Qualifies leads', 'Books meetings', 'Answers FAQs', '24/7 active'].map((f,i) => (
+                      <span key={i} className="ld-idle-chip">
+                        <CheckCircle size={11} /> {f}
+                      </span>
+                    ))}
+                  </div>
+                  <button className="ld-call-btn" onClick={startCall}>
+                    <Phone size={22} />
+                    <span>Start Demo Call</span>
+                  </button>
+                  <p className="ld-idle-hint">↑ Tap to connect with Chloe</p>
+                </div>
+              )}
+
+              {/* ── DIALING ── */}
+              {callState === 'dialing' && (
+                <div className="ld-screen ld-screen-dialing">
+                  <div className="ld-dial-ring">
+                    <div className="ld-dial-pulse" />
+                    <div className="ld-dial-pulse p2" />
+                    <div className="ld-dial-inner">
+                      <Phone size={28} color="#C7FF3D" />
+                    </div>
+                  </div>
+                  <h2>Connecting…</h2>
+                  <p className="ld-dial-sub">Routing to Noryvex server</p>
+                  <div className="ld-dial-dots">
+                    <span /><span /><span />
+                  </div>
+                  <button className="ld-hangup-btn" onClick={endCall}><PhoneOff size={20} /></button>
+                </div>
+              )}
+
+              {/* ── CONNECTED / ENDED ── */}
+              {(callState === 'connected' || callState === 'ended') && (
+                <div className="ld-screen ld-screen-connected">
+
+                  {/* Top bar */}
+                  <div className="ld-call-top">
+                    <div className="ld-call-info">
+                      <span className={`ld-call-badge ${callState === 'ended' ? 'ended' : 'live'}`}>
+                        {callState === 'ended' ? '● Ended' : '● Live'}
+                      </span>
+                      <span className="ld-timer">{fmt(duration)}</span>
+                    </div>
+                    <AudioWaveform active={aiSpeaking} barCount={16} />
+                    <span className="ld-speaking-lbl">
+                      {aiSpeaking ? 'Chloe speaking…' : aiTyping ? 'Chloe thinking…' : isListening ? 'Listening…' : 'Ready'}
+                    </span>
+                  </div>
+
+                  {/* Chat log */}
+                  <div className="ld-chat-log" ref={chatLogRef}>
+                    {transcript.length === 0 && (
+                      <div className="ld-chat-empty">
+                        <Bot size={24} />
+                        <span>Chloe will respond here</span>
+                      </div>
+                    )}
+                    {transcript.map((msg, i) => (
+                      <div key={i} className={`ld-bubble-wrap ${msg.sender}`}>
+                        {msg.sender === 'agent' && (
+                          <div className="ld-agent-avatar"><img src="/logo.png" alt="Chloe" /></div>
+                        )}
+                        <div className="ld-bubble">{msg.text}</div>
+                      </div>
+                    ))}
+                    {aiTyping && (
+                      <div className="ld-bubble-wrap agent">
+                        <div className="ld-agent-avatar"><img src="/logo.png" alt="Chloe" /></div>
+                        <div className="ld-bubble ld-typing">
+                          <span/><span/><span/>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Controls */}
+                  <div className="ld-controls">
+                    {callState === 'connected' ? (<>
+
+                      {/* Quick prompts */}
+                      <div className="ld-prompts-scroll">
+                        {QUICK_PROMPTS.map((p, i) => (
+                          <button
+                            key={i}
+                            className="ld-prompt-chip"
+                            onClick={() => handleUtterance(p)}
+                            disabled={aiTyping || aiSpeaking}
+                          >{p}</button>
+                        ))}
+                      </div>
+
+                      {/* Text input */}
+                      <form onSubmit={handleTextSubmit} className="ld-text-form">
+                        <input
+                          className="ld-text-input"
+                          type="text"
+                          placeholder="Type or speak to Chloe…"
+                          value={textInput}
+                          onChange={e => setTextInput(e.target.value)}
+                          disabled={aiTyping || aiSpeaking}
+                        />
+                        <button type="submit" className="ld-send-btn" disabled={!textInput.trim()}>
+                          <Send size={14} />
+                        </button>
+                      </form>
+
+                      {/* Control buttons */}
+                      <div className="ld-btn-row">
+                        {speechSupported ? (
+                          <button className={`ld-ctrl ${isListening ? 'listening' : ''}`} onClick={triggerListening} title="Speak">
+                            {isListening ? <Mic size={18} /> : <MicOff size={18} />}
+                          </button>
+                        ) : (
+                          <div className="ld-ctrl disabled"><MicOff size={18} /></div>
+                        )}
+                        <button className="ld-ctrl mute" onClick={() => setIsMuted(m => !m)} title="Mute speaker">
+                          <Volume2 size={18} style={{ opacity: isMuted ? 0.3 : 1 }} />
+                        </button>
+                        <button className="ld-ctrl hangup" onClick={endCall} title="End call">
+                          <PhoneOff size={18} />
+                        </button>
+                      </div>
+
+                    </>) : (
+                      <div className="ld-ended">
+                        <CheckCircle size={32} color="#C7FF3D" />
+                        <h3>Call Complete</h3>
+                        <p>That's what your customers will experience — 24/7.</p>
+                        <div className="ld-ended-btns">
+                          <button className="ld-call-btn sm" onClick={startCall}>
+                            <Phone size={16}/> Call Again
+                          </button>
+                          {setActivePage && (
+                            <button className="ld-book-btn" onClick={() => setActivePage('contact')}>
+                              Book a Real Call <ArrowRight size={14} />
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                </div>
+              )}
+            </div>
+
+            {/* Floating labels around phone */}
+            <div className="ld-float-label f1"><Zap size={12} /> 800ms latency</div>
+            <div className="ld-float-label f2"><Headphones size={12} /> Natural voice</div>
+            <div className="ld-float-label f3"><Calendar size={12} /> Auto-books</div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════
+          HOW IT WORKS strip
+      ═══════════════════════════════════════════════════ */}
+      <section className="ld-how">
+        <div className="container">
+          <div className="section-header">
+            <span className="section-tag">How It Works</span>
+            <h2 className="section-title">Three steps to never miss a call</h2>
+          </div>
+          <div className="ld-how-grid">
+            {[
+              { n:'01', title:'Customer Calls', desc:'Your phone number routes to Chloe — instant pickup, no hold music, no voicemail.', icon:<Phone size={24}/> },
+              { n:'02', title:'Chloe Engages', desc:'She listens, understands intent, qualifies the lead, and answers questions naturally.', icon:<Bot size={24}/> },
+              { n:'03', title:'Action Taken',  desc:'Meeting booked, CRM updated, or routed to your team — all within the same call.', icon:<CheckCircle size={24}/> },
+            ].map((s, i) => (
+              <div key={i} className="ld-how-card nrx-reveal" style={{ transitionDelay: `${i * 0.1}s` }}>
+                <div className="ld-how-num">{s.n}</div>
+                <div className="ld-how-icon">{s.icon}</div>
+                <h3>{s.title}</h3>
+                <p>{s.desc}</p>
+                {i < 2 && <div className="ld-how-arrow"><ChevronRight size={20} /></div>}
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
+      {/* ═══════════════════════════════════════════════════
+          CTA
+      ═══════════════════════════════════════════════════ */}
+      <section className="ld-cta">
+        <div className="container ld-cta-inner">
+          <div className="ld-cta-glow" />
+          <span className="section-tag">Ready to automate?</span>
+          <h2 className="ld-cta-title">Build your own Chloe in&nbsp;days</h2>
+          <p className="ld-cta-sub">Custom-trained on your business. Integrated with your CRM. Live in under 2 weeks.</p>
+          <div className="ld-cta-btns">
+            {setActivePage && (<>
+              <button className="btn btn-primary btn-lg" onClick={() => setActivePage('contact')}>
+                Book a Free Strategy Call <ArrowRight size={18} />
+              </button>
+              <button className="btn btn-secondary btn-lg" onClick={() => setActivePage('solutions')}>
+                View All Solutions
+              </button>
+            </>)}
+          </div>
+          <div className="ld-cta-checks">
+            {['No commitment required', 'Free strategy call', 'Live in under 2 weeks', '24/7 support'].map((c,i) => (
+              <span key={i}><CheckCircle size={14} color="#C7FF3D" /> {c}</span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════
+          ALL STYLES
+      ═══════════════════════════════════════════════════ */}
       <style>{`
-        .demo-hero {
-          padding: 140px 0 40px 0;
-          background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(7,7,8,1) 100%);
-        }
-        
-        .demo-title {
-          font-size: 3.5rem;
-          margin-bottom: 16px;
-        }
-        
-        .demo-subtitle {
-          font-size: 1.2rem;
-          color: var(--text-gray);
-          max-width: 600px;
-          margin: 0 auto;
-        }
+        .ld-page { min-height: 100vh; background: var(--bg-pure); }
 
-        .phone-simulation-section {
-          padding: 60px 0 100px 0;
-          background-color: var(--bg-dark);
-          display: flex;
-          justify-content: center;
-        }
-
-        .phone-container {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-
-        /* Phone Frame */
-        .phone-wrapper {
-          width: 360px;
-          height: 740px;
-          background: #1c1c1e;
-          border: 12px solid #2c2c2e;
-          border-radius: 40px;
-          box-shadow: 
-            0 25px 50px -12px rgba(0, 0, 0, 0.8),
-            0 0 40px rgba(199, 255, 61, 0.05);
+        /* ── Hero ─────────────────────────────────────── */
+        .ld-hero {
           position: relative;
-          overflow: hidden;
-          padding: 10px;
-          display: flex;
-          flex-direction: column;
-        }
-
-        .phone-notch {
-          width: 140px;
-          height: 25px;
-          background: #2c2c2e;
-          position: absolute;
-          top: 10px;
-          left: 50%;
-          transform: translateX(-50%);
-          border-radius: 0 0 18px 18px;
-          z-index: 100;
-        }
-
-        .phone-screen {
-          width: 100%;
-          height: 100%;
-          background: var(--bg-pure);
-          border-radius: 28px;
-          overflow: hidden;
-          display: flex;
-          flex-direction: column;
-          position: relative;
-        }
-
-        /* Phone Header */
-        .phone-header {
-          height: 48px;
-          background: #0b0b0d;
-          border-bottom: 1px solid var(--border-light);
-          padding: 0 16px;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          font-size: 0.75rem;
-          color: var(--text-gray);
-          z-index: 10;
-        }
-
-        .agent-title-bar {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          margin-top: 10px;
-        }
-
-        .agent-avatar-mini {
-          width: 20px;
-          height: 20px;
-          border-radius: 50%;
-          border: 1px solid var(--accent-neon-border);
-          overflow: hidden;
-          background: var(--bg-charcoal);
-        }
-
-        .agent-avatar-mini img {
-          width: 100%;
-          height: 100%;
-          object-fit: contain;
-        }
-
-        .agent-meta {
-          display: flex;
-          flex-direction: column;
-          align-items: flex-start;
-        }
-
-        .agent-name {
-          font-weight: 700;
-          color: var(--text-white);
-          line-height: 1.1;
-        }
-
-        .agent-title-label {
-          font-size: 0.6rem;
-          color: var(--accent-neon);
-        }
-
-        /* Phone Body */
-        .phone-body {
-          flex-grow: 1;
-          display: flex;
-          flex-direction: column;
-          overflow: hidden;
-          position: relative;
-        }
-
-        /* Screen States */
-        .phone-screen-idle {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          height: 100%;
-          padding: 24px;
-          text-align: center;
-        }
-
-        .avatar-pulse-container {
-          position: relative;
-          width: 140px;
-          height: 140px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-bottom: 32px;
-        }
-
-        .pulse-circle {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          border-radius: 50%;
-          background: var(--accent-neon);
-          opacity: 0.05;
-        }
-
-        .p-1 { opacity: 0.06; }
-        .p-2 { opacity: 0.03; }
-
-        .avatar-core-glow {
-          width: 100px;
-          height: 100px;
-          background: var(--bg-charcoal);
-          border: 2px solid var(--accent-neon-border);
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 2;
-          box-shadow: 0 0 30px rgba(199, 255, 61, 0.1);
-        }
-
-        .avatar-logo {
-          width: 54px;
-          height: 54px;
-          object-fit: contain;
-        }
-
-        .phone-screen-idle h2 {
-          font-size: 1.5rem;
-          margin-bottom: 12px;
-        }
-
-        .phone-screen-idle p {
-          font-size: 0.85rem;
-          color: var(--text-gray);
-          margin-bottom: 32px;
-          max-width: 220px;
-        }
-
-        .start-call-btn {
-          padding: 12px 24px;
-          font-size: 0.9rem;
-          box-shadow: 0 0 20px rgba(199, 255, 61, 0.2);
-        }
-
-        /* Screen Dialing */
-        .phone-screen-dialing {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          height: 100%;
-          padding: 24px;
-          background: radial-gradient(circle at center, rgba(199,255,61,0.05) 0%, rgba(0,0,0,0) 70%);
-        }
-
-        .dial-pulse {
-          width: 90px;
-          height: 90px;
-          background: rgba(199, 255, 61, 0.05);
-          border: 1px solid var(--accent-neon-border);
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-bottom: 32px;
-          color: var(--accent-neon);
-          animation: float 2s infinite ease-in-out;
-        }
-
-        .dial-icon-spin {
-          animation: spin-slow 3s infinite linear;
-        }
-
-        .dialing-status {
-          font-size: 0.8rem;
-          color: var(--text-muted);
-          margin-top: 8px;
-        }
-
-        .hang-up-btn {
-          width: 60px;
-          height: 60px;
-          border-radius: 50%;
-          background: #ef4444;
-          border: none;
-          color: white;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-top: 48px;
-          box-shadow: 0 5px 15px rgba(239, 68, 68, 0.4);
-          transition: var(--transition-fast);
-        }
-
-        .hang-up-btn:hover {
-          transform: scale(1.05);
-          background: #f87171;
-        }
-
-        /* Screen Connected */
-        .phone-screen-connected {
-          display: flex;
-          flex-direction: column;
-          height: 100%;
+          padding: 100px 0 80px;
           overflow: hidden;
         }
-
-        .phone-visualizer-box {
-          background: rgba(255, 255, 255, 0.02);
-          border-bottom: 1px solid var(--border-light);
-          padding: 16px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          flex-shrink: 0;
+        .ld-hero-bg {
+          position: absolute; inset: 0;
+          background:
+            radial-gradient(ellipse 70% 60% at 70% 40%, rgba(199,255,61,0.06) 0%, transparent 65%),
+            radial-gradient(ellipse 50% 40% at 20% 60%, rgba(199,255,61,0.03) 0%, transparent 60%);
+          pointer-events: none;
         }
-
-        .call-status {
-          font-size: 0.65rem;
-          font-weight: 700;
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
-          color: var(--accent-neon);
-        }
-
-        .call-timer {
-          font-family: var(--font-display);
-          font-size: 1.5rem;
-          font-weight: 700;
-          margin-top: 4px;
-          color: var(--text-white);
-        }
-
-        .waveform-label {
-          font-size: 0.65rem;
-          color: var(--text-muted);
-          margin-top: 4px;
-        }
-
-        /* Chat Log */
-        .phone-chat-log {
-          flex-grow: 1;
-          overflow-y: auto;
-          padding: 16px;
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
-          background: rgba(0, 0, 0, 0.2);
-        }
-
-        .chat-bubble-wrapper {
-          display: flex;
-          width: 100%;
-        }
-
-        .chat-bubble-wrapper.agent {
-          justify-content: flex-start;
-        }
-
-        .chat-bubble-wrapper.user {
-          justify-content: flex-end;
-        }
-
-        .chat-bubble {
-          max-width: 80%;
-          padding: 10px 14px;
-          border-radius: 14px;
-          font-size: 0.85rem;
-          line-height: 1.4;
-          text-align: left;
-        }
-
-        .agent .chat-bubble {
-          background: rgba(255, 255, 255, 0.04);
-          color: var(--text-light);
-          border: 1px solid var(--border-light);
-          border-bottom-left-radius: 2px;
-        }
-
-        .user .chat-bubble {
-          background: var(--accent-neon);
-          color: var(--bg-pure);
-          font-weight: 500;
-          border-bottom-right-radius: 2px;
-        }
-
-        /* Typing indicators */
-        .typing-bubble {
-          display: flex;
-          gap: 4px;
-          padding: 12px 16px;
-        }
-
-        .typing-bubble .dot {
-          width: 6px;
-          height: 6px;
-          background: var(--text-gray);
-          border-radius: 50%;
-          animation: wave-pulse 1s infinite alternate;
-        }
-
-        .typing-bubble .dot:nth-child(2) { animation-delay: 0.2s; }
-        .typing-bubble .dot:nth-child(3) { animation-delay: 0.4s; }
-
-        /* Phone Controls */
-        .phone-controls {
-          padding: 16px;
-          background: #0b0b0d;
-          border-top: 1px solid var(--border-light);
-          flex-shrink: 0;
-        }
-
-        .speech-controls-row {
-          display: flex;
-          justify-content: space-around;
-          align-items: center;
-          margin-bottom: 16px;
-        }
-
-        .control-circle-btn {
-          width: 44px;
-          height: 44px;
-          border-radius: 50%;
-          background: rgba(255,255,255,0.05);
-          border: 1px solid var(--border-light);
-          color: var(--text-white);
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: var(--transition-fast);
-        }
-
-        .control-circle-btn:hover {
-          background: rgba(255,255,255,0.1);
-        }
-
-        .control-circle-btn.active-listening {
-          background: var(--accent-neon);
-          color: var(--bg-pure);
-          border-color: var(--accent-neon);
-          box-shadow: 0 0 15px var(--accent-neon-glow);
-          animation: pulse-neon 2s infinite;
-        }
-
-        .control-circle-btn.muted {
-          color: var(--text-muted);
-          background: rgba(255, 255, 255, 0.02);
-        }
-
-        .hang-up-btn-mini {
-          background: #ef4444;
-          border-color: #ef4444;
-        }
-
-        .hang-up-btn-mini:hover {
-          background: #f87171;
-          border-color: #f87171;
-        }
-
-        .mic-unsupported-tag {
-          font-size: 0.65rem;
-          color: var(--text-muted);
-          background: rgba(255,255,255,0.02);
-          padding: 4px 8px;
-          border-radius: 4px;
-        }
-
-        /* Quick Prompts */
-        .quick-prompts-container {
-          margin-bottom: 16px;
-          text-align: left;
-        }
-
-        .quick-prompt-label {
-          font-size: 0.7rem;
-          color: var(--text-muted);
-          display: block;
-          margin-bottom: 8px;
-        }
-
-        .quick-prompts-grid {
+        .ld-hero-grid {
           display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 8px;
-          max-height: 90px;
-          overflow-y: auto;
+          grid-template-columns: 1fr 1fr;
+          gap: 80px;
+          align-items: center;
         }
 
-        .quick-prompt-btn {
-          background: rgba(255, 255, 255, 0.03);
-          border: 1px solid var(--border-light);
+        /* LEFT */
+        .ld-tag { margin-bottom: 20px; }
+        .ld-headline {
+          font-size: clamp(2.4rem, 4.5vw, 3.6rem);
+          line-height: 1.1;
+          letter-spacing: -0.03em;
+          margin-bottom: 20px;
+        }
+        .ld-name-highlight {
+          background: linear-gradient(135deg, #C7FF3D 0%, #fff 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+        .ld-sub {
+          font-size: 1.1rem;
           color: var(--text-gray);
-          font-size: 0.72rem;
-          padding: 6px 10px;
-          border-radius: 6px;
-          cursor: pointer;
-          text-align: left;
-          transition: var(--transition-fast);
-          overflow: hidden;
-          text-overflow: ellipsis;
+          line-height: 1.65;
+          margin-bottom: 32px;
+          max-width: 480px;
+        }
+
+        /* Trust pills */
+        .ld-trust-row {
+          display: flex;
+          gap: 12px;
+          flex-wrap: wrap;
+          margin-bottom: 32px;
+        }
+        .ld-trust-pill {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          padding: 10px 16px;
+          border: 1px solid var(--border-light);
+          border-radius: 10px;
+          background: rgba(255,255,255,0.02);
+          min-width: 70px;
+        }
+        .ld-trust-val {
+          font-family: var(--font-display);
+          font-size: 1.1rem;
+          font-weight: 800;
+          color: var(--accent-neon);
+          line-height: 1;
+        }
+        .ld-trust-lbl {
+          font-size: 0.65rem;
+          color: var(--text-muted);
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
+          margin-top: 4px;
           white-space: nowrap;
         }
 
-        .quick-prompt-btn:hover:not(:disabled) {
-          border-color: var(--accent-neon);
-          color: var(--text-white);
-          background: rgba(199, 255, 61, 0.05);
-        }
-
-        .quick-prompt-btn:disabled {
-          opacity: 0.5;
-          cursor: not-allowed;
-        }
-
-        /* Text fallback Form */
-        .text-chat-form {
+        /* Capability cards */
+        .ld-caps { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+        .ld-cap-card {
           display: flex;
-          gap: 8px;
-          height: 38px;
+          align-items: flex-start;
+          gap: 14px;
+          padding: 14px 16px;
+          border: 1px solid var(--border-light);
+          border-radius: 12px;
+          background: rgba(255,255,255,0.01);
+          cursor: pointer;
+          transition: border-color 0.25s, background 0.25s, transform 0.25s;
+        }
+        .ld-cap-card.active {
+          border-color: rgba(199,255,61,0.35);
+          background: rgba(199,255,61,0.04);
+          transform: translateX(4px);
+        }
+        .ld-cap-icon {
+          width: 38px; height: 38px; flex-shrink: 0;
+          border-radius: 9px;
+          border: 1px solid var(--border-light);
+          background: rgba(199,255,61,0.06);
+          display: flex; align-items: center; justify-content: center;
+          color: var(--accent-neon);
+          transition: border-color 0.25s;
+        }
+        .ld-cap-card.active .ld-cap-icon { border-color: var(--accent-neon-border); }
+        .ld-cap-title { font-size: 0.88rem; font-weight: 700; color: var(--text-white); margin-bottom: 2px; }
+        .ld-cap-desc  { font-size: 0.78rem; color: var(--text-muted); line-height: 1.45; }
+
+        /* Social proof */
+        .ld-social { display: flex; align-items: center; gap: 10px; }
+        .ld-stars { display: flex; gap: 2px; }
+        .ld-social-text { font-size: 0.8rem; color: var(--text-gray); font-style: italic; }
+
+        /* ── RIGHT: Phone ──────────────────────────── */
+        .ld-right {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          position: relative;
+        }
+        .ld-phone-glow {
+          position: absolute;
+          width: 340px; height: 500px;
+          background: radial-gradient(ellipse, rgba(199,255,61,0.1) 0%, transparent 70%);
+          border-radius: 50%;
+          pointer-events: none;
+          z-index: 0;
+        }
+        .ld-phone-frame {
+          width: 330px;
+          height: 680px;
+          background: #111114;
+          border: 10px solid #222226;
+          border-radius: 44px;
+          position: relative;
+          overflow: hidden;
+          display: flex;
+          flex-direction: column;
+          box-shadow:
+            0 40px 80px rgba(0,0,0,0.8),
+            0 0 0 1px rgba(255,255,255,0.04),
+            inset 0 0 0 1px rgba(255,255,255,0.06);
+          z-index: 1;
+        }
+        .ld-notch {
+          position: absolute; top: 8px; left: 50%;
+          transform: translateX(-50%);
+          width: 100px; height: 20px;
+          background: #222226;
+          border-radius: 0 0 14px 14px;
+          z-index: 20;
+        }
+        .ld-status-bar {
+          height: 44px;
+          display: flex; align-items: center;
+          justify-content: space-between;
+          padding: 0 18px;
+          font-size: 0.68rem;
+          color: var(--text-muted);
+          background: #0a0a0d;
+          border-bottom: 1px solid rgba(255,255,255,0.04);
+          flex-shrink: 0;
+          z-index: 10;
+        }
+        .ld-status-center {
+          display: flex; align-items: center; gap: 6px;
+          font-weight: 600; color: var(--text-white);
+          font-size: 0.75rem;
+        }
+        .ld-live-dot {
+          width: 6px; height: 6px; border-radius: 50%;
+          background: var(--text-muted);
+          transition: background 0.3s;
+        }
+        .ld-live-dot.active { background: #C7FF3D; box-shadow: 0 0 6px #C7FF3D; }
+
+        /* Screen base */
+        .ld-screen {
+          flex: 1;
+          display: flex; flex-direction: column;
+          overflow: hidden;
+          background: #0a0a0d;
         }
 
-        .chat-input {
-          flex-grow: 1;
+        /* ── IDLE screen ── */
+        .ld-screen-idle {
+          align-items: center; justify-content: center;
+          padding: 24px; text-align: center; gap: 8px;
+        }
+        .ld-avatar-wrap {
+          position: relative; width: 120px; height: 120px;
+          display: flex; align-items: center; justify-content: center;
+          margin-bottom: 8px;
+        }
+        .ld-avatar-ring {
+          position: absolute; border-radius: 50%;
+          border: 1px solid rgba(199,255,61,0.15);
+        }
+        .ld-avatar-ring.r1 { width: 100%; height: 100%; }
+        .ld-avatar-ring.r2 { width: 80%;  height: 80%;  border-color: rgba(199,255,61,0.1); }
+        .ld-avatar-core {
+          width: 80px; height: 80px; border-radius: 50%;
+          border: 2px solid rgba(199,255,61,0.3);
+          background: #161619;
+          display: flex; align-items: center; justify-content: center;
+          box-shadow: 0 0 30px rgba(199,255,61,0.12);
+          z-index: 1;
+        }
+        .ld-avatar-core img { width: 48px; height: 48px; object-fit: contain; }
+        .ld-chloe-name { font-size: 1.4rem; font-weight: 800; margin-bottom: 2px; }
+        .ld-chloe-role { font-size: 0.72rem; color: var(--accent-neon); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.08em; }
+        .ld-idle-features { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 24px; }
+        .ld-idle-chip {
+          display: inline-flex; align-items: center; gap: 5px;
+          font-size: 0.68rem; color: var(--text-gray);
           background: rgba(255,255,255,0.03);
           border: 1px solid var(--border-light);
-          border-radius: 8px;
-          padding: 0 12px;
-          color: var(--text-white);
-          font-size: 0.8rem;
-          font-family: var(--font-sans);
+          padding: 4px 10px; border-radius: 100px;
         }
-
-        .chat-input:focus {
-          outline: none;
-          border-color: var(--accent-neon);
-        }
-
-        .chat-submit-btn {
-          width: 38px;
-          background: var(--accent-neon);
-          border: none;
-          color: var(--bg-pure);
-          border-radius: 8px;
+        .ld-call-btn {
+          display: flex; align-items: center; gap: 10px;
+          padding: 14px 28px;
+          background: #C7FF3D; color: #000;
+          border: none; border-radius: 100px;
+          font-family: var(--font-display);
+          font-size: 0.9rem; font-weight: 800;
           cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: var(--transition-fast);
+          box-shadow: 0 8px 30px rgba(199,255,61,0.35);
+          transition: transform 0.2s, box-shadow 0.2s;
+          margin-bottom: 10px;
+        }
+        .ld-call-btn:hover { transform: translateY(-2px); box-shadow: 0 14px 40px rgba(199,255,61,0.5); }
+        .ld-call-btn.sm { padding: 10px 18px; font-size: 0.8rem; margin-bottom: 0; }
+        .ld-idle-hint { font-size: 0.65rem; color: var(--text-muted); }
+
+        /* ── DIALING screen ── */
+        .ld-screen-dialing { align-items: center; justify-content: center; gap: 12px; text-align: center; padding: 24px; }
+        .ld-dial-ring {
+          width: 100px; height: 100px; border-radius: 50%;
+          position: relative;
+          display: flex; align-items: center; justify-content: center;
+          margin-bottom: 8px;
+        }
+        .ld-dial-pulse {
+          position: absolute; inset: 0; border-radius: 50%;
+          background: rgba(199,255,61,0.08);
+          animation: dial-expand 2s ease-out infinite;
+        }
+        .ld-dial-pulse.p2 { animation-delay: 1s; }
+        @keyframes dial-expand {
+          0%   { transform: scale(0.8); opacity: 0.8; }
+          100% { transform: scale(1.6); opacity: 0; }
+        }
+        .ld-dial-inner {
+          width: 70px; height: 70px; border-radius: 50%;
+          background: rgba(199,255,61,0.08);
+          border: 1px solid rgba(199,255,61,0.25);
+          display: flex; align-items: center; justify-content: center;
+          z-index: 1;
+        }
+        .ld-dial-sub { font-size: 0.75rem; color: var(--text-muted); }
+        .ld-dial-dots { display: flex; gap: 6px; }
+        .ld-dial-dots span {
+          width: 6px; height: 6px; border-radius: 50%;
+          background: var(--accent-neon); opacity: 0.4;
+          animation: dot-wave 1.2s ease-in-out infinite;
+        }
+        .ld-dial-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .ld-dial-dots span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes dot-wave { 0%,100%{opacity:0.3;transform:translateY(0)} 50%{opacity:1;transform:translateY(-4px)} }
+        .ld-hangup-btn {
+          width: 52px; height: 52px; border-radius: 50%;
+          background: #ef4444; border: none; color: #fff;
+          display: flex; align-items: center; justify-content: center;
+          cursor: pointer; margin-top: 8px;
+          box-shadow: 0 4px 16px rgba(239,68,68,0.4);
         }
 
-        .chat-submit-btn:hover:not(:disabled) {
-          background: #d4ff66;
+        /* ── CONNECTED screen ── */
+        .ld-screen-connected { overflow: hidden; }
+        .ld-call-top {
+          padding: 12px 14px 8px;
+          background: rgba(199,255,61,0.03);
+          border-bottom: 1px solid rgba(255,255,255,0.04);
+          flex-shrink: 0;
+          display: flex; flex-direction: column; align-items: center; gap: 4px;
         }
+        .ld-call-info { display: flex; align-items: center; gap: 10px; }
+        .ld-call-badge {
+          font-size: 0.62rem; font-weight: 800;
+          text-transform: uppercase; letter-spacing: 0.06em;
+          padding: 2px 8px; border-radius: 100px;
+        }
+        .ld-call-badge.live  { background: rgba(199,255,61,0.15); color: #C7FF3D; }
+        .ld-call-badge.ended { background: rgba(255,255,255,0.06); color: var(--text-muted); }
+        .ld-timer { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; }
+        .ld-speaking-lbl { font-size: 0.62rem; color: var(--text-muted); margin-top: 2px; }
 
-        .chat-submit-btn:disabled {
+        /* Chat log */
+        .ld-chat-log {
+          flex: 1; overflow-y: auto;
+          padding: 12px; display: flex; flex-direction: column; gap: 10px;
+        }
+        .ld-chat-empty {
+          flex: 1; display: flex; flex-direction: column;
+          align-items: center; justify-content: center;
+          gap: 8px; color: var(--text-muted); font-size: 0.75rem;
           opacity: 0.5;
-          cursor: not-allowed;
-          background: var(--text-muted);
+        }
+        .ld-bubble-wrap { display: flex; align-items: flex-end; gap: 6px; }
+        .ld-bubble-wrap.user { flex-direction: row-reverse; }
+        .ld-agent-avatar {
+          width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+          border: 1px solid rgba(199,255,61,0.2);
+          background: #1a1a1e; overflow: hidden;
+        }
+        .ld-agent-avatar img { width: 100%; height: 100%; object-fit: contain; }
+        .ld-bubble {
+          max-width: 78%;
+          padding: 9px 12px;
+          border-radius: 14px;
+          font-size: 0.78rem; line-height: 1.45;
+        }
+        .agent .ld-bubble {
+          background: rgba(255,255,255,0.04);
+          border: 1px solid rgba(255,255,255,0.07);
+          color: var(--text-light);
+          border-bottom-left-radius: 4px;
+        }
+        .user .ld-bubble {
+          background: #C7FF3D; color: #000; font-weight: 600;
+          border-bottom-right-radius: 4px;
+        }
+        .ld-typing {
+          display: flex; gap: 4px; padding: 12px 14px;
+        }
+        .ld-typing span {
+          width: 5px; height: 5px; border-radius: 50%;
+          background: var(--text-gray);
+          animation: dot-wave 1.2s ease-in-out infinite;
+        }
+        .ld-typing span:nth-child(2) { animation-delay: 0.2s; }
+        .ld-typing span:nth-child(3) { animation-delay: 0.4s; }
+
+        /* Controls */
+        .ld-controls {
+          padding: 10px 12px;
+          background: #0a0a0d;
+          border-top: 1px solid rgba(255,255,255,0.05);
+          flex-shrink: 0;
+        }
+        .ld-prompts-scroll {
+          display: flex; gap: 6px; overflow-x: auto;
+          padding-bottom: 8px; margin-bottom: 8px;
+          scrollbar-width: none;
+        }
+        .ld-prompts-scroll::-webkit-scrollbar { display: none; }
+        .ld-prompt-chip {
+          white-space: nowrap; flex-shrink: 0;
+          padding: 5px 10px; border-radius: 100px;
+          border: 1px solid var(--border-light);
+          background: rgba(255,255,255,0.02);
+          color: var(--text-gray); font-size: 0.68rem; font-weight: 500;
+          cursor: pointer;
+          transition: border-color 0.2s, color 0.2s, background 0.2s;
+        }
+        .ld-prompt-chip:hover:not(:disabled) {
+          border-color: rgba(199,255,61,0.4); color: #fff;
+          background: rgba(199,255,61,0.05);
+        }
+        .ld-prompt-chip:disabled { opacity: 0.4; cursor: not-allowed; }
+        .ld-text-form { display: flex; gap: 6px; margin-bottom: 10px; }
+        .ld-text-input {
+          flex: 1; height: 34px;
+          background: rgba(255,255,255,0.04);
+          border: 1px solid var(--border-light);
+          border-radius: 8px; padding: 0 10px;
+          color: var(--text-white);
+          font-size: 0.75rem; font-family: var(--font-sans);
+        }
+        .ld-text-input:focus { outline: none; border-color: rgba(199,255,61,0.4); }
+        .ld-send-btn {
+          width: 34px; height: 34px; border-radius: 8px;
+          background: #C7FF3D; border: none; color: #000;
+          display: flex; align-items: center; justify-content: center;
+          cursor: pointer; flex-shrink: 0;
+          transition: opacity 0.2s;
+        }
+        .ld-send-btn:disabled { opacity: 0.4; cursor: not-allowed; background: var(--text-muted); }
+        .ld-btn-row { display: flex; justify-content: space-around; }
+        .ld-ctrl {
+          width: 42px; height: 42px; border-radius: 50%;
+          background: rgba(255,255,255,0.04);
+          border: 1px solid var(--border-light);
+          color: var(--text-white);
+          display: flex; align-items: center; justify-content: center;
+          cursor: pointer;
+          transition: background 0.2s, border-color 0.2s;
+        }
+        .ld-ctrl:hover { background: rgba(255,255,255,0.08); }
+        .ld-ctrl.listening { background: #C7FF3D; color: #000; border-color: #C7FF3D; }
+        .ld-ctrl.hangup { background: rgba(239,68,68,0.12); border-color: rgba(239,68,68,0.3); color: #f87171; }
+        .ld-ctrl.hangup:hover { background: #ef4444; color: #fff; }
+        .ld-ctrl.disabled { opacity: 0.3; cursor: not-allowed; }
+
+        /* Ended */
+        .ld-ended {
+          display: flex; flex-direction: column;
+          align-items: center; text-align: center;
+          gap: 8px; padding: 16px 12px;
+        }
+        .ld-ended h3 { font-size: 1.1rem; }
+        .ld-ended p  { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px; }
+        .ld-ended-btns { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+        .ld-book-btn {
+          display: flex; align-items: center; justify-content: center; gap: 6px;
+          padding: 10px; border-radius: 10px;
+          background: rgba(199,255,61,0.08);
+          border: 1px solid rgba(199,255,61,0.25);
+          color: #C7FF3D;
+          font-size: 0.8rem; font-weight: 700;
+          cursor: pointer;
+          transition: background 0.2s;
+        }
+        .ld-book-btn:hover { background: rgba(199,255,61,0.15); }
+
+        /* Floating labels */
+        .ld-float-label {
+          position: absolute;
+          display: flex; align-items: center; gap: 6px;
+          padding: 6px 12px;
+          background: rgba(15,15,18,0.9);
+          border: 1px solid var(--border-light);
+          border-radius: 100px;
+          font-size: 0.7rem; font-weight: 600;
+          color: var(--text-gray);
+          white-space: nowrap;
+          z-index: 2;
+          animation: float-bob 5s ease-in-out infinite;
+        }
+        .ld-float-label svg { color: var(--accent-neon); }
+        .f1 { top: 12%;  left: -8%;  animation-delay: 0s; }
+        .f2 { top: 42%;  right: -8%; animation-delay: 1.5s; }
+        .f3 { bottom: 16%; left: -4%; animation-delay: 0.8s; }
+        @keyframes float-bob {
+          0%,100% { transform: translateY(0); }
+          50%      { transform: translateY(-6px); }
         }
 
-        .call-ended-options {
-          text-align: center;
-          padding: 16px 0;
+        /* ── HOW IT WORKS ──────────────────────────── */
+        .ld-how { padding: 100px 0; background: #050507; border-top: 1px solid var(--border-light); }
+        .ld-how-grid {
+          display: grid; grid-template-columns: repeat(3, 1fr);
+          gap: 2px; position: relative;
+          margin-top: 48px;
+        }
+        .ld-how-card {
+          background: rgba(255,255,255,0.015);
+          border: 1px solid var(--border-light);
+          padding: 36px 28px;
+          position: relative;
+          border-radius: 16px;
+        }
+        .ld-how-card:hover { background: rgba(199,255,61,0.02); border-color: rgba(199,255,61,0.15); }
+        .ld-how-num {
+          font-family: var(--font-display);
+          font-size: 3rem; font-weight: 900;
+          color: rgba(199,255,61,0.08);
+          line-height: 1; margin-bottom: 16px;
+        }
+        .ld-how-icon {
+          width: 48px; height: 48px; border-radius: 12px;
+          background: rgba(199,255,61,0.07);
+          border: 1px solid var(--accent-neon-border);
+          display: flex; align-items: center; justify-content: center;
+          color: var(--accent-neon); margin-bottom: 20px;
+        }
+        .ld-how-card h3 { font-size: 1.15rem; margin-bottom: 10px; }
+        .ld-how-card p  { font-size: 0.875rem; color: var(--text-gray); line-height: 1.6; }
+        .ld-how-arrow {
+          position: absolute; right: -14px; top: 50%;
+          transform: translateY(-50%);
+          width: 28px; height: 28px; border-radius: 50%;
+          background: var(--bg-pure); border: 1px solid var(--border-light);
+          display: flex; align-items: center; justify-content: center;
+          color: var(--accent-neon); z-index: 2;
         }
 
-        .call-ended-options h3 {
-          font-size: 1.1rem;
-          margin-bottom: 12px;
+        /* ── CTA ───────────────────────────────────── */
+        .ld-cta {
+          padding: 120px 0;
+          background: var(--bg-dark);
+          border-top: 1px solid var(--border-light);
+        }
+        .ld-cta-inner {
+          text-align: center; position: relative; overflow: hidden;
+        }
+        .ld-cta-glow {
+          position: absolute; inset: -100px;
+          background: radial-gradient(ellipse 60% 50% at 50% 100%, rgba(199,255,61,0.06) 0%, transparent 65%);
+          pointer-events: none;
+        }
+        .ld-cta-title {
+          font-size: clamp(2rem, 4.5vw, 3.2rem);
+          margin: 12px 0 16px;
+          letter-spacing: -0.03em;
+        }
+        .ld-cta-sub {
+          color: var(--text-gray); font-size: 1.05rem;
+          max-width: 500px; margin: 0 auto 40px; line-height: 1.6;
+        }
+        .ld-cta-btns { display: flex; gap: 14px; justify-content: center; margin-bottom: 32px; flex-wrap: wrap; }
+        .ld-cta-checks {
+          display: flex; gap: 24px; justify-content: center;
+          flex-wrap: wrap;
+        }
+        .ld-cta-checks span {
+          display: flex; align-items: center; gap: 6px;
+          font-size: 0.82rem; color: var(--text-muted);
+        }
+
+        /* ── Responsive ────────────────────────────── */
+        @media (max-width: 1024px) {
+          .ld-hero-grid { grid-template-columns: 1fr; gap: 60px; }
+          .ld-right { order: -1; }
+          .ld-float-label { display: none; }
+          .ld-how-grid { grid-template-columns: 1fr; gap: 16px; }
+          .ld-how-arrow { display: none; }
+        }
+        @media (max-width: 600px) {
+          .ld-phone-frame { width: 300px; height: 620px; }
+          .ld-trust-row { gap: 8px; }
+          .ld-cta-btns { flex-direction: column; align-items: center; }
         }
       `}</style>
     </div>

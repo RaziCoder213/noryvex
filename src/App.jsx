@@ -30,31 +30,29 @@ export default function App() {
     return () => window.removeEventListener('scroll', update);
   }, []);
 
-  // ── Reveal on scroll ────────────────────────────────────
+  // ── Reveal on scroll (toggles both ways) ──────────────
   useEffect(() => {
     const els = document.querySelectorAll('.nrx-reveal');
     if (!els.length) return;
     const io = new IntersectionObserver((entries) => {
       entries.forEach(e => {
-        if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+        // Add on enter, REMOVE on exit — fully reversible
+        e.target.classList.toggle('visible', e.isIntersecting);
       });
     }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
     els.forEach(el => io.observe(el));
     return () => io.disconnect();
   }, [activePage]);
 
-  // ── Timeline line fill on scroll ────────────────────────
+  // ── Timeline line fill (reversible) ────────────────────
   useEffect(() => {
     const fill = document.querySelector('.timeline-line-fill');
     if (!fill) return;
     const container = fill.closest('.timeline-container');
     if (!container) return;
     const io = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        fill.style.height = '100%';
-        io.disconnect();
-      }
-    }, { threshold: 0.15 });
+      fill.style.height = entry.isIntersecting ? '100%' : '0%';
+    }, { threshold: 0.1 });
     io.observe(container);
     return () => io.disconnect();
   }, [activePage]);
@@ -122,7 +120,7 @@ export default function App() {
     switch (activePage) {
       case 'home':      return <Home setActivePage={changePage} />;
       case 'solutions': return <Solutions setActivePage={changePage} />;
-      case 'live-demo': return <LiveDemo />;
+      case 'live-demo': return <LiveDemo setActivePage={changePage} />;
       case 'about':     return <About />;
       case 'contact':   return <Contact addToast={addToast} />;
       case 'admin':     return <Admin addToast={addToast} />;
