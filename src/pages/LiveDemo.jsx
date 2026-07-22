@@ -15,6 +15,7 @@ export default function LiveDemo() {
   
   const timerRef = useRef(null);
   const transcriptEndRef = useRef(null);
+  const chatLogRef = useRef(null);
   const recognitionRef = useRef(null);
 
   const initialGreeting = "Noryvex Systems, this is Chloe. Thanks for calling! How can I help automate your business today?";
@@ -53,9 +54,11 @@ export default function LiveDemo() {
     }
   }, []);
 
-  // Scroll transcript to bottom
+  // Scroll ONLY the chat log box — NOT the page
   useEffect(() => {
-    transcriptEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (chatLogRef.current) {
+      chatLogRef.current.scrollTop = chatLogRef.current.scrollHeight;
+    }
   }, [transcript, aiTyping]);
 
   // Call duration timer
@@ -297,7 +300,7 @@ export default function LiveDemo() {
                     </div>
 
                     {/* Chat log / Transcript */}
-                    <div className="phone-chat-log">
+                    <div className="phone-chat-log" ref={chatLogRef}>
                       {transcript.map((msg, idx) => (
                         <div key={idx} className={`chat-bubble-wrapper ${msg.sender}`}>
                           <div className="chat-bubble">
@@ -558,8 +561,8 @@ export default function LiveDemo() {
           opacity: 0.05;
         }
 
-        .p-1 { animation: pulse-neon 3s infinite ease-out; }
-        .p-2 { animation: pulse-neon 3s infinite ease-out 1.5s; }
+        .p-1 { opacity: 0.06; }
+        .p-2 { opacity: 0.03; }
 
         .avatar-core-glow {
           width: 100px;

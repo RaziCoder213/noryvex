@@ -128,39 +128,6 @@ export default function App() {
 
       <main>
         {renderPage()}
-
-        {activePage === 'home' && (
-          <>
-            {/* Stats strip */}
-            <div className="nrx-stats-strip">
-              {[
-                { count: 150, suffix: '+', label: 'AI Agents Deployed' },
-                { count: 98,  suffix: '%', label: 'Client Retention'   },
-                { count: 800, suffix: 'ms', label: 'Voice Latency'     },
-                { count: 24,  suffix: '/7', label: 'System Uptime'     },
-              ].map((s, i) => (
-                <div className="nrx-stat-item nrx-reveal" key={i}>
-                  <div className="nrx-stat-number" data-count={s.count} data-suffix={s.suffix}>
-                    0{s.suffix}
-                  </div>
-                  <div className="nrx-stat-label">{s.label}</div>
-                </div>
-              ))}
-            </div>
-
-            {/* Marquee */}
-            <div className="nrx-marquee-section" aria-hidden="true">
-              <div className="nrx-marquee-track">
-                {[...marqueeItems, ...marqueeItems].map((item, i) => (
-                  <span className="nrx-marquee-item" key={i}>
-                    <span className="nrx-dot" />
-                    {item}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </>
-        )}
       </main>
 
       <Footer setActivePage={changePage} />
