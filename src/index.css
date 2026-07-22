@@ -150,8 +150,8 @@ p {
 .txt-reveal-2 { animation: txt-reveal 0.7s 0.1s var(--ease-out) both; }
 .txt-reveal-3 { animation: txt-reveal 0.7s 0.2s var(--ease-out) both; }
 
-/* Use on subtitle — blurs in */
-.txt-blur-in { animation: txt-blur-in 0.8s 0.08s var(--ease-out) both; }
+/* Use on subtitle — fades in */
+.txt-blur-in { animation: txt-reveal 0.7s 0.15s var(--ease-out) both; }
 
 /* Use on tags/badges — slides from left */
 .txt-slide { animation: txt-slide-right 0.55s var(--ease-out) both; }

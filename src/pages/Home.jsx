@@ -272,13 +272,7 @@ export default function Home({ setActivePage }) {
         }
         
         .badge-glow {
-          position: absolute;
-          top: 0;
-          left: -50%;
-          width: 50%;
-          height: 100%;
-          background: linear-gradient(90deg, transparent, rgba(199, 255, 61, 0.2), transparent);
-          animation: float 3s infinite linear; /* custom shimmer can be used too */
+          display: none;
         }
         
         .badge-text {
@@ -337,24 +331,18 @@ export default function Home({ setActivePage }) {
         }
         
         .ring-1 {
-          width: 100%;
-          height: 100%;
+          width: 100%; height: 100%;
           border-style: dashed;
-          animation: spin-slow 25s infinite linear;
         }
         
         .ring-2 {
-          width: 80%;
-          height: 80%;
+          width: 80%; height: 80%;
           border-color: rgba(199, 255, 61, 0.15);
-          animation: spin-slow 15s infinite linear reverse;
         }
         
         .ring-3 {
-          width: 60%;
-          height: 60%;
+          width: 60%; height: 60%;
           border-style: double;
-          animation: spin-slow 8s infinite linear;
         }
         
         .visualizer-core {
@@ -380,31 +368,27 @@ export default function Home({ setActivePage }) {
         
         .core-pulse {
           position: absolute;
-          width: 100%;
-          height: 100%;
+          width: 100%; height: 100%;
           border-radius: 50%;
           background: var(--accent-neon);
-          opacity: 0.1;
+          opacity: 0.06;
           z-index: 1;
-          animation: pulse-neon 2.5s infinite ease-out;
         }
         
         .floating-node {
           position: absolute;
-          background: rgba(18, 18, 21, 0.85);
+          background: rgba(18, 18, 21, 0.95);
           border: 1px solid var(--border-light);
           padding: 8px 16px;
           border-radius: 100px;
           font-size: 0.8rem;
           font-weight: 600;
           color: var(--text-white);
-          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-          animation: float 4s infinite ease-in-out;
         }
         
-        .node-1 { top: 15%; left: 10%; animation-delay: 0s; border-color: var(--accent-neon-border); }
-        .node-2 { bottom: 20%; right: 5%; animation-delay: 1.5s; }
-        .node-3 { bottom: 10%; left: 20%; animation-delay: 0.7s; }
+        .node-1 { top: 15%; left: 10%; border-color: var(--accent-neon-border); }
+        .node-2 { bottom: 20%; right: 5%; }
+        .node-3 { bottom: 10%; left: 20%; }
 
         /* Services Grid Styling */
         .services-section {
@@ -440,13 +424,7 @@ export default function Home({ setActivePage }) {
         }
         
         .icon-glow {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          background: var(--accent-neon);
-          opacity: 0.15;
-          filter: blur(10px);
-          border-radius: 12px;
+          display: none;
         }
         
         .svc-icon {

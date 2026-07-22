@@ -96,15 +96,13 @@ export default function Navbar({ activePage, setActivePage }) {
           width: 100%;
           z-index: 1000;
           padding: 24px 0;
-          transition: var(--transition-smooth);
+          transition: background 0.25s ease, border-color 0.25s ease, padding 0.25s ease;
           border-bottom: 1px solid transparent;
         }
         
         .navbar-wrapper.scrolled {
           padding: 16px 0;
-          background: rgba(0, 0, 0, 0.7);
-          backdrop-filter: blur(20px);
-          -webkit-backdrop-filter: blur(20px);
+          background: rgba(5, 5, 8, 0.97);
           border-bottom: 1px solid var(--border-light);
         }
         
@@ -138,11 +136,10 @@ export default function Navbar({ activePage, setActivePage }) {
         .nav-menu {
           display: flex;
           gap: 32px;
-          background: rgba(255, 255, 255, 0.03);
+          background: rgba(18, 18, 22, 0.95);
           border: 1px solid var(--border-light);
           padding: 6px 24px;
           border-radius: 100px;
-          backdrop-filter: blur(10px);
         }
         
         .nav-link {
@@ -170,12 +167,10 @@ export default function Navbar({ activePage, setActivePage }) {
           content: '';
           position: absolute;
           bottom: 0;
-          left: 4px;
-          right: 4px;
+          left: 4px; right: 4px;
           height: 2px;
-          background-color: var(--accent-neon);
+          background: var(--accent-neon);
           border-radius: 2px;
-          box-shadow: 0 0 8px var(--accent-neon);
         }
         
         .nav-actions {
