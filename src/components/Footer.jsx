@@ -48,6 +48,11 @@ export default function Footer({ setActivePage }) {
               Founder LinkedIn <ArrowUpRight size={14} />
             </a>
           </div>
+          <div className="footer-link-group">
+            <span className="group-title">Legal</span>
+            <button onClick={() => handleNavClick('privacy')} className="footer-btn-link">Privacy Policy</button>
+            <button onClick={() => handleNavClick('terms')} className="footer-btn-link">Terms of Service</button>
+          </div>
         </div>
       </div>
 
@@ -55,8 +60,8 @@ export default function Footer({ setActivePage }) {
         <div className="container footer-bottom-container">
           <span className="copyright">© {currentYear} Noryvex. All rights reserved.</span>
           <div className="legal-links">
-            <a href="#privacy" className="legal-link">Privacy Policy</a>
-            <a href="#terms" className="legal-link">Terms of Service</a>
+            <button className="legal-link" onClick={() => handleNavClick('privacy')}>Privacy Policy</button>
+            <button className="legal-link" onClick={() => handleNavClick('terms')}>Terms of Service</button>
           </div>
         </div>
       </div>
@@ -196,9 +201,15 @@ export default function Footer({ setActivePage }) {
         }
         
         .legal-link {
+          background: none;
+          border: none;
           color: var(--text-muted);
           text-decoration: none;
-          transition: var(--transition-fast);
+          transition: color 0.2s ease;
+          cursor: pointer;
+          font-size: 0.85rem;
+          font-family: var(--font-sans);
+          padding: 0;
         }
         
         .legal-link:hover {

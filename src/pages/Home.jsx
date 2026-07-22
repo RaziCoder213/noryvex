@@ -249,9 +249,9 @@ export default function Home({ setActivePage }) {
           </div>
 
           <div className="timeline-container">
-            <div className="timeline-line"></div>
+            <div className="timeline-line"><div className="timeline-line-fill"></div></div>
             {processSteps.map((step, i) => (
-              <div key={i} className="timeline-item">
+              <div key={i} className="timeline-item nrx-reveal" style={{ transitionDelay: `${i * 0.12}s` }}>
                 <div className="timeline-node-wrapper">
                   <div className="timeline-node">
                     <span className="node-num">{step.num}</span>
@@ -266,6 +266,29 @@ export default function Home({ setActivePage }) {
           </div>
         </div>
       </section>
+
+      {/* ── Big Kinetic Tagline ── */}
+      <div className="nrx-kinetic-tagline">
+        <div className="nrx-kinetic-inner">
+          <span className="nrx-kinetic-line nrx-reveal">AUTOMATE.</span>
+          <span className="nrx-kinetic-line nrx-reveal" style={{ transitionDelay: '0.1s' }}>COMMUNICATE.</span>
+          <span className="nrx-kinetic-line nrx-reveal nrx-kinetic-accent" style={{ transitionDelay: '0.2s' }}>GROW.</span>
+        </div>
+        <div className="nrx-kinetic-sub nrx-reveal" style={{ transitionDelay: '0.35s' }}>
+          <span>Noryvex</span>
+          <span className="nrx-kinetic-dot">·</span>
+          <span>AI-Powered Business Automation</span>
+          <span className="nrx-kinetic-dot">·</span>
+          <span>Built for Scale</span>
+        </div>
+        <button
+          className="btn btn-primary btn-lg nrx-reveal"
+          style={{ transitionDelay: '0.45s' }}
+          onClick={() => setActivePage('contact')}
+        >
+          Start Your Journey
+        </button>
+      </div>
 
       <style>{`
         /* Hero Section Styling */
@@ -679,7 +702,123 @@ export default function Home({ setActivePage }) {
             height: 48px;
           }
         }
+
+        /* ── Timeline scroll reveal ─────────────────────── */
+        .timeline-line {
+          position: absolute;
+          left: 24px;
+          top: 0; bottom: 0;
+          width: 2px;
+          background: rgba(255,255,255,0.06);
+          border-radius: 2px;
+          overflow: hidden;
+        }
+        .timeline-line-fill {
+          width: 100%;
+          height: 0%;
+          background: linear-gradient(to bottom, var(--accent-neon), rgba(199,255,61,0.3));
+          transition: height 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+          border-radius: 2px;
+        }
+
+        /* Timeline items slide in from left on scroll */
+        .timeline-item.nrx-reveal {
+          opacity: 0;
+          transform: translateX(-28px);
+          transition: opacity 0.55s var(--ease-out), transform 0.55s var(--ease-out);
+        }
+        .timeline-item.nrx-reveal.visible {
+          opacity: 1;
+          transform: translateX(0);
+        }
+
+        /* ── Kinetic Tagline ────────────────────────────── */
+        .nrx-kinetic-tagline {
+          padding: 120px 0 140px;
+          text-align: center;
+          background: linear-gradient(180deg, var(--bg-dark) 0%, #000 100%);
+          border-top: 1px solid var(--border-light);
+          overflow: hidden;
+          position: relative;
+        }
+        .nrx-kinetic-tagline::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(ellipse 60% 50% at 50% 100%, rgba(199,255,61,0.05) 0%, transparent 65%);
+          pointer-events: none;
+        }
+        .nrx-kinetic-inner {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0;
+          margin-bottom: 40px;
+        }
+        .nrx-kinetic-line {
+          display: block;
+          font-family: var(--font-display);
+          font-size: clamp(4rem, 13vw, 11rem);
+          font-weight: 900;
+          line-height: 0.9;
+          letter-spacing: -0.04em;
+          color: rgba(255,255,255,0.08);
+          -webkit-text-stroke: 1px rgba(255,255,255,0.15);
+          transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+          text-transform: uppercase;
+          user-select: none;
+        }
+        .nrx-kinetic-line.nrx-reveal {
+          opacity: 0;
+          transform: translateY(40px);
+        }
+        .nrx-kinetic-line.nrx-reveal.visible {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        .nrx-kinetic-accent {
+          background: linear-gradient(135deg, var(--accent-neon) 0%, #fff 60%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          -webkit-text-stroke: 0px transparent;
+          color: transparent !important;
+        }
+        .nrx-kinetic-sub {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          font-size: 0.8rem;
+          font-weight: 600;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          color: var(--text-muted);
+          margin-bottom: 40px;
+          flex-wrap: wrap;
+          justify-content: center;
+          opacity: 0;
+          transform: translateY(16px);
+          transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+        }
+        .nrx-kinetic-sub.visible {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        .nrx-kinetic-dot {
+          color: var(--accent-neon);
+          font-size: 1.2rem;
+        }
+        .nrx-kinetic-tagline .btn.nrx-reveal {
+          opacity: 0;
+          transform: translateY(16px);
+          transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out), background 0.2s, box-shadow 0.2s;
+        }
+        .nrx-kinetic-tagline .btn.nrx-reveal.visible {
+          opacity: 1;
+          transform: translateY(0);
+        }
       `}</style>
+
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import CookieBanner from './components/CookieBanner';
 
 // Pages
 import Home from './pages/Home';
@@ -9,12 +10,14 @@ import LiveDemo from './pages/LiveDemo';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import Admin from './pages/Admin';
+import Privacy from './pages/Privacy';
+import Terms from './pages/Terms';
 
 export default function App() {
   const [activePage, setActivePage] = useState('home');
   const [toasts, setToasts] = useState([]);
 
-  // ── Scroll progress bar (passive, minimal work) ─────────
+  // ── Scroll progress bar ─────────────────────────────────
   useEffect(() => {
     const bar = document.getElementById('nrx-scroll-bar');
     if (!bar) return;
@@ -27,21 +30,35 @@ export default function App() {
     return () => window.removeEventListener('scroll', update);
   }, []);
 
-  // ── Reveal on scroll (IntersectionObserver — zero scroll cost) ─
+  // ── Reveal on scroll ────────────────────────────────────
   useEffect(() => {
     const els = document.querySelectorAll('.nrx-reveal');
     if (!els.length) return;
     const io = new IntersectionObserver((entries) => {
       entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('visible');
-          io.unobserve(e.target);
-        }
+        if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
       });
     }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
     els.forEach(el => io.observe(el));
     return () => io.disconnect();
   }, [activePage]);
+
+  // ── Timeline line fill on scroll ────────────────────────
+  useEffect(() => {
+    const fill = document.querySelector('.timeline-line-fill');
+    if (!fill) return;
+    const container = fill.closest('.timeline-container');
+    if (!container) return;
+    const io = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        fill.style.height = '100%';
+        io.disconnect();
+      }
+    }, { threshold: 0.15 });
+    io.observe(container);
+    return () => io.disconnect();
+  }, [activePage]);
+
 
   // ── Stats counter ────────────────────────────────────────
   useEffect(() => {
@@ -57,8 +74,7 @@ export default function App() {
         const step = (ts) => {
           if (!start) start = ts;
           const p = Math.min((ts - start) / dur, 1);
-          const ease = 1 - Math.pow(1 - p, 3);
-          el.textContent = Math.round(ease * target) + suffix;
+          el.textContent = Math.round((1 - Math.pow(1 - p, 3)) * target) + suffix;
           if (p < 1) requestAnimationFrame(step);
         };
         requestAnimationFrame(step);
@@ -74,8 +90,9 @@ export default function App() {
     const handle = () => {
       const hash = window.location.hash.replace('#', '');
       const path = window.location.pathname;
+      const all = ['solutions','live-demo','about','contact','home','privacy','terms','admin'];
       if (path === '/admin' || hash === 'admin') setActivePage('admin');
-      else if (['solutions', 'live-demo', 'about', 'contact', 'home'].includes(hash)) setActivePage(hash);
+      else if (all.includes(hash)) setActivePage(hash);
       else setActivePage('home');
     };
     window.addEventListener('popstate', handle);
@@ -90,7 +107,7 @@ export default function App() {
   const changePage = (pageId) => {
     setActivePage(pageId);
     window.location.hash = pageId;
-    window.scrollTo({ top: 0, behavior: 'instant' }); // instant = no jank
+    window.scrollTo({ top: 0, behavior: 'instant' });
   };
 
   const addToast = (message, type = 'success') => {
@@ -109,29 +126,28 @@ export default function App() {
       case 'about':     return <About />;
       case 'contact':   return <Contact addToast={addToast} />;
       case 'admin':     return <Admin addToast={addToast} />;
+      case 'privacy':   return <Privacy setActivePage={changePage} />;
+      case 'terms':     return <Terms setActivePage={changePage} />;
       default:          return <Home setActivePage={changePage} />;
     }
   };
 
-  const marqueeItems = [
-    'AI Voice Agents', 'Business Automation', 'CRM Integration',
-    'Workflow Automation', 'AI Chatbots', 'SaaS Development',
-    'API Integrations', 'Mobile Apps', 'Web Applications', '24/7 Support',
-  ];
+  // Hide navbar on legal pages (clean reading experience)
+  const showNavbar = !['privacy', 'terms'].includes(activePage) || true;
 
   return (
     <>
-      {/* Scroll progress bar */}
       <div id="nrx-scroll-bar" />
-
       <Navbar activePage={activePage} setActivePage={changePage} />
 
-      <main>
-        {renderPage()}
-      </main>
+      <main>{renderPage()}</main>
 
       <Footer setActivePage={changePage} />
 
+      {/* Cookie consent banner */}
+      <CookieBanner />
+
+      {/* Toast notifications */}
       <div className="toast-container">
         {toasts.map(toast => (
           <div
