@@ -7,165 +7,130 @@ export default function ParticleCanvas() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext('2d');
-    let animationFrameId;
+    const ctx = canvas.getContext('2d', { alpha: true });
+    let raf;
     let particles = [];
-    const particleCount = 60;
-    const connectionDistance = 120;
-    
-    const mouse = {
-      x: null,
-      y: null,
-      radius: 150
-    };
+    // ── Reduced count & connection distance for perf ──
+    const COUNT = 35;
+    const CONNECT_DIST = 100;
+    const CONNECT_DIST_SQ = CONNECT_DIST * CONNECT_DIST;
 
-    const handleResize = () => {
-      if (!canvas) return;
-      canvas.width = canvas.parentElement.clientWidth;
+    const mouse = { x: -9999, y: -9999, radius: 120 };
+
+    const resize = () => {
+      canvas.width  = canvas.parentElement.clientWidth  || window.innerWidth;
       canvas.height = canvas.parentElement.clientHeight || 600;
     };
 
-    const handleMouseMove = (e) => {
-      const rect = canvas.getBoundingClientRect();
-      mouse.x = e.clientX - rect.left;
-      mouse.y = e.clientY - rect.top;
+    const onMouseMove = (e) => {
+      const r = canvas.getBoundingClientRect();
+      mouse.x = e.clientX - r.left;
+      mouse.y = e.clientY - r.top;
     };
+    const onMouseLeave = () => { mouse.x = -9999; mouse.y = -9999; };
 
-    const handleMouseLeave = () => {
-      mouse.x = null;
-      mouse.y = null;
+    window.addEventListener('resize', resize, { passive: true });
+    canvas.addEventListener('mousemove', onMouseMove, { passive: true });
+    canvas.addEventListener('mouseleave', onMouseLeave, { passive: true });
+    resize();
+
+    // ── Particle factory (plain object — faster than class) ──
+    const makeParticle = () => ({
+      x:  Math.random() * canvas.width,
+      y:  Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 0.45,
+      vy: (Math.random() - 0.5) * 0.45,
+      r:  Math.random() * 1.5 + 0.6,
+    });
+
+    for (let i = 0; i < COUNT; i++) particles.push(makeParticle());
+
+    // ── Pre-build a reusable gradient for glow (drawn once) ──
+    let dotGrad = null;
+    const buildGrad = () => {
+      dotGrad = ctx.createRadialGradient(0, 0, 0, 0, 0, 3);
+      dotGrad.addColorStop(0,   'rgba(199,255,61,0.9)');
+      dotGrad.addColorStop(1,   'rgba(199,255,61,0)');
     };
+    buildGrad();
 
-    window.addEventListener('resize', handleResize);
-    canvas.addEventListener('mousemove', handleMouseMove);
-    canvas.addEventListener('mouseleave', handleMouseLeave);
-
-    handleResize();
-
-    // Particle class
-    class Particle {
-      constructor(width, height) {
-        this.x = Math.random() * width;
-        this.y = Math.random() * height;
-        this.vx = (Math.random() - 0.5) * 0.6;
-        this.vy = (Math.random() - 0.5) * 0.6;
-        this.size = Math.random() * 2 + 1;
-      }
-
-      update(width, height) {
-        this.x += this.vx;
-        this.y += this.vy;
-
-        // Bounce on boundaries
-        if (this.x < 0 || this.x > width) this.vx = -this.vx;
-        if (this.y < 0 || this.y > height) this.vy = -this.vy;
-
-        // Mouse interaction (repel effect)
-        if (mouse.x !== null && mouse.y !== null) {
-          const dx = this.x - mouse.x;
-          const dy = this.y - mouse.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          
-          if (dist < mouse.radius) {
-            const force = (mouse.radius - dist) / mouse.radius;
-            const angle = Math.atan2(dy, dx);
-            this.x += Math.cos(angle) * force * 1.5;
-            this.y += Math.sin(angle) * force * 1.5;
-          }
-        }
-      }
-
-      draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fillStyle = '#C7FF3D';
-        ctx.shadowBlur = 8;
-        ctx.shadowColor = '#C7FF3D';
-        ctx.fill();
-        ctx.shadowBlur = 0; // reset
-      }
-    }
-
-    // Initialize particles
-    const init = () => {
-      particles = [];
-      for (let i = 0; i < particleCount; i++) {
-        particles.push(new Particle(canvas.width, canvas.height));
-      }
-    };
-
-    init();
-
-    // Animation loop
+    // ── Main loop — NO shadowBlur, NO grid, NO sqrt ──
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
-      // Draw grid lines
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.01)';
-      ctx.lineWidth = 1;
-      const gridSize = 40;
-      for (let x = 0; x < canvas.width; x += gridSize) {
-        ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, canvas.height);
-        ctx.stroke();
-      }
-      for (let y = 0; y < canvas.height; y += gridSize) {
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(canvas.width, y);
-        ctx.stroke();
-      }
 
-      for (let i = 0; i < particles.length; i++) {
-        particles[i].update(canvas.width, canvas.height);
-        particles[i].draw();
+      const W = canvas.width, H = canvas.height;
 
-        // Draw connections
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-
-          if (dist < connectionDistance) {
-            const alpha = (1 - dist / connectionDistance) * 0.12;
+      // Draw connections first (back layer)
+      ctx.lineWidth = 0.7;
+      for (let i = 0; i < COUNT - 1; i++) {
+        const a = particles[i];
+        for (let j = i + 1; j < COUNT; j++) {
+          const b  = particles[j];
+          const dx = a.x - b.x;
+          const dy = a.y - b.y;
+          const dSq = dx * dx + dy * dy;
+          if (dSq < CONNECT_DIST_SQ) {
+            const alpha = (1 - dSq / CONNECT_DIST_SQ) * 0.18;
+            ctx.strokeStyle = `rgba(199,255,61,${alpha.toFixed(3)})`;
             ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(199, 255, 61, ${alpha})`;
-            ctx.lineWidth = 0.8;
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
             ctx.stroke();
           }
         }
       }
 
-      animationFrameId = requestAnimationFrame(animate);
+      // Draw particles + update
+      for (let i = 0; i < COUNT; i++) {
+        const p = particles[i];
+
+        // Move
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0 || p.x > W) p.vx = -p.vx;
+        if (p.y < 0 || p.y > H) p.vy = -p.vy;
+
+        // Mouse repel (use squared distance — no sqrt)
+        const mx = p.x - mouse.x, my = p.y - mouse.y;
+        const mSq = mx * mx + my * my;
+        if (mSq < mouse.radius * mouse.radius) {
+          const force = (1 - mSq / (mouse.radius * mouse.radius)) * 1.2;
+          const len = Math.sqrt(mSq) || 1;
+          p.x += (mx / len) * force;
+          p.y += (my / len) * force;
+        }
+
+        // Draw — simple filled arc, NO shadowBlur
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(199,255,61,0.75)';
+        ctx.fill();
+      }
+
+      raf = requestAnimationFrame(animate);
     };
 
     animate();
 
     return () => {
-      window.removeEventListener('resize', handleResize);
-      if (canvas) {
-        canvas.removeEventListener('mousemove', handleMouseMove);
-        canvas.removeEventListener('mouseleave', handleMouseLeave);
-      }
-      cancelAnimationFrame(animationFrameId);
+      window.removeEventListener('resize', resize);
+      canvas.removeEventListener('mousemove', onMouseMove);
+      canvas.removeEventListener('mouseleave', onMouseLeave);
+      cancelAnimationFrame(raf);
     };
   }, []);
 
   return (
-    <canvas 
-      ref={canvasRef} 
-      style={{ 
-        position: 'absolute', 
-        top: 0, 
-        left: 0, 
-        width: '100%', 
-        height: '100%', 
+    <canvas
+      ref={canvasRef}
+      style={{
+        position: 'absolute',
+        top: 0, left: 0,
+        width: '100%', height: '100%',
         zIndex: 0,
-        pointerEvents: 'auto'
-      }} 
+        pointerEvents: 'auto',
+        willChange: 'transform', // promotes to compositor layer
+      }}
     />
   );
 }

@@ -109,15 +109,15 @@ export default function Home({ setActivePage }) {
         <ParticleCanvas />
         <div className="container hero-container">
           <div className="hero-content">
-            <div className="hero-badge">
+            <div className="hero-badge txt-slide">
               <span className="badge-glow"></span>
               <span className="badge-text">NEVER SLEEPS. NEVER SLOWS.</span>
             </div>
-            <h1 className="hero-title">
+            <h1 className="hero-title txt-reveal">
               Your AI Employee <br />
-              <span className="text-neon-gradient">That Never Sleeps.</span>
+              <span className="text-neon-gradient txt-gradient-animate">That Never Sleeps.</span>
             </h1>
-            <p className="hero-subtitle">
+            <p className="hero-subtitle txt-blur-in">
               We build AI Voice Agents, Business Automation, and Intelligent Software that answer calls, automate workflows, and help businesses scale exponentially.
             </p>
             <div className="hero-ctas">
@@ -157,9 +157,9 @@ export default function Home({ setActivePage }) {
       <section className="services-section">
         <div className="container">
           <div className="section-header">
-            <span className="section-tag">Capabilities</span>
-            <h2 className="section-title">Futuristic Automated Services</h2>
-            <p className="section-subtitle">We design and integrate bespoke AI layers custom-tailored to solve manual workflow friction.</p>
+            <span className="section-tag txt-slide">Capabilities</span>
+            <h2 className="section-title txt-reveal-2">Futuristic Automated Services</h2>
+            <p className="section-subtitle txt-blur-in">We design and integrate bespoke AI layers custom-tailored to solve manual workflow friction.</p>
           </div>
           
           <div className="services-grid">
@@ -186,9 +186,9 @@ export default function Home({ setActivePage }) {
       <section className="why-section">
         <div className="container">
           <div className="section-header">
-            <span className="section-tag">Why Noryvex</span>
-            <h2 className="section-title">Engineered For Unmatched ROI</h2>
-            <p className="section-subtitle">We replace bloated legacy systems with intelligent autonomous agents designed to close deals.</p>
+            <span className="section-tag txt-slide">Why Noryvex</span>
+            <h2 className="section-title txt-reveal-2">Engineered For Unmatched ROI</h2>
+            <p className="section-subtitle txt-blur-in">We replace bloated legacy systems with intelligent autonomous agents designed to close deals.</p>
           </div>
 
           <div className="why-grid">
@@ -209,9 +209,9 @@ export default function Home({ setActivePage }) {
       <section className="process-section">
         <div className="container">
           <div className="section-header">
-            <span className="section-tag">Our Workflow</span>
-            <h2 className="section-title">From Concept to Scale</h2>
-            <p className="section-subtitle">A highly optimized delivery roadmap engineered to deploy high-grade AI into your stack.</p>
+            <span className="section-tag txt-slide">Our Workflow</span>
+            <h2 className="section-title txt-reveal-2">From Concept to Scale</h2>
+            <p className="section-subtitle txt-blur-in">A highly optimized delivery roadmap engineered to deploy high-grade AI into your stack.</p>
           </div>
 
           <div className="timeline-container">
@@ -289,9 +289,10 @@ export default function Home({ setActivePage }) {
         }
         
         .hero-title {
-          font-size: 4rem;
-          line-height: 1.1;
+          font-size: 4.2rem;
+          line-height: 1.05;
           margin-bottom: 24px;
+          letter-spacing: -0.035em;
         }
         
         .text-neon-gradient {
