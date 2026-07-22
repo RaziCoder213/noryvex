@@ -1,17 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { 
   ArrowRight, Phone, Cpu, Zap, MessageSquare, Globe, Smartphone, 
-  Layers, Link2, Database, Shield, CheckCircle2, ChevronRight 
+  Layers, Link2, Database, Shield, CheckCircle2, ChevronRight, ChevronLeft
 } from 'lucide-react';
 import ParticleCanvas from '../components/ParticleCanvas';
 
 export default function Home({ setActivePage }) {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [mousePos, setMousePos]       = useState({ x: 0.5, y: 0.5 });
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [sliderPaused, setSliderPaused] = useState(false);
+  const heroRef    = useRef(null);
+  const sliderRef  = useRef(null);
+  const CARDS_PER_VIEW = 3;
 
-  const handleMouseMove = (e) => {
-    const { clientX, clientY } = e;
-    setMousePosition({ x: clientX, y: clientY });
-  };
+  // Mouse parallax for hero (normalised 0–1)
+  const handleMouseMove = useCallback((e) => {
+    const rect = heroRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    setMousePos({
+      x: (e.clientX - rect.left) / rect.width,
+      y: (e.clientY - rect.top)  / rect.height,
+    });
+  }, []);
 
   const services = [
     {
@@ -101,14 +111,40 @@ export default function Home({ setActivePage }) {
     { num: "05", step: "Support", desc: "24/7 system health checks, optimization of agent memory, and scaling integrations as needed." }
   ];
 
+  // Auto-advance slider
+  useEffect(() => {
+    if (sliderPaused) return;
+    const maxSlide = services.length - CARDS_PER_VIEW;
+    const t = setInterval(() => {
+      setActiveSlide(s => (s >= maxSlide ? 0 : s + 1));
+    }, 3000);
+    return () => clearInterval(t);
+  }, [sliderPaused, services.length]);
+
+  const slideNext = () => setActiveSlide(s => Math.min(s + 1, services.length - CARDS_PER_VIEW));
+  const slidePrev = () => setActiveSlide(s => Math.max(s - 1, 0));
+
+  // Parallax deltas from normalised mouse pos
+  const px = (mousePos.x - 0.5) * 22;   // -11 to +11px
+  const py = (mousePos.y - 0.5) * 14;   // -7  to +7px
+
   return (
-    <div className="home-page page-enter" onMouseMove={handleMouseMove}>
-      
+    <div className="home-page page-enter">
+
       {/* Hero Section */}
-      <section className="hero-section">
+      <section className="hero-section" ref={heroRef} onMouseMove={handleMouseMove}>
         <ParticleCanvas />
+        {/* Mouse-tracking ambient glow */}
+        <div className="hero-mouse-glow" style={{
+          left: `${mousePos.x * 100}%`,
+          top:  `${mousePos.y * 100}%`,
+        }} />
         <div className="container hero-container">
-          <div className="hero-content">
+          {/* Content tilts slightly against mouse */}
+          <div
+            className="hero-content"
+            style={{ transform: `translate(${-px * 0.3}px, ${-py * 0.3}px)` }}
+          >
             <div className="hero-badge txt-slide">
               <span className="badge-glow"></span>
               <span className="badge-text">NEVER SLEEPS. NEVER SLOWS.</span>
@@ -121,22 +157,20 @@ export default function Home({ setActivePage }) {
               We build AI Voice Agents, Business Automation, and Intelligent Software that answer calls, automate workflows, and help businesses scale exponentially.
             </p>
             <div className="hero-ctas">
-              <button 
-                onClick={() => setActivePage('contact')} 
-                className="btn btn-primary btn-lg"
-              >
+              <button onClick={() => setActivePage('contact')} className="btn btn-primary btn-lg">
                 Book a Free Strategy Call <ArrowRight size={18} />
               </button>
-              <button 
-                onClick={() => setActivePage('live-demo')} 
-                className="btn btn-secondary btn-lg"
-              >
+              <button onClick={() => setActivePage('live-demo')} className="btn btn-secondary btn-lg">
                 Try Live Demo
               </button>
             </div>
           </div>
-          
-          <div className="hero-visualizer-container">
+
+          {/* Globe tilts with mouse — stronger parallax */}
+          <div
+            className="hero-visualizer-container"
+            style={{ transform: `translate(${px * 0.6}px, ${py * 0.6}px)` }}
+          >
             <div className="visualizer-globe">
               <div className="globe-ring ring-1"></div>
               <div className="globe-ring ring-2"></div>
@@ -187,7 +221,7 @@ export default function Home({ setActivePage }) {
         </div>
       </div>
 
-      {/* Services Grid */}
+      {/* ── Services SLIDER ── */}
       <section className="services-section">
         <div className="container">
           <div className="section-header">
@@ -195,22 +229,56 @@ export default function Home({ setActivePage }) {
             <h2 className="section-title txt-reveal-2">Futuristic Automated Services</h2>
             <p className="section-subtitle txt-blur-in">We design and integrate bespoke AI layers custom-tailored to solve manual workflow friction.</p>
           </div>
-          
-          <div className="services-grid">
-            {services.map((svc, i) => (
-              <div key={i} className="glass-card service-card">
-                <div className="service-icon-wrapper">
-                  {svc.icon}
-                  <div className="icon-glow"></div>
+
+          {/* Slider viewport */}
+          <div
+            className="svc-slider-wrap"
+            onMouseEnter={() => setSliderPaused(true)}
+            onMouseLeave={() => setSliderPaused(false)}
+          >
+            {/* Track */}
+            <div
+              className="svc-slider-track"
+              ref={sliderRef}
+              style={{ transform: `translateX(calc(-${activeSlide} * (100% / ${CARDS_PER_VIEW}) - ${activeSlide} * 24px))` }}
+            >
+              {services.map((svc, i) => (
+                <div
+                  key={i}
+                  className={`glass-card service-card svc-slide-card ${i === activeSlide || i === activeSlide+1 || i === activeSlide+2 ? 'in-view' : ''}`}
+                >
+                  <div className="service-icon-wrapper">
+                    {svc.icon}
+                    <div className="icon-glow"></div>
+                  </div>
+                  <h3 className="service-card-title">{svc.title}</h3>
+                  <p className="service-card-desc">{svc.desc}</p>
+                  <div className="service-card-footer">
+                    <span className="learn-more" onClick={() => setActivePage('solutions')}>
+                      Explore Solution <ChevronRight size={16} />
+                    </span>
+                  </div>
                 </div>
-                <h3 className="service-card-title">{svc.title}</h3>
-                <p className="service-card-desc">{svc.desc}</p>
-                <div className="service-card-footer">
-                  <span className="learn-more" onClick={() => setActivePage('solutions')}>
-                    Explore Solution <ChevronRight size={16} />
-                  </span>
-                </div>
-              </div>
+              ))}
+            </div>
+
+            {/* Prev / Next */}
+            <button className="svc-arrow svc-prev" onClick={slidePrev} disabled={activeSlide === 0}>
+              <ChevronLeft size={20} />
+            </button>
+            <button className="svc-arrow svc-next" onClick={slideNext} disabled={activeSlide >= services.length - CARDS_PER_VIEW}>
+              <ChevronRight size={20} />
+            </button>
+          </div>
+
+          {/* Dot indicators */}
+          <div className="svc-dots">
+            {Array.from({ length: services.length - CARDS_PER_VIEW + 1 }).map((_, i) => (
+              <button
+                key={i}
+                className={`svc-dot ${i === activeSlide ? 'active' : ''}`}
+                onClick={() => setActiveSlide(i)}
+              />
             ))}
           </div>
         </div>
@@ -270,9 +338,9 @@ export default function Home({ setActivePage }) {
       {/* ── Big Kinetic Tagline ── */}
       <div className="nrx-kinetic-tagline">
         <div className="nrx-kinetic-inner">
-          <span className="nrx-kinetic-line nrx-reveal">AUTOMATE.</span>
-          <span className="nrx-kinetic-line nrx-reveal" style={{ transitionDelay: '0.1s' }}>COMMUNICATE.</span>
-          <span className="nrx-kinetic-line nrx-reveal nrx-kinetic-accent" style={{ transitionDelay: '0.2s' }}>GROW.</span>
+          <span className="nrx-kinetic-line nrx-reveal nrx-kinetic-word">AUTOMATE.</span>
+          <span className="nrx-kinetic-line nrx-reveal nrx-kinetic-word" style={{ transitionDelay: '0.1s' }}>COMMUNICATE.</span>
+          <span className="nrx-kinetic-line nrx-reveal nrx-kinetic-accent nrx-kinetic-word" style={{ transitionDelay: '0.2s' }}>GROW.</span>
         </div>
         <div className="nrx-kinetic-sub nrx-reveal" style={{ transitionDelay: '0.35s' }}>
           <span>Noryvex</span>
@@ -291,7 +359,100 @@ export default function Home({ setActivePage }) {
       </div>
 
       <style>{`
-        /* Hero Section Styling */
+        /* Hero mouse-follow glow */
+        .hero-mouse-glow {
+          position: absolute;
+          width: 500px; height: 500px;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(199,255,61,0.07) 0%, transparent 65%);
+          transform: translate(-50%, -50%);
+          pointer-events: none;
+          z-index: 0;
+          transition: left 0.12s ease, top 0.12s ease;
+        }
+        .hero-content, .hero-visualizer-container {
+          will-change: transform;
+          transition: transform 0.1s linear;
+        }
+
+        /* ── Services Slider ─────────────────────── */
+        .svc-slider-wrap {
+          position: relative;
+          overflow: hidden;
+          padding: 12px 0 24px;
+        }
+        .svc-slider-track {
+          display: flex;
+          gap: 24px;
+          transition: transform 0.55s cubic-bezier(0.16,1,0.3,1);
+          will-change: transform;
+        }
+        .svc-slide-card {
+          flex: 0 0 calc((100% - 48px) / 3);
+          min-width: 0;
+          opacity: 0.45;
+          transform: scale(0.97) translateY(10px);
+          transition: opacity 0.4s ease, transform 0.4s ease, border-color 0.25s;
+        }
+        .svc-slide-card.in-view {
+          opacity: 1;
+          transform: scale(1) translateY(0);
+        }
+        .svc-slide-card:hover {
+          border-color: rgba(199,255,61,0.3) !important;
+          transform: scale(1.02) translateY(-4px) !important;
+        }
+
+        /* Arrows */
+        .svc-arrow {
+          position: absolute;
+          top: 50%; transform: translateY(-50%);
+          width: 44px; height: 44px;
+          border-radius: 50%;
+          border: 1px solid var(--border-light);
+          background: rgba(10,10,14,0.9);
+          color: var(--text-white);
+          display: flex; align-items: center; justify-content: center;
+          cursor: pointer; z-index: 10;
+          transition: border-color 0.2s, background 0.2s, opacity 0.2s;
+        }
+        .svc-arrow:hover:not(:disabled) {
+          border-color: var(--accent-neon);
+          background: rgba(199,255,61,0.08);
+        }
+        .svc-arrow:disabled { opacity: 0.2; cursor: not-allowed; }
+        .svc-prev { left: -22px; }
+        .svc-next { right: -22px; }
+
+        /* Dots */
+        .svc-dots { display: flex; justify-content: center; gap: 8px; margin-top: 28px; }
+        .svc-dot {
+          width: 8px; height: 8px; border-radius: 50%;
+          border: none; cursor: pointer;
+          background: rgba(255,255,255,0.15);
+          transition: background 0.25s, transform 0.25s, width 0.25s;
+          padding: 0;
+        }
+        .svc-dot.active {
+          background: var(--accent-neon);
+          width: 24px; border-radius: 4px;
+          box-shadow: 0 0 8px rgba(199,255,61,0.4);
+        }
+
+        /* ── Kinetic tagline hover per word ─────── */
+        .nrx-kinetic-word {
+          cursor: default;
+          transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out),
+                      letter-spacing 0.35s ease, text-shadow 0.35s ease;
+        }
+        .nrx-kinetic-word:hover {
+          letter-spacing: 0.02em;
+          text-shadow: 0 0 60px rgba(199,255,61,0.25), 0 0 120px rgba(199,255,61,0.1);
+        }
+        .nrx-kinetic-accent.nrx-kinetic-word:hover {
+          filter: brightness(1.15);
+          letter-spacing: 0.04em;
+        }
         .hero-section {
           position: relative;
           padding: 160px 0 100px 0;
@@ -667,8 +828,24 @@ export default function Home({ setActivePage }) {
           .hero-visualizer-container {
             margin-top: 40px;
           }
+          /* Tablet: show 2 cards */
+          .svc-slide-card {
+            flex: 0 0 calc((100% - 24px) / 2);
+          }
+          .svc-prev { left: -16px; }
+          .svc-next { right: -16px; }
         }
-        
+
+        @media (max-width: 640px) {
+          /* Mobile: show 1 card */
+          .svc-slide-card {
+            flex: 0 0 100%;
+          }
+          .svc-prev { left: 0; }
+          .svc-next { right: 0; }
+          .svc-slider-wrap { padding: 12px 36px 24px; }
+        }
+
         @media (max-width: 768px) {
           .services-grid, .why-grid {
             grid-template-columns: 1fr;
