@@ -3,6 +3,9 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import CookieBanner from './components/CookieBanner';
 import useSEO from './hooks/useSEO';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
+
 
 // Pages
 import Home from './pages/Home';
@@ -164,6 +167,12 @@ export default function App() {
       </div>
 
       <style>{`main { margin-top: 80px; }`}</style>
+
+      {/* Vercel Analytics — tracks page views */}
+      <Analytics />
+
+      {/* Vercel Speed Insights — tracks Core Web Vitals */}
+      <SpeedInsights />
     </>
   );
 }
