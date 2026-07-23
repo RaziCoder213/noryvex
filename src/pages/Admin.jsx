@@ -54,7 +54,7 @@ export default function Admin({ addToast }) {
     setLoggingIn(true);
 
     try {
-      const result = dbAdminLogin(email, password);
+      const result = await dbAdminLogin(email, password);
       if (result.success) {
         localStorage.setItem('noryvex_admin_token', result.token);
         setToken(result.token);

@@ -135,14 +135,28 @@ export const dbDeleteMeeting = (id) => {
   return { success: true };
 };
 
+// SHA-256 Hashing Helper using Web Crypto API
+async function sha256(message) {
+  const msgBuffer = new TextEncoder().encode(message);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  return hashHex;
+}
+
 // ADMIN LOGIN AUTHENTICATION
-export const dbAdminLogin = (email, password) => {
+export const dbAdminLogin = async (email, password) => {
   const adminEmail = 'codingwithrazi@gmail.com';
-  const adminPassword = 'RaziNoryvex2026!'; // local password matching .env
+  const targetHash = '37ad83dfcd34d8dec4f9d22e67b0f396232cf7159c3b07c82df7cca325699886'; // SHA-256 hash of RaziNoryvex2026!
   
-  if (email === adminEmail && password === adminPassword) {
-    const token = 'mock-jwt-token-' + Date.now();
-    return { success: true, token };
+  try {
+    const hashedPassword = await sha256(password);
+    if (email === adminEmail && hashedPassword === targetHash) {
+      const token = 'mock-jwt-token-' + Date.now();
+      return { success: true, token };
+    }
+  } catch (e) {
+    console.error('Hashing failed:', e);
   }
   return { success: false, error: 'Invalid admin credentials.' };
 };
