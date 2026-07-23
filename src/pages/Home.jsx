@@ -938,7 +938,7 @@ export default function Home({ setActivePage }) {
         .nrx-kinetic-line {
           display: block;
           font-family: var(--font-display);
-          font-size: clamp(3.2rem, 11vw, 9.5rem);
+          font-size: clamp(2rem, 7.2vw, 8.5rem);
           font-weight: 900;
           line-height: 1.15;
           letter-spacing: -0.02em;
@@ -947,6 +947,11 @@ export default function Home({ setActivePage }) {
           transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
           text-transform: uppercase;
           user-select: none;
+        }
+        @media (max-width: 600px) {
+          .nrx-kinetic-line {
+            font-size: clamp(1.5rem, 8.2vw, 2.8rem) !important;
+          }
         }
         .nrx-kinetic-line.nrx-reveal {
           opacity: 0;
