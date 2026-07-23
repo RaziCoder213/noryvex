@@ -78,7 +78,7 @@ export default function App() {
         requestAnimationFrame(step);
         io.unobserve(el);
       });
-    }, { threshold: 0.5 });
+    }, { threshold: 0.05 });
     els.forEach(el => io.observe(el));
     return () => io.disconnect();
   }, [activePage]);

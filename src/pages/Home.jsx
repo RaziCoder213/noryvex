@@ -196,7 +196,7 @@ export default function Home({ setActivePage }) {
           { count: 24,  suffix: '/7', label: 'System Uptime'     },
         ].map((s, i) => (
           <div className="nrx-stat-item nrx-reveal" key={i}>
-            <div className="nrx-stat-number" data-count={s.count} data-suffix={s.suffix}>0{s.suffix}</div>
+            <div className="nrx-stat-number" data-count={s.count} data-suffix={s.suffix}>{s.count}{s.suffix}</div>
             <div className="nrx-stat-label">{s.label}</div>
           </div>
         ))}
@@ -443,11 +443,14 @@ export default function Home({ setActivePage }) {
         .nrx-kinetic-word {
           cursor: default;
           transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out),
-                      letter-spacing 0.35s ease, text-shadow 0.35s ease;
+                      letter-spacing 0.35s ease, text-shadow 0.35s ease,
+                      color 0.35s ease, -webkit-text-stroke-color 0.35s ease;
         }
         .nrx-kinetic-word:hover {
           letter-spacing: 0.02em;
-          text-shadow: 0 0 60px rgba(199,255,61,0.25), 0 0 120px rgba(199,255,61,0.1);
+          color: rgba(255, 255, 255, 0.85) !important;
+          -webkit-text-stroke-color: rgba(255, 255, 255, 0.85) !important;
+          text-shadow: 0 0 60px rgba(199,255,61,0.2), 0 0 120px rgba(199,255,61,0.08);
         }
         .nrx-kinetic-accent.nrx-kinetic-word:hover {
           filter: brightness(1.15);
@@ -935,12 +938,12 @@ export default function Home({ setActivePage }) {
         .nrx-kinetic-line {
           display: block;
           font-family: var(--font-display);
-          font-size: clamp(4rem, 13vw, 11rem);
+          font-size: clamp(3.2rem, 11vw, 9.5rem);
           font-weight: 900;
-          line-height: 0.9;
-          letter-spacing: -0.04em;
-          color: rgba(255,255,255,0.08);
-          -webkit-text-stroke: 1px rgba(255,255,255,0.15);
+          line-height: 1.15;
+          letter-spacing: -0.02em;
+          color: rgba(255, 255, 255, 0.12);
+          -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.25);
           transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
           text-transform: uppercase;
           user-select: none;
