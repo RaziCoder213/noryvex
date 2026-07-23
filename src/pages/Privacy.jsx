@@ -87,7 +87,7 @@ export default function Privacy({ setActivePage }) {
               <li>Right to data portability</li>
               <li>Right to lodge a complaint with a supervisory authority</li>
             </ul>
-            <p>To exercise any of these rights, contact us at <a href="mailto:codingwithrazi@gmail.com">codingwithrazi@gmail.com</a>.</p>
+            <p>To exercise any of these rights, contact us at <a href="mailto:hello@trynoryvex.com">hello@trynoryvex.com</a>.</p>
           </section>
 
           <section className="legal-section">
@@ -110,7 +110,7 @@ export default function Privacy({ setActivePage }) {
             <p>If you have any questions about this Privacy Policy, please contact us:</p>
             <div className="legal-contact-card">
               <p><strong>Noryvex</strong></p>
-              <p>Email: <a href="mailto:codingwithrazi@gmail.com">codingwithrazi@gmail.com</a></p>
+              <p>Email: <a href="mailto:hello@trynoryvex.com">hello@trynoryvex.com</a></p>
               <p>LinkedIn: <a href="https://www.linkedin.com/company/noryvex" target="_blank" rel="noopener noreferrer">linkedin.com/company/noryvex</a></p>
             </div>
           </section>

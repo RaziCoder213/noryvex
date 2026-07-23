@@ -1,5 +1,13 @@
 User-agent: *
 Allow: /
+Disallow: /admin
+
+# AI Crawlers — allowed to index public content
+User-agent: GPTBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
 
 User-agent: ClaudeBot
 Allow: /
@@ -7,10 +15,17 @@ Allow: /
 User-agent: Claude-User
 Allow: /
 
-User-agent: GPTBot
+User-agent: Bingbot
 Allow: /
 
-User-agent: Google-Extended
+User-agent: Googlebot
 Allow: /
 
-Sitemap: https://noryvex.vercel.app/sitemap.xml
+User-agent: Googlebot-Image
+Allow: /
+
+# Crawl delay for polite bots
+Crawl-delay: 10
+
+# Sitemaps
+Sitemap: https://trynoryvex.com/sitemap.xml

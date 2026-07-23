@@ -146,7 +146,7 @@ async function sha256(message) {
 
 // ADMIN LOGIN AUTHENTICATION
 export const dbAdminLogin = async (email, password) => {
-  const adminEmail = 'codingwithrazi@gmail.com';
+  const adminEmail = 'razi@noryvex.com';
   const targetHash = '37ad83dfcd34d8dec4f9d22e67b0f396232cf7159c3b07c82df7cca325699886'; // SHA-256 hash of RaziNoryvex2026!
   
   try {

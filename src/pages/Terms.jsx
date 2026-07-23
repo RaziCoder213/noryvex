@@ -115,7 +115,7 @@ export default function Terms({ setActivePage }) {
             <p>For questions about these Terms, please reach out:</p>
             <div className="legal-contact-card">
               <p><strong>Noryvex</strong></p>
-              <p>Email: <a href="mailto:codingwithrazi@gmail.com">codingwithrazi@gmail.com</a></p>
+              <p>Email: <a href="mailto:hello@trynoryvex.com">hello@trynoryvex.com</a></p>
               <p>LinkedIn: <a href="https://www.linkedin.com/company/noryvex" target="_blank" rel="noopener noreferrer">linkedin.com/company/noryvex</a></p>
             </div>
           </section>

@@ -39,7 +39,7 @@ const AI_REPLIES = {
   founder: "Noryvex was founded by Muhammad Razi — a Full-Stack AI Developer specializing in intelligent workflow automation and custom AI systems.",
   small:   "Absolutely! We work with businesses of all sizes. Whether you're a solo founder or a growing team, we can build an AI solution that fits your budget and scales with you.",
   ai:      "AI voice agents use large language models combined with ultra-low-latency text-to-speech. They understand context, handle interruptions, and sound completely natural — under 800ms response time.",
-  thanks:  "You're very welcome! Feel free to reach out anytime at codingwithrazi@gmail.com. Have a fantastic day — and I hope to connect you with the Noryvex team soon! 👋",
+  thanks:  "You're very welcome! Feel free to reach out anytime at hello@trynoryvex.com. Have a fantastic day — and I hope to connect you with the Noryvex team soon! 👋",
 };
 
 function getReply(text) {

@@ -38,7 +38,7 @@ export default function Footer({ setActivePage }) {
 
           <div className="footer-link-group">
             <span className="group-title">Contact & Socials</span>
-            <a href="mailto:codingwithrazi@gmail.com" className="footer-link">
+            <a href="mailto:hello@trynoryvex.com" className="footer-link">
               Email <ArrowUpRight size={14} />
             </a>
             <a href="https://www.linkedin.com/company/noryvex" target="_blank" rel="noopener noreferrer" className="footer-link">

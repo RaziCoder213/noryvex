@@ -97,7 +97,7 @@ export default function About() {
                 <a href="https://www.linkedin.com/in/mrazi-dev/" target="_blank" rel="noopener noreferrer" className="btn btn-secondary founder-link-btn">
                   <Linkedin size={18} /> LinkedIn <ArrowUpRight size={14} />
                 </a>
-                <a href="mailto:codingwithrazi@gmail.com" className="btn btn-outline-neon founder-link-btn">
+                <a href="mailto:razi@noryvex.com" className="btn btn-outline-neon founder-link-btn">
                   <Mail size={18} /> Email
                 </a>
               </div>

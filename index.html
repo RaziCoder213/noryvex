@@ -1,35 +1,427 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" prefix="og: https://ogp.me/ns#">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- ══════════════════════════════════════════════════
+         FAVICON & ICONS
+    ══════════════════════════════════════════════════ -->
+    <link rel="icon"             type="image/png"       href="/logo.png" />
+    <link rel="apple-touch-icon"                        href="/logo.png" />
+    <link rel="shortcut icon"    type="image/png"       href="/logo.png" />
+
+    <!-- ══════════════════════════════════════════════════
+         CANONICAL & VERIFICATION
+    ══════════════════════════════════════════════════ -->
+    <link rel="canonical" href="https://trynoryvex.com/" />
     <meta name="google-site-verification" content="e5B7V0C6WmqsJtbx7OVPiF596o-uNuykVI5J6rzKFmg" />
-    
-    <!-- Primary SEO Metadata -->
-    <title>Noryvex | Custom AI Voice Agents & Business Workflow Automation</title>
-    <meta name="description" content="Noryvex constructs premium custom AI Voice Agents, Autonomous Receptionists, Business Workflow Automations, and Intelligent Software to help companies qualify leads and book meetings 24/7." />
-    <meta name="keywords" content="AI Voice Agents, AI Receptionist, Business Automation, Workflow Automation, Intelligent Chatbots, Web Applications, SaaS Development, API Integrations, CRM Automation, Noryvex" />
-    <meta name="author" content="Muhammad Razi" />
-    <meta name="robots" content="index, follow" />
-    
-    <!-- Open Graph / Facebook Link Previews -->
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="Noryvex | Custom AI Voice Agents & Business Workflow Automation" />
-    <meta property="og:description" content="Save thousands in operational overhead. We build custom conversational AI voice assistants, automate CRM syncing, and construct custom database pipelines." />
-    <meta property="og:image" content="/banner.png" />
-    <meta property="og:url" content="https://noryvex.vercel.app" />
-    <meta property="og:site_name" content="Noryvex" />
-    
-    <!-- Twitter Link Previews -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Noryvex | Custom AI Voice Agents & Business Workflow Automation" />
-    <meta name="twitter:description" content="We deploy human-sounding voice agents and connect custom API pipelines to supercharge business growth." />
-    <meta name="twitter:image" content="/banner.png" />
+
+    <!-- ══════════════════════════════════════════════════
+         PRIMARY SEO META
+    ══════════════════════════════════════════════════ -->
+    <title>Noryvex | AI Voice Agents &amp; Business Automation — Muhammad Razi</title>
+
+    <meta name="description" content="Noryvex builds custom AI Voice Agents, Autonomous Receptionists, and Business Automation systems that answer calls, qualify leads, and book meetings 24/7 — under 800ms latency. Founded by Muhammad Razi." />
+
+    <meta name="keywords" content="Noryvex, Noryvex AI, AI Voice Agents, AI Receptionist, Business Automation, Workflow Automation, AI Chatbot, CRM Automation, SaaS Development, API Integration, Muhammad Razi, Muhammad Razi founder, trynoryvex, AI automation agency, voice AI, conversational AI, AI business tools, lead qualification AI, automated receptionist, Noryvex solutions" />
+
+    <meta name="author"   content="Muhammad Razi — Noryvex" />
+    <meta name="creator"  content="Muhammad Razi" />
+    <meta name="publisher" content="Noryvex" />
+    <meta name="robots"  content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="theme-color" content="#C7FF3D" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="rating"  content="general" />
+    <meta name="language" content="English" />
+    <meta name="revisit-after" content="7 days" />
+    <meta name="category" content="Artificial Intelligence, Business Automation, SaaS" />
+
+    <!-- ══════════════════════════════════════════════════
+         OPEN GRAPH (Facebook, LinkedIn, WhatsApp previews)
+    ══════════════════════════════════════════════════ -->
+    <meta property="og:type"        content="website" />
+    <meta property="og:locale"      content="en_US" />
+    <meta property="og:site_name"   content="Noryvex" />
+    <meta property="og:url"         content="https://trynoryvex.com/" />
+    <meta property="og:title"       content="Noryvex | AI Voice Agents &amp; Business Automation" />
+    <meta property="og:description" content="Custom AI Voice Agents and Business Automation built by Muhammad Razi. Noryvex deploys autonomous receptionists, CRM pipelines, and intelligent software that work 24/7 — never miss a lead again." />
+    <meta property="og:image"              content="https://trynoryvex.com/banner.png" />
+    <meta property="og:image:secure_url"   content="https://trynoryvex.com/banner.png" />
+    <meta property="og:image:type"         content="image/png" />
+    <meta property="og:image:width"        content="1200" />
+    <meta property="og:image:height"       content="630" />
+    <meta property="og:image:alt"          content="Noryvex — AI Voice Agents and Business Automation Platform" />
+
+    <!-- ══════════════════════════════════════════════════
+         TWITTER / X CARD
+    ══════════════════════════════════════════════════ -->
+    <meta name="twitter:card"        content="summary_large_image" />
+    <meta name="twitter:site"        content="@noryvex" />
+    <meta name="twitter:creator"     content="@noryvex" />
+    <meta name="twitter:url"         content="https://trynoryvex.com/" />
+    <meta name="twitter:title"       content="Noryvex | AI Voice Agents &amp; Business Automation" />
+    <meta name="twitter:description" content="Deploy human-sounding AI Voice Agents and automate your business in weeks. Founded by Muhammad Razi. Try the live demo at trynoryvex.com." />
+    <meta name="twitter:image"       content="https://trynoryvex.com/banner.png" />
+    <meta name="twitter:image:alt"   content="Noryvex AI Voice Agents Banner" />
+
+    <!-- ══════════════════════════════════════════════════
+         GEO & BUSINESS META (helps local/regional ranking)
+    ══════════════════════════════════════════════════ -->
+    <meta name="geo.region"      content="PK" />
+    <meta name="geo.country"     content="Pakistan" />
+    <meta name="ICBM"            content="30.3753, 69.3451" />
+
+    <!-- ══════════════════════════════════════════════════
+         PRECONNECT (performance for Google Fonts etc.)
+    ══════════════════════════════════════════════════ -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- ══════════════════════════════════════════════════
+         JSON-LD STRUCTURED DATA
+         1. Organization
+         2. Person (Muhammad Razi — Founder)
+         3. WebSite + SearchAction
+         4. Service (AI Voice Agents)
+         5. Service (Business Automation)
+         6. BreadcrumbList
+    ══════════════════════════════════════════════════ -->
+
+    <!-- 1. Organization -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "@id": "https://trynoryvex.com/#organization",
+      "name": "Noryvex",
+      "alternateName": ["Noryvex AI", "TryNoryvex"],
+      "url": "https://trynoryvex.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://trynoryvex.com/logo.png",
+        "width": 512,
+        "height": 512
+      },
+      "image": "https://trynoryvex.com/banner.png",
+      "description": "Noryvex is an AI automation agency that builds custom AI Voice Agents, autonomous business receptionists, workflow automation, and intelligent software for companies worldwide.",
+      "email": "hello@trynoryvex.com",
+      "foundingDate": "2024",
+      "founders": [
+        {
+          "@type": "Person",
+          "@id": "https://trynoryvex.com/#muhammad-razi",
+          "name": "Muhammad Razi",
+          "jobTitle": "Founder & Full-Stack AI Developer",
+          "url": "https://www.linkedin.com/in/mrazi-dev/",
+          "email": "razi@noryvex.com",
+          "sameAs": [
+            "https://www.linkedin.com/in/mrazi-dev/",
+            "https://www.linkedin.com/company/noryvex"
+          ]
+        }
+      ],
+      "sameAs": [
+        "https://www.linkedin.com/company/noryvex",
+        "https://trynoryvex.com"
+      ],
+      "contactPoint": [
+        {
+          "@type": "ContactPoint",
+          "contactType": "customer support",
+          "email": "hello@trynoryvex.com",
+          "availableLanguage": ["English"],
+          "contactOption": "TollFree"
+        },
+        {
+          "@type": "ContactPoint",
+          "contactType": "sales",
+          "email": "hello@trynoryvex.com",
+          "availableLanguage": ["English"]
+        }
+      ],
+      "areaServed": {
+        "@type": "GeoShape",
+        "name": "Worldwide"
+      },
+      "knowsAbout": [
+        "Artificial Intelligence",
+        "AI Voice Agents",
+        "Business Automation",
+        "Workflow Automation",
+        "CRM Integration",
+        "SaaS Development",
+        "API Integration",
+        "Conversational AI",
+        "Natural Language Processing"
+      ],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Noryvex AI Solutions",
+        "itemListElement": [
+          {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "AI Voice Agents"}},
+          {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "AI Receptionists"}},
+          {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Business Automation"}},
+          {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Workflow Automation"}},
+          {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "CRM Automation"}},
+          {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "AI Chatbots"}},
+          {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Web Applications"}},
+          {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Mobile Apps"}},
+          {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "SaaS Development"}},
+          {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "API Integrations"}}
+        ]
+      }
+    }
+    </script>
+
+    <!-- 2. Person — Muhammad Razi (Founder) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "@id": "https://trynoryvex.com/#muhammad-razi",
+      "name": "Muhammad Razi",
+      "givenName": "Muhammad",
+      "familyName": "Razi",
+      "jobTitle": "Founder & Full-Stack AI Developer",
+      "description": "Muhammad Razi is the founder of Noryvex, an AI automation agency specializing in custom AI Voice Agents, business workflow automation, and intelligent software development.",
+      "url": "https://www.linkedin.com/in/mrazi-dev/",
+      "email": "razi@noryvex.com",
+      "image": "https://trynoryvex.com/logo.png",
+      "worksFor": {
+        "@type": "Organization",
+        "@id": "https://trynoryvex.com/#organization",
+        "name": "Noryvex"
+      },
+      "alumniOf": [],
+      "knowsAbout": [
+        "Artificial Intelligence",
+        "Full-Stack Development",
+        "AI Voice Agents",
+        "Business Automation",
+        "Large Language Models",
+        "API Development",
+        "SaaS Architecture",
+        "CRM Integration"
+      ],
+      "sameAs": [
+        "https://www.linkedin.com/in/mrazi-dev/",
+        "https://www.linkedin.com/company/noryvex"
+      ]
+    }
+    </script>
+
+    <!-- 3. WebSite + SearchAction -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "@id": "https://trynoryvex.com/#website",
+      "url": "https://trynoryvex.com",
+      "name": "Noryvex",
+      "alternateName": "Noryvex AI",
+      "description": "Noryvex — AI Voice Agents and Business Automation solutions by Muhammad Razi.",
+      "publisher": {
+        "@id": "https://trynoryvex.com/#organization"
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://trynoryvex.com/?s={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      },
+      "inLanguage": "en-US"
+    }
+    </script>
+
+    <!-- 4. WebPage — Home -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "@id": "https://trynoryvex.com/#webpage",
+      "url": "https://trynoryvex.com/",
+      "name": "Noryvex | AI Voice Agents & Business Automation — Muhammad Razi",
+      "description": "Noryvex builds custom AI Voice Agents, Autonomous Receptionists, and Business Automation systems — founded by Muhammad Razi.",
+      "isPartOf": {"@id": "https://trynoryvex.com/#website"},
+      "about": {"@id": "https://trynoryvex.com/#organization"},
+      "author": {"@id": "https://trynoryvex.com/#muhammad-razi"},
+      "dateModified": "2026-07-24",
+      "inLanguage": "en-US",
+      "potentialAction": {
+        "@type": "ReadAction",
+        "target": ["https://trynoryvex.com/"]
+      }
+    }
+    </script>
+
+    <!-- 5. Professional Services -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfessionalService",
+      "@id": "https://trynoryvex.com/#service",
+      "name": "Noryvex AI Automation Services",
+      "description": "Custom AI Voice Agents, Business Process Automation, CRM Integration, and Intelligent Software built by Noryvex — founded by Muhammad Razi.",
+      "provider": {"@id": "https://trynoryvex.com/#organization"},
+      "url": "https://trynoryvex.com",
+      "image": "https://trynoryvex.com/banner.png",
+      "email": "hello@trynoryvex.com",
+      "priceRange": "$$",
+      "currenciesAccepted": "USD",
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+        "opens": "00:00",
+        "closes": "23:59"
+      },
+      "areaServed": {"@type": "GeoShape", "name": "Worldwide"},
+      "serviceType": [
+        "AI Voice Agent Development",
+        "Business Automation",
+        "CRM Integration",
+        "Workflow Automation",
+        "SaaS Development",
+        "API Integration",
+        "AI Chatbot Development",
+        "Web Application Development",
+        "Mobile App Development"
+      ],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Noryvex AI Solutions",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "name": "AI Voice Agent",
+            "description": "Human-sounding AI voice agents for inbound and outbound calls — sub-800ms response time."
+          },
+          {
+            "@type": "Offer",
+            "name": "AI Receptionist",
+            "description": "Fully autonomous 24/7 AI receptionist that qualifies leads and books meetings."
+          },
+          {
+            "@type": "Offer",
+            "name": "Business Automation",
+            "description": "End-to-end workflow automation connecting your entire software stack."
+          }
+        ]
+      }
+    }
+    </script>
+
+    <!-- 6. FAQ — helps appear in Google FAQ rich results -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is Noryvex?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Noryvex is an AI automation agency founded by Muhammad Razi that builds custom AI Voice Agents, autonomous business receptionists, workflow automation pipelines, and intelligent software to help companies scale 24/7."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Who founded Noryvex?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Noryvex was founded by Muhammad Razi, a Full-Stack AI Developer specializing in conversational AI, business automation, and intelligent software systems."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What does Noryvex AI do?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Noryvex AI builds custom AI Voice Agents that handle phone calls, qualify leads, and book meetings automatically — with under 800ms response latency and 24/7 availability."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much does Noryvex cost?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Noryvex solutions are fully custom-built, so pricing depends on the scope and integrations required. Book a free strategy call at trynoryvex.com to receive a tailored quote."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I try Noryvex AI for free?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes! Visit trynoryvex.com and try the live interactive demo to talk directly with Chloe, Noryvex's AI receptionist, completely free."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How fast are Noryvex AI Voice Agents?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Noryvex AI Voice Agents respond in under 800 milliseconds, making them sound completely natural and ensuring no customer feels like they are talking to a robot."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What industries does Noryvex serve?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Noryvex serves businesses across all industries including real estate, healthcare, legal services, e-commerce, SaaS companies, and any business that wants to automate customer communication and lead qualification."
+          }
+        }
+      ]
+    }
+    </script>
+
+    <!-- 7. BreadcrumbList -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://trynoryvex.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Solutions",
+          "item": "https://trynoryvex.com/#solutions"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Live Demo",
+          "item": "https://trynoryvex.com/#live-demo"
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "name": "About",
+          "item": "https://trynoryvex.com/#about"
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "name": "Contact",
+          "item": "https://trynoryvex.com/#contact"
+        }
+      ]
+    }
+    </script>
+
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
-</html> 
-
+</html>

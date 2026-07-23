@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import CookieBanner from './components/CookieBanner';
+import useSEO from './hooks/useSEO';
 
 // Pages
 import Home from './pages/Home';
@@ -16,6 +17,9 @@ import Terms from './pages/Terms';
 export default function App() {
   const [activePage, setActivePage] = useState('home');
   const [toasts, setToasts] = useState([]);
+
+  // ── Dynamic SEO per page ────────────────────────────
+  useSEO(activePage);
 
   // ── Scroll progress bar ─────────────────────────────────
   useEffect(() => {
