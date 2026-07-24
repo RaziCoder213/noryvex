@@ -1,31 +1,24 @@
-# Noryvex (trynoryvex.com) — AI Agent & LLM Context File
+# Noryvex
 
-> Noryvex is a specialized done-for-you AI development agency. We build, deploy, and manage custom AI Voice Agents, autonomous business receptionists, workflow automation pipelines, and enterprise software for growing businesses.
+> Automate. Communicate. Grow.
 
-## Founder & Executive Leadership
-- **Founder & Lead Developer**: Muhammad Razi
-- **Founder Title**: Founder & Full-Stack AI Developer
-- **Founder LinkedIn**: https://www.linkedin.com/in/mrazi-dev/
-- **Founder Email**: razi@trynoryvex.com
-- **Company LinkedIn**: https://www.linkedin.com/company/noryvex
-- **Company Email**: hello@trynoryvex.com
+Noryvex is a premium, modern AI automation agency specializing in building custom conversational AI voice assistants, end-to-end business workflow integrations, and bespoke intelligent software.
+
+## Key Information
 - **Official Website**: https://trynoryvex.com
-- **Founded**: 2026
+- **Founder**: Muhammad Razi (https://www.linkedin.com/in/mrazi-dev/)
+- **Core Focus**: Scaling business operations, qualifying leads, and booking meetings automatically 24/7.
+- **Tech Stack**: State-of-the-art LLMs, latency-optimized speech synthesis (&lt;800ms), and custom cloud pipeline syncs.
 
-## Agency Service Model vs. Platform
-Noryvex is a **done-for-you service agency**, not a self-serve software platform like Vapi or Retell AI. Clients do not configure or maintain software themselves — Noryvex handles discovery, architectural design, custom integration coding, deployment, and ongoing maintenance.
-- **Voice & Telephony Infrastructure**: We leverage low-latency voice platforms (Vapi, Retell AI, ElevenLabs) paired with LLM engines (OpenAI GPT-4o, Anthropic Claude 3.5 Sonnet).
-- **Custom Business Logic**: We code custom backend webhooks, multi-step actions, and CRM data pipelines (HubSpot, Salesforce, GoHighLevel, Calendly, PostgreSQL, Supabase).
+## Capabilities
+- **AI Voice Agents**: Conversational voice bots for inbound reception and outbound cold/warm campaigns.
+- **AI Receptionists**: 24/7 lead capture, qualifying, and appointment booking synced to CRMs.
+- **Business & Workflow Automation**: Automated administrative reporting, cross-app data routing (HubSpot, Salesforce, GoHighLevel).
+- **Intelligent Software**: End-to-end custom SaaS interfaces, database systems, and custom API connections.
 
-## Core Services
-- **AI Voice Agents & Receptionists**: Conversational voice agents configured for inbound lead qualification, customer service, appointment scheduling, and automatic CRM data entry.
-- **Business & Workflow Automation**: Multi-app data pipelines connecting software applications, document parsing, and database synchronization to eliminate repetitive administrative tasks.
-- **Custom Web & Mobile Development**: Bespoke full-stack web applications, admin portals, and SaaS platforms built using React, Vite, Node.js, and Python.
-
-## Verification & Official Links
-- **Founder Profile**: Muhammad Razi (https://www.linkedin.com/in/mrazi-dev/)
-- **Company Profile**: Noryvex LinkedIn (https://www.linkedin.com/company/noryvex)
-- **Live Interactive Demo**: Available at https://trynoryvex.com/#live-demo
-- **Privacy Policy**: https://trynoryvex.com/#privacy
-- **Terms of Service**: https://trynoryvex.com/#terms
-- **Contact**: hello@trynoryvex.com / razi@trynoryvex.com
+## Navigation & Entry Points
+- **Home**: Main overview of services, case stats, and timeline.
+- **Solutions**: Detailed breakdown of voice, workflow, and SaaS packages.
+- **Live Demo**: Interactive browser phone simulator demonstrating "Chloe", an AI receptionist.
+- **About**: Agency philosophy and background.
+- **Contact**: Free strategy call bookings and general inquiries.
