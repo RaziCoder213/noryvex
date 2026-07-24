@@ -128,12 +128,14 @@ export default function Home({ setActivePage }) {
       const winHeight = window.innerHeight;
       
       // Calculate how far we have scrolled within the sticky parent container
-      const totalDist = rect.height - winHeight;
+      // offset by 80px due to sticky offset below navbar
+      const totalDist = rect.height - (winHeight - 80);
       const scrolled = -rect.top;
       const pct = Math.max(0, Math.min(1, scrolled / totalDist));
       
       // Calculate the maximum horizontal translation needed to see all cards
-      const maxScroll = track.scrollWidth - parent.clientWidth;
+      // Math.max(0, ...) handles zoomed-out browser margins (minus page percentages)
+      const maxScroll = Math.max(0, track.scrollWidth - parent.clientWidth);
       setTranslateX(pct * maxScroll);
     };
 
@@ -629,8 +631,8 @@ export default function Home({ setActivePage }) {
         }
         .services-sticky-wrapper {
           position: sticky;
-          top: 0;
-          height: 100vh;
+          top: 80px; /* align below the 80px navbar */
+          height: calc(100vh - 80px); /* remaining viewport height */
           display: flex;
           flex-direction: column;
           justify-content: center;
@@ -703,10 +705,10 @@ export default function Home({ setActivePage }) {
         }
         .hero-section {
           position: relative;
-          padding: 160px 0 100px 0;
+          padding: 80px 0 80px 0; /* reduced top spacing from header */
           overflow: hidden;
           background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(7,7,8,1) 100%);
-          min-height: 85vh;
+          min-height: 75vh;
           display: flex;
           align-items: center;
         }
@@ -1190,8 +1192,8 @@ export default function Home({ setActivePage }) {
         }
         .nrx-tagline-sticky-wrapper {
           position: sticky;
-          top: 0;
-          height: 100vh;
+          top: 80px; /* align below the 80px navbar */
+          height: calc(100vh - 80px); /* remaining viewport height */
           display: flex;
           flex-direction: column;
           align-items: center;
