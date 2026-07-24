@@ -1,44 +1,5 @@
 User-agent: *
 Allow: /
-Disallow: /admin
-
-# AI Crawlers & Search Engines — Full access allowed for AI Indexing
-User-agent: GPTBot
-Allow: /
-
-User-agent: ChatGPT-User
-Allow: /
-
-User-agent: PerplexityBot
-Allow: /
-
-User-agent: ClaudeBot
-Allow: /
-
-User-agent: Claude-User
-Allow: /
-
-User-agent: Google-Extended
-Allow: /
-
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: Cohere-ai
-Allow: /
-
-User-agent: Applebot-Extended
-Allow: /
-
-# Crawl delay for polite bots
-Crawl-delay: 5
-
-# LLM Specification Files
-Allow: /llms.txt
-Allow: /llms-full.txt
 
 # Sitemaps
 Sitemap: https://trynoryvex.com/sitemap.xml
