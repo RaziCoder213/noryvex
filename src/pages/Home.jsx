@@ -8,9 +8,11 @@ import ParticleCanvas from '../components/ParticleCanvas';
 export default function Home({ setActivePage }) {
   const [mousePos, setMousePos]       = useState({ x: 0.5, y: 0.5 });
   const [translateX, setTranslateX] = useState(0);
+  const [taglineProgress, setTaglineProgress] = useState(0);
   const heroRef    = useRef(null);
   const sliderRef  = useRef(null);
   const servicesSectionRef = useRef(null);
+  const taglineSectionRef = useRef(null);
   const CARDS_PER_VIEW = 3;
 
   // Mouse parallax for hero (normalised 0–1)
@@ -133,6 +135,34 @@ export default function Home({ setActivePage }) {
       // Calculate the maximum horizontal translation needed to see all cards
       const maxScroll = track.scrollWidth - parent.clientWidth;
       setTranslateX(pct * maxScroll);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll);
+    handleScroll();
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
+  }, []);
+
+  // Scroll-driven tagline word-by-word reveal progress
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.innerWidth <= 768) {
+        setTaglineProgress(1.0);
+        return;
+      }
+      const parent = taglineSectionRef.current;
+      if (!parent) return;
+      
+      const rect = parent.getBoundingClientRect();
+      const winHeight = window.innerHeight;
+      
+      const totalDist = rect.height - winHeight;
+      const scrolled = -rect.top;
+      const pct = Math.max(0, Math.min(1, scrolled / totalDist));
+      setTaglineProgress(pct);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -507,28 +537,69 @@ export default function Home({ setActivePage }) {
         </div>
       </section>
 
-      {/* ── Big Kinetic Tagline ── */}
-      <div className="nrx-kinetic-tagline">
-        <div className="nrx-kinetic-inner">
-          <span className="nrx-kinetic-line nrx-reveal nrx-kinetic-word">AUTOMATE.</span>
-          <span className="nrx-kinetic-line nrx-reveal nrx-kinetic-word" style={{ transitionDelay: '0.1s' }}>COMMUNICATE.</span>
-          <span className="nrx-kinetic-line nrx-reveal nrx-kinetic-accent nrx-kinetic-word" style={{ transitionDelay: '0.2s' }}>GROW.</span>
+      {/* ── Big Kinetic Tagline (Sticky Pin & Scroll Reveal) ── */}
+      <section className="nrx-tagline-sticky-parent" ref={taglineSectionRef}>
+        <div className="nrx-tagline-sticky-wrapper">
+          <div className="nrx-kinetic-inner">
+            <span 
+              className={`nrx-kinetic-line nrx-kinetic-word ${taglineProgress > 0.15 ? 'active' : ''}`}
+              style={{ 
+                opacity: taglineProgress >= 0.95 ? 1.0 : Math.max(0.1, Math.min(1.0, (taglineProgress - 0.05) * 5)),
+                transform: taglineProgress >= 0.95 ? 'none' : `scale(${Math.max(0.95, Math.min(1.0, 0.95 + (taglineProgress - 0.05) * 0.25))})`
+              }}
+            >
+              AUTOMATE.
+            </span>
+            <span 
+              className={`nrx-kinetic-line nrx-kinetic-word ${taglineProgress > 0.45 ? 'active' : ''}`}
+              style={{ 
+                opacity: taglineProgress >= 0.95 ? 1.0 : Math.max(0.1, Math.min(1.0, (taglineProgress - 0.35) * 5)),
+                transform: taglineProgress >= 0.95 ? 'none' : `scale(${Math.max(0.95, Math.min(1.0, 0.95 + (taglineProgress - 0.35) * 0.25))})`
+              }}
+            >
+              COMMUNICATE.
+            </span>
+            <span 
+              className={`nrx-kinetic-line nrx-kinetic-word nrx-kinetic-accent ${taglineProgress > 0.75 ? 'active' : ''}`}
+              style={{ 
+                opacity: taglineProgress >= 0.95 ? 1.0 : Math.max(0.1, Math.min(1.0, (taglineProgress - 0.65) * 5)),
+                transform: taglineProgress >= 0.95 ? 'none' : `scale(${Math.max(0.95, Math.min(1.0, 0.95 + (taglineProgress - 0.65) * 0.25))})`
+              }}
+            >
+              GROW.
+            </span>
+          </div>
+
+          <div 
+            className="nrx-kinetic-sub" 
+            style={{ 
+              opacity: taglineProgress >= 0.95 ? 1.0 : Math.max(0, Math.min(1, (taglineProgress - 0.85) * 8)),
+              transform: taglineProgress >= 0.95 ? 'none' : `translateY(${Math.max(0, 15 - (taglineProgress - 0.85) * 120)}px)`
+            }}
+          >
+            <span>Noryvex</span>
+            <span className="nrx-kinetic-dot">·</span>
+            <span>AI-Powered Business Automation</span>
+            <span className="nrx-kinetic-dot">·</span>
+            <span>Built for Scale</span>
+          </div>
+
+          <div 
+            className="nrx-tagline-btn-wrap"
+            style={{ 
+              opacity: taglineProgress >= 0.95 ? 1.0 : Math.max(0, Math.min(1, (taglineProgress - 0.88) * 8)),
+              transform: taglineProgress >= 0.95 ? 'none' : `translateY(${Math.max(0, 15 - (taglineProgress - 0.88) * 120)}px)`
+            }}
+          >
+            <button
+              className="btn btn-primary btn-lg"
+              onClick={() => setActivePage('contact')}
+            >
+              Start Your Journey
+            </button>
+          </div>
         </div>
-        <div className="nrx-kinetic-sub nrx-reveal" style={{ transitionDelay: '0.35s' }}>
-          <span>Noryvex</span>
-          <span className="nrx-kinetic-dot">·</span>
-          <span>AI-Powered Business Automation</span>
-          <span className="nrx-kinetic-dot">·</span>
-          <span>Built for Scale</span>
-        </div>
-        <button
-          className="btn btn-primary btn-lg nrx-reveal"
-          style={{ transitionDelay: '0.45s' }}
-          onClick={() => setActivePage('contact')}
-        >
-          Start Your Journey
-        </button>
-      </div>
+      </section>
 
       <style>{`
         /* Hero mouse-follow glow */
@@ -1108,16 +1179,25 @@ export default function Home({ setActivePage }) {
           transform: translateX(0);
         }
 
-        /* ── Kinetic Tagline ────────────────────────────── */
-        .nrx-kinetic-tagline {
-          padding: 120px 0 140px;
-          text-align: center;
+        /* ── Kinetic Tagline Sticky Scroll ──────────────── */
+        .nrx-tagline-sticky-parent {
+          position: relative;
+          height: 200vh; /* scrollable distance for locking */
           background: linear-gradient(180deg, var(--bg-dark) 0%, #000 100%);
           border-top: 1px solid var(--border-light);
-          overflow: hidden;
-          position: relative;
         }
-        .nrx-kinetic-tagline::before {
+        .nrx-tagline-sticky-wrapper {
+          position: sticky;
+          top: 0;
+          height: 100vh;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          overflow: hidden;
+          text-align: center;
+        }
+        .nrx-tagline-sticky-wrapper::before {
           content: '';
           position: absolute;
           inset: 0;
@@ -1129,7 +1209,8 @@ export default function Home({ setActivePage }) {
           flex-direction: column;
           align-items: center;
           gap: 0;
-          margin-bottom: 40px;
+          margin-bottom: 30px;
+          z-index: 1;
         }
         .nrx-kinetic-line {
           display: block;
@@ -1138,24 +1219,22 @@ export default function Home({ setActivePage }) {
           font-weight: 900;
           line-height: 1.15;
           letter-spacing: -0.02em;
-          color: rgba(255, 255, 255, 0.12);
+          color: rgba(255, 255, 255, 0.1);
           -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.25);
-          transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
           text-transform: uppercase;
           user-select: none;
+          transition: opacity 0.15s ease-out, transform 0.15s ease-out, text-shadow 0.3s ease;
+          will-change: opacity, transform;
         }
         @media (max-width: 600px) {
           .nrx-kinetic-line {
             font-size: clamp(1.5rem, 8.2vw, 2.8rem) !important;
           }
         }
-        .nrx-kinetic-line.nrx-reveal {
-          opacity: 0;
-          transform: translateY(40px);
-        }
-        .nrx-kinetic-line.nrx-reveal.visible {
-          opacity: 1;
-          transform: translateY(0);
+        .nrx-kinetic-line.active {
+          color: rgba(255, 255, 255, 0.95);
+          -webkit-text-stroke: 0px transparent;
+          text-shadow: 0 0 40px rgba(255, 255, 255, 0.2);
         }
         .nrx-kinetic-accent {
           background: linear-gradient(135deg, var(--accent-neon) 0%, #fff 60%);
@@ -1164,6 +1243,9 @@ export default function Home({ setActivePage }) {
           background-clip: text;
           -webkit-text-stroke: 0px transparent;
           color: transparent !important;
+        }
+        .nrx-kinetic-accent.active {
+          text-shadow: 0 0 50px rgba(199, 255, 61, 0.4);
         }
         .nrx-kinetic-sub {
           display: flex;
@@ -1174,29 +1256,51 @@ export default function Home({ setActivePage }) {
           letter-spacing: 0.14em;
           text-transform: uppercase;
           color: var(--text-muted);
-          margin-bottom: 40px;
+          margin-bottom: 24px;
           flex-wrap: wrap;
           justify-content: center;
-          opacity: 0;
-          transform: translateY(16px);
-          transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
-        }
-        .nrx-kinetic-sub.visible {
-          opacity: 1;
-          transform: translateY(0);
+          z-index: 1;
+          transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+          will-change: opacity, transform;
         }
         .nrx-kinetic-dot {
           color: var(--accent-neon);
           font-size: 1.2rem;
         }
-        .nrx-kinetic-tagline .btn.nrx-reveal {
-          opacity: 0;
-          transform: translateY(16px);
-          transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out), background 0.2s, box-shadow 0.2s;
+        .nrx-tagline-btn-wrap {
+          z-index: 1;
+          transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+          will-change: opacity, transform;
         }
-        .nrx-kinetic-tagline .btn.nrx-reveal.visible {
-          opacity: 1;
-          transform: translateY(0);
+
+        @media (max-width: 768px) {
+          .nrx-tagline-sticky-parent {
+            height: auto !important;
+            padding: 100px 0;
+          }
+          .nrx-tagline-sticky-wrapper {
+            position: relative !important;
+            height: auto !important;
+          }
+          .nrx-kinetic-line {
+            opacity: 1 !important;
+            transform: none !important;
+            color: rgba(255, 255, 255, 0.95);
+            -webkit-text-stroke: 0px transparent;
+          }
+          .nrx-kinetic-accent {
+            color: transparent !important;
+          }
+          .nrx-kinetic-sub {
+            opacity: 1 !important;
+            transform: none !important;
+            margin-top: 24px;
+          }
+          .nrx-tagline-btn-wrap {
+            opacity: 1 !important;
+            transform: none !important;
+            margin-top: 16px;
+          }
         }
 
         /* ── Tech Section ──────────────────────── */
