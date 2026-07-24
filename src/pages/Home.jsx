@@ -171,6 +171,9 @@ export default function Home({ setActivePage }) {
               <a href="https://twelve.tools" target="_blank" rel="noopener noreferrer">
                 <img src="https://twelve.tools/badge3-dark.svg" alt="Featured on Twelve Tools" className="featured-badge-img" />
               </a>
+              <a href="https://wired.business" target="_blank" rel="noopener noreferrer">
+                <img src="https://wired.business/badge3-dark.svg" alt="Featured on Wired Business" className="featured-badge-img" />
+              </a>
             </div>
           </div>
 
