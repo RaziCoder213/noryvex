@@ -154,7 +154,7 @@ export default function Home({ setActivePage }) {
               <span className="text-neon-gradient txt-gradient-animate">That Never Sleeps.</span>
             </h1>
             <p className="hero-subtitle txt-blur-in">
-              We build AI Voice Agents, Business Automation, and Intelligent Software that answer calls, automate workflows, and help businesses scale exponentially.
+              Noryvex is a leading AI Automation Agency. We build custom AI Voice Calling Agents, Autonomous Receptionist AI systems, and Intelligent Software that answer calls, automate workflows, and help businesses scale exponentially.
             </p>
             <div className="hero-ctas">
               <button onClick={() => setActivePage('contact')} className="btn btn-primary btn-lg">
