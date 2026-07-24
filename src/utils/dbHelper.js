@@ -146,12 +146,13 @@ async function sha256(message) {
 
 // ADMIN LOGIN AUTHENTICATION
 export const dbAdminLogin = async (email, password) => {
-  const adminEmail = 'razi@noryvex.com';
+  const allowedEmails = ['razi@noryvex.com', 'codingwithrazi@gmail.com'];
   const targetHash = '37ad83dfcd34d8dec4f9d22e67b0f396232cf7159c3b07c82df7cca325699886'; // SHA-256 hash of RaziNoryvex2026!
   
   try {
     const hashedPassword = await sha256(password);
-    if (email === adminEmail && hashedPassword === targetHash) {
+    const cleanedEmail = (email || '').toLowerCase().trim();
+    if (allowedEmails.includes(cleanedEmail) && hashedPassword === targetHash) {
       const token = 'mock-jwt-token-' + Date.now();
       return { success: true, token };
     }
