@@ -5,6 +5,7 @@ import CookieBanner from './components/CookieBanner';
 import useSEO from './hooks/useSEO';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
+import { ChevronUp, ChevronDown } from 'lucide-react';
 
 
 // Pages
@@ -36,6 +37,29 @@ export default function App() {
     window.addEventListener('scroll', update, { passive: true });
     return () => window.removeEventListener('scroll', update);
   }, []);
+
+  // ── Scroll Navigation Assistant (Top & Bottom shortcuts) ──
+  const [showScrollNav, setShowScrollNav] = useState(false);
+
+  useEffect(() => {
+    const handleScrollNavVisibility = () => {
+      if (window.scrollY > 300) {
+        setShowScrollNav(true);
+      } else {
+        setShowScrollNav(false);
+      }
+    };
+    window.addEventListener('scroll', handleScrollNavVisibility, { passive: true });
+    return () => window.removeEventListener('scroll', handleScrollNavVisibility);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const scrollToBottom = () => {
+    window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+  };
 
   // ── Reveal on scroll (toggles both ways) ──────────────
   useEffect(() => {
@@ -152,6 +176,17 @@ export default function App() {
       {/* Cookie consent banner */}
       <CookieBanner />
 
+      {/* Floating Scroll Navigation */}
+      <div className={`nrx-scroll-nav ${showScrollNav ? 'visible' : ''}`}>
+        <button onClick={scrollToTop} className="scroll-nav-btn" title="Go to Top">
+          <ChevronUp size={16} />
+        </button>
+        <div className="scroll-nav-divider"></div>
+        <button onClick={scrollToBottom} className="scroll-nav-btn" title="Go to Bottom">
+          <ChevronDown size={16} />
+        </button>
+      </div>
+
       {/* Toast notifications */}
       <div className="toast-container">
         {toasts.map(toast => (
@@ -166,7 +201,63 @@ export default function App() {
         ))}
       </div>
 
-      <style>{`main { margin-top: 80px; }`}</style>
+      <style>{`
+        main { margin-top: 80px; }
+
+        /* Floating Scroll Navigation */
+        .nrx-scroll-nav {
+          position: fixed;
+          bottom: 24px;
+          right: 96px; /* offset to the left of toast messages */
+          background: rgba(10, 10, 14, 0.95);
+          border: 1px solid var(--border-light);
+          border-radius: 100px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          padding: 4px;
+          z-index: 9999;
+          opacity: 0;
+          transform: translateY(20px) scale(0.9);
+          transition: opacity 0.3s var(--ease-out), transform 0.3s var(--ease-out);
+          pointer-events: none;
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+        .nrx-scroll-nav.visible {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+          pointer-events: all;
+        }
+        .scroll-nav-btn {
+          background: none;
+          border: none;
+          color: var(--text-gray);
+          width: 32px;
+          height: 32px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          border-radius: 50%;
+          transition: color 0.2s, background 0.2s;
+        }
+        .scroll-nav-btn:hover {
+          color: var(--accent-neon);
+          background: rgba(255, 255, 255, 0.05);
+        }
+        .scroll-nav-divider {
+          width: 16px;
+          height: 1px;
+          background: var(--border-light);
+          margin: 2px 0;
+        }
+        @media (max-width: 600px) {
+          .nrx-scroll-nav {
+            bottom: 16px;
+            right: 84px;
+          }
+        }
+      `}</style>
 
       {/* Vercel Analytics — tracks page views */}
       <Analytics />

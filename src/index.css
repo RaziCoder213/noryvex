@@ -103,7 +103,7 @@ body {
   background-color: var(--bg-pure);
   color: var(--text-light);
   font-family: var(--font-sans);
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 /* ─── Scrollbar ─────────────────────────────────────────── */

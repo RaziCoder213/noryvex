@@ -178,6 +178,8 @@ export default function Home({ setActivePage }) {
   const px = (mousePos.x - 0.5) * 22;   // -11 to +11px
   const py = (mousePos.y - 0.5) * 14;   // -7  to +7px
 
+  const fadeOutFactor = taglineProgress > 0.78 ? Math.max(0.15, 1 - (taglineProgress - 0.78) * 5) : 1.0;
+
   return (
     <div className="home-page page-enter">
 
@@ -544,7 +546,7 @@ export default function Home({ setActivePage }) {
             <span 
               className={`nrx-kinetic-line nrx-kinetic-word ${taglineProgress > 0.15 ? 'active' : ''}`}
               style={{ 
-                opacity: taglineProgress >= 0.95 ? 1.0 : Math.max(0.1, Math.min(1.0, (taglineProgress - 0.05) * 5)),
+                opacity: taglineProgress >= 0.95 ? 0.15 : Math.max(0.1, Math.min(1.0, (taglineProgress - 0.05) * 5)) * fadeOutFactor,
                 transform: taglineProgress >= 0.95 ? 'none' : `scale(${Math.max(0.95, Math.min(1.0, 0.95 + (taglineProgress - 0.05) * 0.25))})`
               }}
             >
@@ -553,7 +555,7 @@ export default function Home({ setActivePage }) {
             <span 
               className={`nrx-kinetic-line nrx-kinetic-word ${taglineProgress > 0.45 ? 'active' : ''}`}
               style={{ 
-                opacity: taglineProgress >= 0.95 ? 1.0 : Math.max(0.1, Math.min(1.0, (taglineProgress - 0.35) * 5)),
+                opacity: taglineProgress >= 0.95 ? 0.15 : Math.max(0.1, Math.min(1.0, (taglineProgress - 0.35) * 5)) * fadeOutFactor,
                 transform: taglineProgress >= 0.95 ? 'none' : `scale(${Math.max(0.95, Math.min(1.0, 0.95 + (taglineProgress - 0.35) * 0.25))})`
               }}
             >
@@ -562,7 +564,7 @@ export default function Home({ setActivePage }) {
             <span 
               className={`nrx-kinetic-line nrx-kinetic-word nrx-kinetic-accent ${taglineProgress > 0.75 ? 'active' : ''}`}
               style={{ 
-                opacity: taglineProgress >= 0.95 ? 1.0 : Math.max(0.1, Math.min(1.0, (taglineProgress - 0.65) * 5)),
+                opacity: taglineProgress >= 0.95 ? 0.15 : Math.max(0.1, Math.min(1.0, (taglineProgress - 0.65) * 5)) * fadeOutFactor,
                 transform: taglineProgress >= 0.95 ? 'none' : `scale(${Math.max(0.95, Math.min(1.0, 0.95 + (taglineProgress - 0.65) * 0.25))})`
               }}
             >
