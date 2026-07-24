@@ -36,7 +36,7 @@ export default function Navbar({ activePage, setActivePage }) {
       <div className="container nav-container">
         <a href="#home" className="nav-brand" onClick={() => handleNavClick('home')}>
           <img src="/logo.png" alt="Noryvex" className="nav-logo" />
-          <span className="nav-title">Noryvex</span>
+          <span className="nav-title">NORYVE<span className="nav-title-x">X</span></span>
         </a>
 
         {/* Desktop Navigation */}
@@ -128,9 +128,15 @@ export default function Navbar({ activePage, setActivePage }) {
         .nav-title {
           font-family: var(--font-display);
           font-weight: 800;
-          font-size: 1.5rem;
+          font-size: 1.4rem;
           color: var(--text-white);
-          letter-spacing: 0.05em;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+        }
+        
+        .nav-title-x {
+          color: var(--accent-neon);
+          text-shadow: 0 0 12px rgba(199,255,61,0.5);
         }
         
         .nav-menu {

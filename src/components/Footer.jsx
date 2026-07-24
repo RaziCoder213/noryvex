@@ -15,7 +15,7 @@ export default function Footer({ setActivePage }) {
         <div className="footer-brand-section">
           <div className="footer-logo-title" onClick={() => handleNavClick('home')}>
             <img src="/logo.png" alt="Noryvex Logo" className="footer-logo" />
-            <span className="footer-title">Noryvex</span>
+            <span className="footer-title">NORYVE<span className="footer-title-x">X</span></span>
           </div>
           <p className="footer-tagline">Automate. Communicate. Grow.</p>
           <p className="footer-desc">Building futuristic AI Voice Agents, Business Automation, and Intelligent Software to scale enterprises.</p>
@@ -107,6 +107,13 @@ export default function Footer({ setActivePage }) {
           font-weight: 800;
           font-size: 1.3rem;
           color: var(--text-white);
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+        }
+        
+        .footer-title-x {
+          color: var(--accent-neon);
+          text-shadow: 0 0 12px rgba(199,255,61,0.5);
         }
         
         .footer-tagline {

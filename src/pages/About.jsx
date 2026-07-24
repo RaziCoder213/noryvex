@@ -69,7 +69,7 @@ export default function About() {
           </div>
 
           {/* Founder Section */}
-          <div className="founder-card-wrapper">
+          <div className="founder-card-wrapper" itemScope itemType="https://schema.org/Person">
             <div className="glass-card founder-card">
               <div className="founder-avatar-wrapper">
                 <svg className="founder-avatar" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -78,11 +78,11 @@ export default function About() {
                 </svg>
                 <div className="avatar-glow"></div>
               </div>
-              <span className="founder-label">Founder & Lead Architect</span>
-              <h3 className="founder-name">Muhammad Razi</h3>
-              <p className="founder-title">Founder & Full-Stack AI Developer</p>
-              <p className="founder-bio">
-                Razi is a full-stack engineer and automation developer. He leverages cutting-edge LLMs, backend databases, and APIs to design autonomous voice systems that save business overhead.
+              <span className="founder-label" itemProp="jobTitle">Founder &amp; Lead AI Architect</span>
+              <h3 className="founder-name" itemProp="name">Muhammad Razi</h3>
+              <p className="founder-title">Founder &amp; Full-Stack AI Developer at <span itemProp="worksFor">Noryvex</span></p>
+              <p className="founder-bio" itemProp="description">
+                Muhammad Razi is the founder of Noryvex, a specialized AI technology agency. Razi is a full-stack AI developer and automation architect who engineers custom voice agents, CRM data pipelines, and intelligent software to eliminate business operational overhead.
               </p>
               
               <div className="founder-skills">
@@ -94,10 +94,10 @@ export default function About() {
               </div>
 
               <div className="founder-links">
-                <a href="https://www.linkedin.com/in/mrazi-dev/" target="_blank" rel="noopener noreferrer" className="btn btn-secondary founder-link-btn">
+                <a href="https://www.linkedin.com/in/mrazi-dev/" target="_blank" rel="noopener noreferrer" className="btn btn-secondary founder-link-btn" itemProp="sameAs">
                   <Linkedin size={18} /> LinkedIn <ArrowUpRight size={14} />
                 </a>
-                <a href="mailto:razi@noryvex.com" className="btn btn-outline-neon founder-link-btn">
+                <a href="mailto:razi@trynoryvex.com" className="btn btn-outline-neon founder-link-btn" itemProp="email">
                   <Mail size={18} /> Email
                 </a>
               </div>

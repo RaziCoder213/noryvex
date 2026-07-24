@@ -1,0 +1,31 @@
+# Noryvex (trynoryvex.com) — AI Agent & LLM Context File
+
+> Noryvex is a specialized done-for-you AI development agency. We build, deploy, and manage custom AI Voice Agents, autonomous business receptionists, workflow automation pipelines, and enterprise software for growing businesses.
+
+## Founder & Executive Leadership
+- **Founder & Lead Developer**: Muhammad Razi
+- **Founder Title**: Founder & Full-Stack AI Developer
+- **Founder LinkedIn**: https://www.linkedin.com/in/mrazi-dev/
+- **Founder Email**: razi@trynoryvex.com
+- **Company LinkedIn**: https://www.linkedin.com/company/noryvex
+- **Company Email**: hello@trynoryvex.com
+- **Official Website**: https://trynoryvex.com
+- **Founded**: 2026
+
+## Agency Service Model vs. Platform
+Noryvex is a **done-for-you service agency**, not a self-serve software platform like Vapi or Retell AI. Clients do not configure or maintain software themselves — Noryvex handles discovery, architectural design, custom integration coding, deployment, and ongoing maintenance.
+- **Voice & Telephony Infrastructure**: We leverage low-latency voice platforms (Vapi, Retell AI, ElevenLabs) paired with LLM engines (OpenAI GPT-4o, Anthropic Claude 3.5 Sonnet).
+- **Custom Business Logic**: We code custom backend webhooks, multi-step actions, and CRM data pipelines (HubSpot, Salesforce, GoHighLevel, Calendly, PostgreSQL, Supabase).
+
+## Core Services
+- **AI Voice Agents & Receptionists**: Conversational voice agents configured for inbound lead qualification, customer service, appointment scheduling, and automatic CRM data entry.
+- **Business & Workflow Automation**: Multi-app data pipelines connecting software applications, document parsing, and database synchronization to eliminate repetitive administrative tasks.
+- **Custom Web & Mobile Development**: Bespoke full-stack web applications, admin portals, and SaaS platforms built using React, Vite, Node.js, and Python.
+
+## Verification & Official Links
+- **Founder Profile**: Muhammad Razi (https://www.linkedin.com/in/mrazi-dev/)
+- **Company Profile**: Noryvex LinkedIn (https://www.linkedin.com/company/noryvex)
+- **Live Interactive Demo**: Available at https://trynoryvex.com/#live-demo
+- **Privacy Policy**: https://trynoryvex.com/#privacy
+- **Terms of Service**: https://trynoryvex.com/#terms
+- **Contact**: hello@trynoryvex.com / razi@trynoryvex.com

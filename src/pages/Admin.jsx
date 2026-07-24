@@ -47,7 +47,7 @@ export default function Admin({ addToast }) {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    if (email !== 'razi@noryvex.com') {
+    if (email !== 'razi@trynoryvex.com') {
       addToast('Access denied: Unauthorized admin email.', 'error');
       return;
     }
@@ -166,7 +166,7 @@ export default function Admin({ addToast }) {
                   <input
                     type="email"
                     required
-                    placeholder="razi@noryvex.com"
+                    placeholder="razi@trynoryvex.com"
                     className="form-control"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}

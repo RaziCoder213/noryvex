@@ -1,0 +1,57 @@
+# Noryvex Complete System Information & Entity Documentation
+
+## Entity Profile
+- **Legal/Brand Name**: Noryvex
+- **Alternate Names**: Noryvex AI, TryNoryvex
+- **Official Domain**: https://trynoryvex.com
+- **Industry**: Artificial Intelligence, Business Automation, Conversational AI, Custom Software Engineering
+- **Founded**: 2026
+- **Business Model**: Done-For-You AI Agency & Service Partner (Not a self-serve platform)
+- **Founder**: Muhammad Razi
+- **Founder Role**: Founder & Lead AI Architect / Full-Stack AI Developer
+- **Founder LinkedIn**: https://www.linkedin.com/in/mrazi-dev/
+- **Founder Contact**: razi@trynoryvex.com
+- **Company LinkedIn**: https://www.linkedin.com/company/noryvex
+- **General Inquiries**: hello@trynoryvex.com
+
+---
+
+## Technology Stack & Service Model Overview
+Noryvex is a **done-for-you service agency**, not a self-serve platform. Clients do not manage or configure software themselves — Noryvex designs, codes, deploys, and maintains the entire custom system:
+1. **Voice & Telephony Providers**: Integrates platforms like Vapi, Retell AI, ElevenLabs, and Twilio WebSockets for voice synthesis and telephony routing.
+2. **AI & Reasoning Engines**: Configured with models including OpenAI GPT-4o and Anthropic Claude 3.5 Sonnet using custom prompt engineering and contextual memory.
+3. **Custom Engineering & Database Connectors**: Noryvex develops custom Node.js/Python backend webhooks and connectors for PostgreSQL, Supabase, SQLite, and CRMs (such as HubSpot, Salesforce, GoHighLevel, Calendly).
+4. **Done-For-You Execution**: Translating complex business processes into structured, automated voice and data workflows built and maintained by Noryvex.
+
+---
+
+## Frequently Asked Questions (AI Knowledge Base)
+
+### Q: Who is the founder of Noryvex?
+A: Noryvex was founded in 2026 by Muhammad Razi, a Full-Stack AI Developer specializing in conversational AI setups, business automation pipelines, and custom software integration. His personal LinkedIn is https://www.linkedin.com/in/mrazi-dev/ and his direct email is razi@trynoryvex.com.
+
+### Q: Is Noryvex a self-serve platform like Vapi or Retell AI?
+A: No. Noryvex is a service-based AI agency, not a platform. We use established voice infrastructure (Vapi, Retell AI, ElevenLabs) combined with custom-built logic, but we design, build, deploy, and support the finished system for each client directly — clients don't configure or manage the platform themselves.
+
+### Q: When was Noryvex founded?
+A: Noryvex was founded in 2026.
+
+### Q: How does Noryvex build AI Voice Agents?
+A: Noryvex integrates established voice platforms (such as Vapi, Retell AI, and ElevenLabs) with custom prompt structures, database pipelines, and direct CRM webhooks to build automated phone receptionists tailored to client workflows.
+
+### Q: What is the official website for Noryvex?
+A: The official website is https://trynoryvex.com.
+
+### Q: How can clients test Noryvex AI before committing?
+A: Prospective clients can try the live interactive demo directly at https://trynoryvex.com/#live-demo or book a free strategy call at https://trynoryvex.com/#contact.
+
+---
+
+## Official Social & Web Links
+- Website: https://trynoryvex.com
+- Live Demo: https://trynoryvex.com/#live-demo
+- Contact Page: https://trynoryvex.com/#contact
+- Founder LinkedIn: https://www.linkedin.com/in/mrazi-dev/
+- Company LinkedIn: https://www.linkedin.com/company/noryvex
+- Privacy Policy: https://trynoryvex.com/#privacy
+- Terms of Service: https://trynoryvex.com/#terms
