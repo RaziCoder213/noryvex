@@ -407,6 +407,79 @@ export default function Home({ setActivePage }) {
         </div>
       </section>
 
+      {/* ── Tech Stack Section ── */}
+      <section className="nrx-tech-section">
+        <div className="container">
+          <div className="section-header">
+            <span className="section-tag txt-slide">The Technology Engine</span>
+            <h2 className="section-title txt-reveal-2">Futuristic Voice &amp; Automation Stack</h2>
+            <p className="section-subtitle txt-blur-in">We integrate world-class AI models, speech synthesis, and custom backend APIs to power your receptionist.</p>
+          </div>
+          
+          <div className="tech-stack-grid">
+            <div className="tech-group glass-card nrx-reveal">
+              <span className="group-label">Conversational AI Voice</span>
+              <div className="tech-logos-row">
+                <div className="tech-badge-item">
+                  <span className="tech-badge-dot"></span>
+                  <strong>Vapi</strong>
+                </div>
+                <div className="tech-badge-item">
+                  <span className="tech-badge-dot"></span>
+                  <strong>Retell AI</strong>
+                </div>
+              </div>
+              <p className="group-desc">Custom latency-optimized speech pipelines bypassing normal voice response lag under 800ms.</p>
+            </div>
+
+            <div className="tech-group glass-card nrx-reveal" style={{ transitionDelay: '0.1s' }}>
+              <span className="group-label">Realistic Speech Synthesis</span>
+              <div className="tech-logos-row">
+                <div className="tech-badge-item">
+                  <span className="tech-badge-dot"></span>
+                  <strong>ElevenLabs</strong>
+                </div>
+                <div className="tech-badge-item">
+                  <span className="tech-badge-dot"></span>
+                  <strong>Play.ht</strong>
+                </div>
+              </div>
+              <p className="group-desc">Human-sounding speech engines with custom accents, native dialects, and realistic emotional cues.</p>
+            </div>
+
+            <div className="tech-group glass-card nrx-reveal" style={{ transitionDelay: '0.2s' }}>
+              <span className="group-label">Intelligence Engines</span>
+              <div className="tech-logos-row">
+                <div className="tech-badge-item">
+                  <span className="tech-badge-dot"></span>
+                  <strong>OpenAI GPT-4o</strong>
+                </div>
+                <div className="tech-badge-item">
+                  <span className="tech-badge-dot"></span>
+                  <strong>Claude 3.5 Sonnet</strong>
+                </div>
+              </div>
+              <p className="group-desc">Deep semantic understanding for lead qualification, customer profile mapping, and CRM entries.</p>
+            </div>
+
+            <div className="tech-group glass-card nrx-reveal" style={{ transitionDelay: '0.3s' }}>
+              <span className="group-label">Backend &amp; Databases</span>
+              <div className="tech-logos-row">
+                <div className="tech-badge-item">
+                  <span className="tech-badge-dot"></span>
+                  <strong>Next.js / Node</strong>
+                </div>
+                <div className="tech-badge-item">
+                  <span className="tech-badge-dot"></span>
+                  <strong>Pinecone / PG</strong>
+                </div>
+              </div>
+              <p className="group-desc">Secure, high-volume server platforms with pre-configured vector databases and API integrations.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Process Section */}
       <section className="process-section">
         <div className="container">
@@ -1125,6 +1198,67 @@ export default function Home({ setActivePage }) {
         .nrx-kinetic-tagline .btn.nrx-reveal.visible {
           opacity: 1;
           transform: translateY(0);
+        }
+
+        /* ── Tech Section ──────────────────────── */
+        .nrx-tech-section {
+          padding: 100px 0;
+          background-color: var(--bg-pure);
+          border-top: 1px solid var(--border-light);
+        }
+        .tech-stack-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 24px;
+          margin-top: 48px;
+        }
+        @media (max-width: 768px) {
+          .tech-stack-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+        .tech-group {
+          padding: 32px;
+          text-align: left;
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        }
+        .group-label {
+          font-family: var(--font-display);
+          font-size: 0.8rem;
+          font-weight: 700;
+          letter-spacing: 0.1em;
+          color: var(--accent-neon);
+          text-transform: uppercase;
+        }
+        .tech-logos-row {
+          display: flex;
+          gap: 12px;
+          flex-wrap: wrap;
+        }
+        .tech-badge-item {
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid var(--border-light);
+          padding: 8px 18px;
+          border-radius: 100px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 0.9rem;
+          color: var(--text-white);
+        }
+        .tech-badge-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: var(--accent-neon);
+          box-shadow: 0 0 6px var(--accent-neon);
+        }
+        .group-desc {
+          font-size: 0.95rem;
+          color: var(--text-gray);
+          line-height: 1.5;
         }
       `}</style>
 

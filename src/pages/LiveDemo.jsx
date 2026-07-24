@@ -112,6 +112,49 @@ export default function LiveDemo({ setActivePage }) {
 
   const addMsg = (sender, text) => setTranscript(p => [...p, { sender, text, time: new Date() }]);
 
+  // DTMF & Call progress tone synthesizer using Web Audio API
+  const playTone = (freq1, freq2, duration) => {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const osc1 = ctx.createOscillator();
+      const osc2 = freq2 > 0 ? ctx.createOscillator() : null;
+      const gainNode = ctx.createGain();
+      
+      osc1.frequency.value = freq1;
+      if (osc2) osc2.frequency.value = freq2;
+      
+      gainNode.gain.setValueAtTime(0.04, ctx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+      
+      osc1.connect(gainNode);
+      if (osc2) osc2.connect(gainNode);
+      gainNode.connect(ctx.destination);
+      
+      osc1.start();
+      if (osc2) osc2.start();
+      osc1.stop(ctx.currentTime + duration);
+      if (osc2) osc2.stop(ctx.currentTime + duration);
+    } catch (e) {
+      console.warn("Audio Context failed:", e);
+    }
+  };
+
+  const playDialBeeps = () => {
+    playTone(697, 1209, 0.12);
+    setTimeout(() => playTone(770, 1336, 0.12), 160);
+    setTimeout(() => playTone(852, 1477, 0.12), 320);
+  };
+
+  const playRingback = () => {
+    playTone(440, 480, 1.2);
+  };
+
+  const playHangup = () => {
+    playTone(480, 0, 0.35);
+  };
+
   const speak = (text) => {
     if (!('speechSynthesis' in window)) { setAiSpeaking(true); setTimeout(() => setAiSpeaking(false), 3000); return; }
     window.speechSynthesis.cancel();
@@ -139,17 +182,23 @@ export default function LiveDemo({ setActivePage }) {
   const startCall = () => {
     setCallState('dialing');
     setTranscript([]);
+    playDialBeeps();
+    setTimeout(() => {
+      playRingback();
+    }, 600);
+
     setTimeout(() => {
       setCallState('connected');
       setAiTyping(true);
       setTimeout(() => { setAiTyping(false); addMsg('agent', GREETING); speak(GREETING); }, 1000);
-    }, 1800);
+    }, 2000);
   };
 
   const endCall = () => {
     window.speechSynthesis?.cancel();
     recognitionRef.current?.abort();
     setCallState('ended'); setIsListening(false); setAiSpeaking(false); setAiTyping(false);
+    playHangup();
   };
 
   const triggerListening = () => {
