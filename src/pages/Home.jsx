@@ -128,8 +128,8 @@ export default function Home({ setActivePage }) {
       const winHeight = window.innerHeight;
       
       // Calculate how far we have scrolled within the sticky parent container
-      // offset by 80px due to sticky offset below navbar
-      const totalDist = rect.height - (winHeight - 80);
+      // offset by 100px due to sticky offset below navbar
+      const totalDist = rect.height - (winHeight - 100);
       const scrolled = -rect.top;
       const pct = Math.max(0, Math.min(1, scrolled / totalDist));
       
@@ -526,15 +526,19 @@ export default function Home({ setActivePage }) {
           height: 250vh; /* scrollable distance for the pinning effect */
           background-color: var(--bg-pure);
           border-top: 1px solid var(--border-light);
+          margin-top: 80px; /* Generous top margin to prevent overlapping hero/marquee */
+          padding-top: 40px;
+          z-index: 5;
         }
         .services-sticky-wrapper {
           position: sticky;
-          top: 80px; /* align below the 80px navbar */
-          height: calc(100vh - 80px); /* remaining viewport height */
+          top: 100px; /* align below the 80px navbar with 20px clearance */
+          height: calc(100vh - 100px); /* remaining viewport height */
           display: flex;
           flex-direction: column;
           justify-content: center;
           overflow: hidden;
+          padding-top: 10px;
         }
         .svc-slider-wrap {
           position: relative;
@@ -565,11 +569,14 @@ export default function Home({ setActivePage }) {
         @media (max-width: 768px) {
           .services-sticky-parent {
             height: auto !important;
+            margin-top: 40px !important;
+            padding-top: 0 !important;
           }
           .services-sticky-wrapper {
             position: relative !important;
             height: auto !important;
-            padding: 80px 0;
+            padding: 60px 0 !important;
+            top: 0 !important;
           }
           .svc-slider-wrap {
             overflow-x: auto;
