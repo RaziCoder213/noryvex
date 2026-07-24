@@ -7,10 +7,10 @@ import ParticleCanvas from '../components/ParticleCanvas';
 
 export default function Home({ setActivePage }) {
   const [mousePos, setMousePos]       = useState({ x: 0.5, y: 0.5 });
-  const [activeSlide, setActiveSlide] = useState(0);
-  const [sliderPaused, setSliderPaused] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const heroRef    = useRef(null);
   const sliderRef  = useRef(null);
+  const servicesSectionRef = useRef(null);
   const CARDS_PER_VIEW = 3;
 
   // Mouse parallax for hero (normalised 0–1)
@@ -111,18 +111,23 @@ export default function Home({ setActivePage }) {
     { num: "05", step: "Support", desc: "24/7 system health checks, optimization of agent memory, and scaling integrations as needed." }
   ];
 
-  // Auto-advance slider
+  // Scroll-driven horizontal translation for the capabilities track
   useEffect(() => {
-    if (sliderPaused) return;
-    const maxSlide = services.length - CARDS_PER_VIEW;
-    const t = setInterval(() => {
-      setActiveSlide(s => (s >= maxSlide ? 0 : s + 1));
-    }, 3000);
-    return () => clearInterval(t);
-  }, [sliderPaused, services.length]);
-
-  const slideNext = () => setActiveSlide(s => Math.min(s + 1, services.length - CARDS_PER_VIEW));
-  const slidePrev = () => setActiveSlide(s => Math.max(s - 1, 0));
+    const handleScroll = () => {
+      const el = servicesSectionRef.current;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const winHeight = window.innerHeight;
+      
+      const totalHeight = rect.height + winHeight;
+      const scrolled = winHeight - rect.top;
+      const pct = Math.max(0, Math.min(1, scrolled / totalHeight));
+      setScrollProgress(pct);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Parallax deltas from normalised mouse pos
   const px = (mousePos.x - 0.5) * 22;   // -11 to +11px
@@ -322,7 +327,7 @@ export default function Home({ setActivePage }) {
       </div>
 
       {/* ── Services SLIDER ── */}
-      <section className="services-section">
+      <section className="services-section" ref={servicesSectionRef}>
         <div className="container">
           <div className="section-header">
             <span className="section-tag txt-slide">Capabilities</span>
@@ -331,21 +336,17 @@ export default function Home({ setActivePage }) {
           </div>
 
           {/* Slider viewport */}
-          <div
-            className="svc-slider-wrap"
-            onMouseEnter={() => setSliderPaused(true)}
-            onMouseLeave={() => setSliderPaused(false)}
-          >
-            {/* Track */}
+          <div className="svc-slider-wrap">
+            {/* Track - translated horizontally on page scroll */}
             <div
               className="svc-slider-track"
               ref={sliderRef}
-              style={{ transform: `translateX(calc(-${activeSlide} * (100% / ${CARDS_PER_VIEW}) - ${activeSlide} * 24px))` }}
+              style={{ transform: `translateX(-${scrollProgress * 65}%)` }}
             >
               {services.map((svc, i) => (
                 <div
                   key={i}
-                  className={`glass-card service-card svc-slide-card ${i === activeSlide || i === activeSlide+1 || i === activeSlide+2 ? 'in-view' : ''}`}
+                  className="glass-card service-card svc-slide-card in-view"
                 >
                   <div className="service-icon-wrapper">
                     {svc.icon}
@@ -361,25 +362,11 @@ export default function Home({ setActivePage }) {
                 </div>
               ))}
             </div>
-
-            {/* Prev / Next */}
-            <button className="svc-arrow svc-prev" onClick={slidePrev} disabled={activeSlide === 0}>
-              <ChevronLeft size={20} />
-            </button>
-            <button className="svc-arrow svc-next" onClick={slideNext} disabled={activeSlide >= services.length - CARDS_PER_VIEW}>
-              <ChevronRight size={20} />
-            </button>
           </div>
 
-          {/* Dot indicators */}
-          <div className="svc-dots">
-            {Array.from({ length: services.length - CARDS_PER_VIEW + 1 }).map((_, i) => (
-              <button
-                key={i}
-                className={`svc-dot ${i === activeSlide ? 'active' : ''}`}
-                onClick={() => setActiveSlide(i)}
-              />
-            ))}
+          {/* Premium Scroll Progress Bar Indicator */}
+          <div className="svc-scroll-progress-bar">
+            <div className="svc-scroll-progress-fill" style={{ width: `${scrollProgress * 100}%` }}></div>
           </div>
         </div>
       </section>
@@ -557,59 +544,42 @@ export default function Home({ setActivePage }) {
         .svc-slider-track {
           display: flex;
           gap: 24px;
-          transition: transform 0.55s cubic-bezier(0.16,1,0.3,1);
+          transition: transform 0.2s ease-out;
           will-change: transform;
         }
         .svc-slide-card {
           flex: 0 0 calc((100% - 48px) / 3);
-          min-width: 0;
-          opacity: 0.45;
-          transform: scale(0.97) translateY(10px);
+          min-width: 320px;
+          opacity: 0.85;
+          transform: scale(0.98);
           transition: opacity 0.4s ease, transform 0.4s ease, border-color 0.25s;
         }
         .svc-slide-card.in-view {
           opacity: 1;
-          transform: scale(1) translateY(0);
+          transform: scale(1);
         }
         .svc-slide-card:hover {
-          border-color: rgba(199,255,61,0.3) !important;
+          border-color: rgba(199,255,61,0.35) !important;
           transform: scale(1.02) translateY(-4px) !important;
         }
 
-        /* Arrows */
-        .svc-arrow {
-          position: absolute;
-          top: 50%; transform: translateY(-50%);
-          width: 44px; height: 44px;
-          border-radius: 50%;
-          border: 1px solid var(--border-light);
-          background: rgba(10,10,14,0.9);
-          color: var(--text-white);
-          display: flex; align-items: center; justify-content: center;
-          cursor: pointer; z-index: 10;
-          transition: border-color 0.2s, background 0.2s, opacity 0.2s;
+        /* Scroll Progress Bar */
+        .svc-scroll-progress-bar {
+          width: 100%;
+          height: 3px;
+          background: rgba(255, 255, 255, 0.05);
+          border-radius: 10px;
+          margin-top: 40px;
+          position: relative;
+          overflow: hidden;
         }
-        .svc-arrow:hover:not(:disabled) {
-          border-color: var(--accent-neon);
-          background: rgba(199,255,61,0.08);
-        }
-        .svc-arrow:disabled { opacity: 0.2; cursor: not-allowed; }
-        .svc-prev { left: -22px; }
-        .svc-next { right: -22px; }
-
-        /* Dots */
-        .svc-dots { display: flex; justify-content: center; gap: 8px; margin-top: 28px; }
-        .svc-dot {
-          width: 8px; height: 8px; border-radius: 50%;
-          border: none; cursor: pointer;
-          background: rgba(255,255,255,0.15);
-          transition: background 0.25s, transform 0.25s, width 0.25s;
-          padding: 0;
-        }
-        .svc-dot.active {
+        .svc-scroll-progress-fill {
+          height: 100%;
           background: var(--accent-neon);
-          width: 24px; border-radius: 4px;
-          box-shadow: 0 0 8px rgba(199,255,61,0.4);
+          width: 0%;
+          border-radius: 10px;
+          box-shadow: 0 0 10px rgba(199, 255, 61, 0.5);
+          transition: width 0.15s ease-out;
         }
 
         /* ── Kinetic tagline hover per word ─────── */

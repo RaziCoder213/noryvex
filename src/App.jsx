@@ -147,7 +147,7 @@ export default function App() {
 
       <main>{renderPage()}</main>
 
-      <Footer setActivePage={changePage} />
+      <Footer setActivePage={changePage} addToast={addToast} />
 
       {/* Cookie consent banner */}
       <CookieBanner />

@@ -1,12 +1,39 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ArrowUpRight } from 'lucide-react';
+import { dbSaveContact } from '../utils/dbHelper';
 
-export default function Footer({ setActivePage }) {
+export default function Footer({ setActivePage, addToast }) {
   const currentYear = new Date().getFullYear();
+  const [emailInput, setEmailInput] = useState('');
+  const [subscribing, setSubscribing] = useState(false);
 
   const handleNavClick = (id) => {
     setActivePage(id);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleSubscribe = (e) => {
+    e.preventDefault();
+    if (!emailInput.trim()) return;
+    setSubscribing(true);
+    try {
+      dbSaveContact({
+        name: 'Newsletter Subscriber',
+        email: emailInput,
+        phone: 'N/A',
+        message: 'Subscribed to mailing list from footer form.'
+      });
+      setEmailInput('');
+      if (addToast) {
+        addToast('Subscribed successfully! Welcome to Noryvex.', 'success');
+      } else {
+        alert('Thank you for subscribing!');
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setSubscribing(false);
+    }
   };
 
   return (
@@ -19,6 +46,24 @@ export default function Footer({ setActivePage }) {
           </div>
           <p className="footer-tagline">Automate. Communicate. Grow.</p>
           <p className="footer-desc">Building futuristic AI Voice Agents, Business Automation, and Intelligent Software to scale enterprises.</p>
+
+          <div className="footer-newsletter">
+            <span className="newsletter-label">Stay Automated</span>
+            <form onSubmit={handleSubscribe} className="newsletter-form">
+              <input 
+                type="email" 
+                placeholder="Enter email for updates" 
+                required 
+                className="newsletter-input" 
+                value={emailInput}
+                onChange={(e) => setEmailInput(e.target.value)}
+                disabled={subscribing}
+              />
+              <button type="submit" className="btn btn-primary btn-sm newsletter-btn" disabled={subscribing}>
+                {subscribing ? '...' : 'Join'}
+              </button>
+            </form>
+          </div>
         </div>
 
         <div className="footer-links-grid">
@@ -256,6 +301,55 @@ export default function Footer({ setActivePage }) {
             gap: 16px;
             text-align: center;
           }
+        }
+
+        /* Newsletter form styling */
+        .footer-newsletter {
+          margin-top: 24px;
+          width: 100%;
+          max-width: 320px;
+          text-align: left;
+        }
+        @media (max-width: 1024px) {
+          .footer-newsletter {
+            margin: 24px auto 0 auto;
+          }
+        }
+        .newsletter-label {
+          display: block;
+          font-family: var(--font-display);
+          font-size: 0.72rem;
+          font-weight: 700;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          color: var(--text-white);
+          margin-bottom: 8px;
+        }
+        .newsletter-form {
+          display: flex;
+          gap: 8px;
+          width: 100%;
+        }
+        .newsletter-input {
+          flex-grow: 1;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid var(--border-light);
+          border-radius: 100px;
+          padding: 8px 16px;
+          font-size: 0.85rem;
+          color: var(--text-white);
+          font-family: var(--font-sans);
+          outline: none;
+          transition: border-color 0.2s;
+        }
+        .newsletter-input:focus {
+          border-color: var(--accent-neon);
+        }
+        .newsletter-btn {
+          font-size: 0.75rem;
+          padding: 8px 16px;
+          flex-shrink: 0;
+          border-radius: 100px;
         }
       `}</style>
     </footer>
