@@ -164,6 +164,11 @@ export default function Home({ setActivePage }) {
                 Try Live Demo
               </button>
             </div>
+            <div className="hero-featured-badge nrx-reveal" style={{ transitionDelay: '0.15s' }}>
+              <a href="https://www.superlaun.ch/products/2926" target="_blank" rel="noopener noreferrer">
+                <img src="https://www.superlaun.ch/badge.png" alt="Featured on Super Launch" className="featured-badge-img" />
+              </a>
+            </div>
           </div>
 
           {/* Globe tilts with mouse — stronger parallax */}
@@ -526,6 +531,28 @@ export default function Home({ setActivePage }) {
         .hero-ctas {
           display: flex;
           gap: 16px;
+          margin-bottom: 24px;
+        }
+        .hero-featured-badge {
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+        }
+        @media (max-width: 1024px) {
+          .hero-featured-badge {
+            justify-content: center;
+          }
+        }
+        .featured-badge-img {
+          height: 52px;
+          width: auto;
+          opacity: 0.85;
+          filter: drop-shadow(0 0 15px rgba(199, 255, 61, 0.08));
+          transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+        .featured-badge-img:hover {
+          opacity: 1;
+          transform: translateY(-2px) scale(1.02);
         }
         
         /* Hero Visualizer */
