@@ -7,7 +7,7 @@ import ParticleCanvas from '../components/ParticleCanvas';
 
 export default function Home({ setActivePage }) {
   const [mousePos, setMousePos]       = useState({ x: 0.5, y: 0.5 });
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const [translateX, setTranslateX] = useState(0);
   const heroRef    = useRef(null);
   const sliderRef  = useRef(null);
   const servicesSectionRef = useRef(null);
@@ -111,22 +111,37 @@ export default function Home({ setActivePage }) {
     { num: "05", step: "Support", desc: "24/7 system health checks, optimization of agent memory, and scaling integrations as needed." }
   ];
 
-  // Scroll-driven horizontal translation for the capabilities track
+  // Scroll-driven horizontal translation with sticky pinning for the capabilities track
   useEffect(() => {
     const handleScroll = () => {
-      const el = servicesSectionRef.current;
-      if (!el) return;
-      const rect = el.getBoundingClientRect();
+      if (window.innerWidth <= 768) {
+        setTranslateX(0);
+        return;
+      }
+      const parent = servicesSectionRef.current;
+      const track = sliderRef.current;
+      if (!parent || !track) return;
+      
+      const rect = parent.getBoundingClientRect();
       const winHeight = window.innerHeight;
       
-      const totalHeight = rect.height + winHeight;
-      const scrolled = winHeight - rect.top;
-      const pct = Math.max(0, Math.min(1, scrolled / totalHeight));
-      setScrollProgress(pct);
+      // Calculate how far we have scrolled within the sticky parent container
+      const totalDist = rect.height - winHeight;
+      const scrolled = -rect.top;
+      const pct = Math.max(0, Math.min(1, scrolled / totalDist));
+      
+      // Calculate the maximum horizontal translation needed to see all cards
+      const maxScroll = track.scrollWidth - parent.clientWidth;
+      setTranslateX(pct * maxScroll);
     };
+
     window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll);
     handleScroll();
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
   }, []);
 
   // Parallax deltas from normalised mouse pos
@@ -326,47 +341,44 @@ export default function Home({ setActivePage }) {
         </div>
       </div>
 
-      {/* ── Services SLIDER ── */}
-      <section className="services-section" ref={servicesSectionRef}>
-        <div className="container">
-          <div className="section-header">
-            <span className="section-tag txt-slide">Capabilities</span>
-            <h2 className="section-title txt-reveal-2">Futuristic Automated Services</h2>
-            <p className="section-subtitle txt-blur-in">We design and integrate bespoke AI layers custom-tailored to solve manual workflow friction.</p>
-          </div>
-
-          {/* Slider viewport */}
-          <div className="svc-slider-wrap">
-            {/* Track - translated horizontally on page scroll */}
-            <div
-              className="svc-slider-track"
-              ref={sliderRef}
-              style={{ transform: `translateX(-${scrollProgress * 65}%)` }}
-            >
-              {services.map((svc, i) => (
-                <div
-                  key={i}
-                  className="glass-card service-card svc-slide-card in-view"
-                >
-                  <div className="service-icon-wrapper">
-                    {svc.icon}
-                    <div className="icon-glow"></div>
-                  </div>
-                  <h3 className="service-card-title">{svc.title}</h3>
-                  <p className="service-card-desc">{svc.desc}</p>
-                  <div className="service-card-footer">
-                    <span className="learn-more" onClick={() => setActivePage('solutions')}>
-                      Explore Solution <ChevronRight size={16} />
-                    </span>
-                  </div>
-                </div>
-              ))}
+      {/* ── Services STICKY SCROLL SECTION ── */}
+      <section className="services-sticky-parent" ref={servicesSectionRef}>
+        <div className="services-sticky-wrapper">
+          <div className="container">
+            <div className="section-header">
+              <span className="section-tag txt-slide">Capabilities</span>
+              <h2 className="section-title txt-reveal-2">Futuristic Automated Services</h2>
+              <p className="section-subtitle txt-blur-in">We design and integrate bespoke AI layers custom-tailored to solve manual workflow friction.</p>
             </div>
-          </div>
 
-          {/* Premium Scroll Progress Bar Indicator */}
-          <div className="svc-scroll-progress-bar">
-            <div className="svc-scroll-progress-fill" style={{ width: `${scrollProgress * 100}%` }}></div>
+            {/* Slider viewport */}
+            <div className="svc-slider-wrap">
+              {/* Track - translated horizontally on page scroll */}
+              <div
+                className="svc-slider-track"
+                ref={sliderRef}
+                style={{ transform: `translateX(-${translateX}px)` }}
+              >
+                {services.map((svc, i) => (
+                  <div
+                    key={i}
+                    className="glass-card service-card svc-slide-card in-view"
+                  >
+                    <div className="service-icon-wrapper">
+                      {svc.icon}
+                      <div className="icon-glow"></div>
+                    </div>
+                    <h3 className="service-card-title">{svc.title}</h3>
+                    <p className="service-card-desc">{svc.desc}</p>
+                    <div className="service-card-footer">
+                      <span className="learn-more" onClick={() => setActivePage('solutions')}>
+                        Explore Solution <ChevronRight size={16} />
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -535,51 +547,68 @@ export default function Home({ setActivePage }) {
           transition: transform 0.1s linear;
         }
 
-        /* ── Services Slider ─────────────────────── */
+        /* ── Services Sticky Scroll ──────────────── */
+        .services-sticky-parent {
+          position: relative;
+          height: 250vh; /* scrollable distance for the pinning effect */
+          background-color: var(--bg-pure);
+          border-top: 1px solid var(--border-light);
+        }
+        .services-sticky-wrapper {
+          position: sticky;
+          top: 0;
+          height: 100vh;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          overflow: hidden;
+        }
         .svc-slider-wrap {
           position: relative;
-          overflow: hidden;
-          padding: 12px 0 24px;
+          overflow: visible; /* let cards scale and hover extend nicely */
+          padding: 30px 0;
+          width: 100%;
         }
         .svc-slider-track {
           display: flex;
-          gap: 24px;
-          transition: transform 0.2s ease-out;
+          gap: 28px;
+          transition: transform 0.1s ease-out;
           will-change: transform;
+          width: max-content;
         }
         .svc-slide-card {
-          flex: 0 0 calc((100% - 48px) / 3);
-          min-width: 320px;
+          width: 360px;
+          flex-shrink: 0;
           opacity: 0.85;
           transform: scale(0.98);
-          transition: opacity 0.4s ease, transform 0.4s ease, border-color 0.25s;
-        }
-        .svc-slide-card.in-view {
-          opacity: 1;
-          transform: scale(1);
+          transition: opacity 0.3s, transform 0.3s, border-color 0.25s;
         }
         .svc-slide-card:hover {
+          opacity: 1;
           border-color: rgba(199,255,61,0.35) !important;
           transform: scale(1.02) translateY(-4px) !important;
         }
 
-        /* Scroll Progress Bar */
-        .svc-scroll-progress-bar {
-          width: 100%;
-          height: 3px;
-          background: rgba(255, 255, 255, 0.05);
-          border-radius: 10px;
-          margin-top: 40px;
-          position: relative;
-          overflow: hidden;
-        }
-        .svc-scroll-progress-fill {
-          height: 100%;
-          background: var(--accent-neon);
-          width: 0%;
-          border-radius: 10px;
-          box-shadow: 0 0 10px rgba(199, 255, 61, 0.5);
-          transition: width 0.15s ease-out;
+        @media (max-width: 768px) {
+          .services-sticky-parent {
+            height: auto !important;
+          }
+          .services-sticky-wrapper {
+            position: relative !important;
+            height: auto !important;
+            padding: 80px 0;
+          }
+          .svc-slider-wrap {
+            overflow-x: auto;
+            padding-bottom: 20px;
+            -webkit-overflow-scrolling: touch;
+          }
+          .svc-slider-track {
+            transform: none !important;
+          }
+          .svc-slide-card {
+            width: 290px;
+          }
         }
 
         /* ── Kinetic tagline hover per word ─────── */
