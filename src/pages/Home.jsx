@@ -192,20 +192,109 @@ export default function Home({ setActivePage }) {
         </div>
       </section>
 
-      {/* ── Stats Strip ── */}
-      <div className="nrx-stats-strip">
-        {[
-          { count: 150, suffix: '+', label: 'AI Agents Deployed' },
-          { count: 98,  suffix: '%', label: 'Client Retention'   },
-          { count: 800, suffix: 'ms', label: 'Voice Latency'     },
-          { count: 24,  suffix: '/7', label: 'System Uptime'     },
-        ].map((s, i) => (
-          <div className="nrx-stat-item nrx-reveal" key={i}>
-            <div className="nrx-stat-number" data-count={s.count} data-suffix={s.suffix}>{s.count}{s.suffix}</div>
-            <div className="nrx-stat-label">{s.label}</div>
+      {/* ── Featured On / Partners Section ── */}
+      <section className="nrx-featured-section">
+        <div className="container">
+          <div className="featured-header">
+            <span className="featured-title">Featured Listings &amp; Global Partners</span>
           </div>
-        ))}
-      </div>
+          <div className="featured-logos-wrap">
+            <div className="featured-logos-track">
+              {/* Set 1 */}
+              <div className="featured-logo-item">
+                <a href="https://www.superlaun.ch/products/2926" target="_blank" rel="noopener noreferrer">
+                  <svg className="partner-svg" viewBox="0 0 160 30" fill="currentColor">
+                    <path d="M12 5l-7 12h14l-7-12zM5 22h14v-2H5v2z" fill="var(--accent-neon)" />
+                    <text x="28" y="20" fontFamily="var(--font-display)" fontWeight="800" fontSize="13" letterSpacing="0.04em">SUPERLAUNCH</text>
+                  </svg>
+                </a>
+              </div>
+              <div className="featured-logo-item">
+                <a href="https://www.producthunt.com" target="_blank" rel="noopener noreferrer">
+                  <svg className="partner-svg" viewBox="0 0 160 30" fill="currentColor">
+                    <circle cx="15" cy="15" r="10" fill="#FF5330" />
+                    <path d="M13 10h4a2.5 2.5 0 0 1 0 5h-4zm0 7v3h-2V8h6a4.5 4.5 0 0 1 0 9h-4z" fill="#FFF" />
+                    <text x="34" y="20" fontFamily="var(--font-display)" fontWeight="800" fontSize="13" letterSpacing="0.04em">PRODUCT HUNT</text>
+                  </svg>
+                </a>
+              </div>
+              <div className="featured-logo-item">
+                <svg className="partner-svg" viewBox="0 0 150 30" fill="currentColor">
+                  <rect x="5" y="5" width="20" height="20" rx="3" fill="#F06529" />
+                  <text x="11" y="20" fontFamily="var(--font-sans)" fontWeight="800" fontSize="15" fill="#FFF">Y</text>
+                  <text x="32" y="20" fontFamily="var(--font-display)" fontWeight="800" fontSize="13" letterSpacing="0.04em">COMBINATOR</text>
+                </svg>
+              </div>
+              <div className="featured-logo-item">
+                <svg className="partner-svg" viewBox="0 0 120 30" fill="currentColor">
+                  <polygon points="5,5 25,5 15,25" fill="#FFF" />
+                  <text x="32" y="20" fontFamily="var(--font-display)" fontWeight="800" fontSize="13" letterSpacing="0.04em">VERCEL</text>
+                </svg>
+              </div>
+              <div className="featured-logo-item">
+                <svg className="partner-svg" viewBox="0 0 130 30" fill="currentColor">
+                  <circle cx="15" cy="15" r="9" fill="none" stroke="currentColor" strokeWidth="2.5" />
+                  <path d="M12 11h4a2 2 0 0 1 0 4h-4v-4zm0 4h4a2 2 0 0 1 0 4h-4v-4z" />
+                  <text x="30" y="20" fontFamily="var(--font-display)" fontWeight="800" fontSize="13" letterSpacing="0.04em">BETALIST</text>
+                </svg>
+              </div>
+              <div className="featured-logo-item">
+                <svg className="partner-svg" viewBox="0 0 140 30" fill="currentColor">
+                  <rect x="5" y="6" width="18" height="18" rx="2" fill="#0288D1" />
+                  <circle cx="14" cy="15" r="4" fill="#FFF" />
+                  <text x="30" y="20" fontFamily="var(--font-display)" fontWeight="800" fontSize="13" letterSpacing="0.04em">CRUNCHBASE</text>
+                </svg>
+              </div>
+
+              {/* Set 2 (Duplicate for loop) */}
+              <div className="featured-logo-item">
+                <a href="https://www.superlaun.ch/products/2926" target="_blank" rel="noopener noreferrer">
+                  <svg className="partner-svg" viewBox="0 0 160 30" fill="currentColor">
+                    <path d="M12 5l-7 12h14l-7-12zM5 22h14v-2H5v2z" fill="var(--accent-neon)" />
+                    <text x="28" y="20" fontFamily="var(--font-display)" fontWeight="800" fontSize="13" letterSpacing="0.04em">SUPERLAUNCH</text>
+                  </svg>
+                </a>
+              </div>
+              <div className="featured-logo-item">
+                <a href="https://www.producthunt.com" target="_blank" rel="noopener noreferrer">
+                  <svg className="partner-svg" viewBox="0 0 160 30" fill="currentColor">
+                    <circle cx="15" cy="15" r="10" fill="#FF5330" />
+                    <path d="M13 10h4a2.5 2.5 0 0 1 0 5h-4zm0 7v3h-2V8h6a4.5 4.5 0 0 1 0 9h-4z" fill="#FFF" />
+                    <text x="34" y="20" fontFamily="var(--font-display)" fontWeight="800" fontSize="13" letterSpacing="0.04em">PRODUCT HUNT</text>
+                  </svg>
+                </a>
+              </div>
+              <div className="featured-logo-item">
+                <svg className="partner-svg" viewBox="0 0 150 30" fill="currentColor">
+                  <rect x="5" y="5" width="20" height="20" rx="3" fill="#F06529" />
+                  <text x="11" y="20" fontFamily="var(--font-sans)" fontWeight="800" fontSize="15" fill="#FFF">Y</text>
+                  <text x="32" y="20" fontFamily="var(--font-display)" fontWeight="800" fontSize="13" letterSpacing="0.04em">COMBINATOR</text>
+                </svg>
+              </div>
+              <div className="featured-logo-item">
+                <svg className="partner-svg" viewBox="0 0 120 30" fill="currentColor">
+                  <polygon points="5,5 25,5 15,25" fill="#FFF" />
+                  <text x="32" y="20" fontFamily="var(--font-display)" fontWeight="800" fontSize="13" letterSpacing="0.04em">VERCEL</text>
+                </svg>
+              </div>
+              <div className="featured-logo-item">
+                <svg className="partner-svg" viewBox="0 0 130 30" fill="currentColor">
+                  <circle cx="15" cy="15" r="9" fill="none" stroke="currentColor" strokeWidth="2.5" />
+                  <path d="M12 11h4a2 2 0 0 1 0 4h-4v-4zm0 4h4a2 2 0 0 1 0 4h-4v-4z" />
+                  <text x="30" y="20" fontFamily="var(--font-display)" fontWeight="800" fontSize="13" letterSpacing="0.04em">BETALIST</text>
+                </svg>
+              </div>
+              <div className="featured-logo-item">
+                <svg className="partner-svg" viewBox="0 0 140 30" fill="currentColor">
+                  <rect x="5" y="6" width="18" height="18" rx="2" fill="#0288D1" />
+                  <circle cx="14" cy="15" r="4" fill="#FFF" />
+                  <text x="30" y="20" fontFamily="var(--font-display)" fontWeight="800" fontSize="13" letterSpacing="0.04em">CRUNCHBASE</text>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* ── Marquee ── */}
       <div className="nrx-marquee-section" aria-hidden="true">
