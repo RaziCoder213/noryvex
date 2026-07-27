@@ -337,7 +337,7 @@ export default function Admin({ addToast }) {
                               <div className="phone-subtext">{c.phone || '—'}</div>
                             </td>
                             <td>
-                              <div className="service-tag-badge">{c.service}</div>
+                              <div className={`service-tag-badge ${c.service && c.service.includes('7-Day Trial') ? 'trial-badge' : ''}`}>{c.service}</div>
                               <p className="message-content-text">{c.message}</p>
                             </td>
                             <td>
@@ -586,6 +586,12 @@ export default function Admin({ addToast }) {
           padding: 2px 8px;
           border-radius: 4px;
           margin-bottom: 8px;
+        }
+
+        .service-tag-badge.trial-badge {
+          background: rgba(199,255,61,0.15) !important;
+          border-color: var(--accent-neon) !important;
+          box-shadow: 0 0 10px rgba(199, 255, 61, 0.25);
         }
 
         .message-content-text {

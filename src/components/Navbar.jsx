@@ -37,8 +37,8 @@ export default function Navbar({ activePage, setActivePage }) {
     { name: 'Contact', id: 'contact' },
   ];
 
-  const handleNavClick = (id) => {
-    setActivePage(id);
+  const handleNavClick = (id, option = 'trial') => {
+    setActivePage(id, option);
     setIsOpen(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -66,10 +66,10 @@ export default function Navbar({ activePage, setActivePage }) {
 
         <div className="nav-actions">
           <button 
-            onClick={() => handleNavClick('contact')} 
+            onClick={() => handleNavClick('contact', 'trial')} 
             className="btn btn-outline-neon btn-sm nav-cta"
           >
-            Book Strategy Call <ArrowUpRight size={16} />
+            Start Free Trial <ArrowUpRight size={16} />
           </button>
           
           {/* Mobile Menu Toggle */}
@@ -92,10 +92,18 @@ export default function Navbar({ activePage, setActivePage }) {
             </button>
           ))}
           <button
-            onClick={() => handleNavClick('contact')}
+            onClick={() => handleNavClick('contact', 'trial')}
             className="btn btn-primary mobile-cta"
+            style={{ width: '100%', marginBottom: '12px' }}
           >
-            Book Strategy Call <ArrowUpRight size={16} />
+            Start Free Trial <ArrowUpRight size={16} />
+          </button>
+          <button
+            onClick={() => handleNavClick('contact', 'call')}
+            className="btn btn-secondary mobile-cta-secondary"
+            style={{ width: '100%', background: 'transparent', border: '1px solid var(--border-light)', color: 'var(--text-white)', padding: '12px', borderRadius: '100px', fontSize: '0.9rem', fontWeight: '700', cursor: 'pointer' }}
+          >
+            Book Strategy Call
           </button>
         </div>
       </div>

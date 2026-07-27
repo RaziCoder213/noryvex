@@ -77,6 +77,17 @@ export const dbSaveContact = (contact) => {
   return { success: true, lastID: newContact.id };
 };
 
+export const dbSaveTrial = (trial) => {
+  return dbSaveContact({
+    name: trial.contactName,
+    company: trial.businessName,
+    email: trial.email,
+    phone: trial.phone,
+    service: `7-Day Trial (${trial.businessType || 'General'})`,
+    message: `AI Tasks: ${trial.aiHandling.toUpperCase()}`
+  });
+};
+
 export const dbGetContacts = () => {
   return getStoredData('noryvex_contacts', []);
 };

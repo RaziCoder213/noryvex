@@ -68,10 +68,10 @@ export default function Solutions({ setActivePage }) {
                 <h2 className="sol-row-title">{cat.title}</h2>
                 <p className="sol-row-desc">{cat.description}</p>
                 <button 
-                  onClick={() => setActivePage('contact')} 
+                  onClick={() => setActivePage('contact', cat.title.toLowerCase().includes('voice') ? 'trial' : 'call')} 
                   className="btn btn-outline-neon"
                 >
-                  Deploy this Solution
+                  {cat.title.toLowerCase().includes('voice') ? 'Start Free Trial' : 'Book a Call'}
                 </button>
               </div>
 

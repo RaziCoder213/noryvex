@@ -21,6 +21,7 @@ import Terms from './pages/Terms';
 export default function App() {
   const [activePage, setActivePage] = useState('home');
   const [toasts, setToasts] = useState([]);
+  const [initialContactTab, setInitialContactTab] = useState('trial');
 
   // ── Dynamic SEO per page ────────────────────────────
   useSEO(activePage);
@@ -133,7 +134,10 @@ export default function App() {
     };
   }, []);
 
-  const changePage = (pageId) => {
+  const changePage = (pageId, option = 'trial') => {
+    if (pageId === 'contact') {
+      setInitialContactTab(option);
+    }
     setActivePage(pageId);
     window.location.hash = pageId;
     window.scrollTo({ top: 0, behavior: 'instant' });
@@ -153,7 +157,7 @@ export default function App() {
       case 'solutions': return <Solutions setActivePage={changePage} />;
       case 'live-demo': return <LiveDemo setActivePage={changePage} />;
       case 'about':     return <About />;
-      case 'contact':   return <Contact addToast={addToast} />;
+      case 'contact':   return <Contact addToast={addToast} initialTab={initialContactTab} />;
       case 'admin':     return <Admin addToast={addToast} />;
       case 'privacy':   return <Privacy setActivePage={changePage} />;
       case 'terms':     return <Terms setActivePage={changePage} />;

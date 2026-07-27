@@ -453,6 +453,21 @@ export default function LiveDemo({ setActivePage }) {
             <div className="ld-float-label f3"><Calendar size={12} /> Auto-books</div>
           </div>
 
+          {/* Trial banner under the phone demo */}
+          <div className="ld-trial-banner glass-card nrx-reveal" style={{ marginTop: '48px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '24px', border: '1px solid var(--accent-neon-border)' }}>
+            <div className="ld-trial-banner-content" style={{ textAlign: 'left', flex: '1 1 400px' }}>
+              <h3 style={{ fontSize: '1.25rem', marginBottom: '4px', color: 'var(--text-white)' }}>Want this running for your business?</h3>
+              <p style={{ fontSize: '0.95rem', color: 'var(--text-gray)', margin: 0 }}>Start a free 7-day trial — no cost, no obligation.</p>
+            </div>
+            <button 
+              className="btn btn-primary btn-lg" 
+              onClick={() => setActivePage('contact', 'trial')}
+              style={{ flexShrink: 0 }}
+            >
+              Start Free 7-Day Trial <ArrowRight size={16} />
+            </button>
+          </div>
+
         </div>
       </section>
 
@@ -494,11 +509,11 @@ export default function LiveDemo({ setActivePage }) {
           <p className="ld-cta-sub">Custom-trained on your business. Integrated with your CRM. Live in under 2 weeks.</p>
           <div className="ld-cta-btns">
             {setActivePage && (<>
-              <button className="btn btn-primary btn-lg" onClick={() => setActivePage('contact')}>
-                Book a Free Strategy Call <ArrowRight size={18} />
+              <button className="btn btn-primary btn-lg" onClick={() => setActivePage('contact', 'trial')}>
+                Start Your Free 7-Day Trial <ArrowRight size={18} />
               </button>
-              <button className="btn btn-secondary btn-lg" onClick={() => setActivePage('solutions')}>
-                View All Solutions
+              <button className="btn btn-secondary btn-lg" onClick={() => setActivePage('contact', 'call')}>
+                Book a Strategy Call
               </button>
             </>)}
           </div>

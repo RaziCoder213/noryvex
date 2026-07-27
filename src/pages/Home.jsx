@@ -211,11 +211,11 @@ export default function Home({ setActivePage }) {
               Noryvex is a leading AI Automation Agency. We build custom AI Voice Calling Agents, Autonomous Receptionist AI systems, and Intelligent Software that answer calls, automate workflows, and help businesses scale exponentially.
             </p>
             <div className="hero-ctas">
-              <button onClick={() => setActivePage('contact')} className="btn btn-primary btn-lg">
-                Book a Free Strategy Call <ArrowRight size={18} />
+              <button onClick={() => setActivePage('contact', 'trial')} className="btn btn-primary btn-lg">
+                Start Your Free 7-Day Trial <ArrowRight size={18} />
               </button>
-              <button onClick={() => setActivePage('live-demo')} className="btn btn-secondary btn-lg">
-                Try Live Demo
+              <button onClick={() => setActivePage('contact', 'call')} className="btn btn-secondary btn-lg">
+                Book a Strategy Call
               </button>
             </div>
             <div className="hero-featured-badges nrx-reveal" style={{ transitionDelay: '0.15s' }}>
@@ -498,9 +498,9 @@ export default function Home({ setActivePage }) {
           >
             <button
               className="btn btn-primary btn-lg"
-              onClick={() => setActivePage('contact')}
+              onClick={() => setActivePage('contact', 'trial')}
             >
-              Start Your Journey
+              Start Your Free Trial
             </button>
           </div>
         </div>
