@@ -1043,6 +1043,24 @@ export default function LiveDemo({ setActivePage }) {
           .ld-how-grid { grid-template-columns: 1fr; gap: 16px; }
           .ld-how-arrow { display: none; }
         }
+        @media (max-width: 768px) {
+          .ld-hero {
+            padding: 100px 0 40px;
+          }
+          .ld-headline {
+            font-size: clamp(2rem, 8vw, 2.6rem);
+          }
+          .ld-sub {
+            font-size: 1rem;
+            margin-bottom: 24px;
+          }
+          .ld-how {
+            padding: 60px 0;
+          }
+          .ld-cta {
+            padding: 80px 0;
+          }
+        }
         @media (max-width: 600px) {
           .ld-phone-frame { width: 300px; height: 620px; }
           .ld-trust-row { gap: 8px; }

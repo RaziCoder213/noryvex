@@ -17,6 +17,18 @@ export default function Navbar({ activePage, setActivePage }) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
   const navLinks = [
     { name: 'Home', id: 'home' },
     { name: 'Solutions', id: 'solutions' },
@@ -199,7 +211,6 @@ export default function Navbar({ activePage, setActivePage }) {
         }
         
         .mobile-nav {
-          display: none;
           position: fixed;
           top: 0;
           left: 0;
@@ -208,14 +219,18 @@ export default function Navbar({ activePage, setActivePage }) {
           background: var(--bg-pure);
           z-index: 999;
           transform: translateY(-100%);
-          transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+          transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+          opacity: 0;
+          pointer-events: none;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
         
         .mobile-nav.open {
           transform: translateY(0);
-          display: flex;
-          align-items: center;
-          justify-content: center;
+          opacity: 1;
+          pointer-events: auto;
         }
         
         .mobile-nav-links {
@@ -259,6 +274,19 @@ export default function Navbar({ activePage, setActivePage }) {
           }
           .nav-cta {
             display: none; /* Hide on small screens to save space */
+          }
+        }
+        
+        @media (max-width: 480px) {
+          .navbar-wrapper {
+            padding: 16px 0;
+          }
+          .nav-title {
+            font-size: 1.15rem;
+          }
+          .nav-logo {
+            height: 32px;
+            width: 32px;
           }
         }
       `}</style>

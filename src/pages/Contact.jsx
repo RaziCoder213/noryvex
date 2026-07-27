@@ -413,6 +413,21 @@ export default function Contact({ addToast }) {
           }
         }
 
+        @media (max-width: 768px) {
+          .contact-hero {
+            padding: 100px 0 30px 0;
+          }
+          .contact-title {
+            font-size: clamp(2rem, 8vw, 2.6rem);
+          }
+          .contact-subtitle {
+            font-size: 1.05rem;
+          }
+          .form-card {
+            padding: 28px 20px;
+          }
+        }
+
         @media (max-width: 600px) {
           .form-row {
             grid-template-columns: 1fr;

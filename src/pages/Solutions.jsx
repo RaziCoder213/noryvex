@@ -286,6 +286,27 @@ export default function Solutions({ setActivePage }) {
             grid-template-columns: 1fr;
           }
         }
+
+        @media (max-width: 768px) {
+          .solutions-hero {
+            padding: 100px 0 30px 0;
+          }
+          .solutions-title {
+            font-size: clamp(2rem, 8vw, 2.6rem);
+          }
+          .solutions-subtitle {
+            font-size: 1.05rem;
+          }
+          .solution-row {
+            padding: 24px;
+          }
+          .sol-row-title {
+            font-size: 1.5rem;
+          }
+          .sol-features-block {
+            padding: 20px;
+          }
+        }
       `}</style>
     </div>
   );

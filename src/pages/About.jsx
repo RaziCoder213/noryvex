@@ -290,6 +290,42 @@ export default function About() {
             margin: 0 auto;
           }
         }
+
+        @media (max-width: 768px) {
+          .about-hero {
+            padding: 100px 0 30px 0;
+          }
+          .about-title {
+            font-size: clamp(2rem, 8vw, 2.6rem);
+          }
+          .about-subtitle {
+            font-size: 1.05rem;
+          }
+          .story-heading {
+            font-size: 1.75rem;
+          }
+          .stats-strip {
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 32px;
+            padding-top: 24px;
+          }
+          .stat-num {
+            font-size: 2rem;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .founder-links {
+            grid-template-columns: 1fr;
+            gap: 12px;
+          }
+          .stats-strip {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+          }
+        }
       `}</style>
     </div>
   );

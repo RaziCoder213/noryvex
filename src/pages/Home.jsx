@@ -580,14 +580,20 @@ export default function Home({ setActivePage }) {
           }
           .svc-slider-wrap {
             overflow-x: auto;
-            padding-bottom: 20px;
+            padding-bottom: 12px;
             -webkit-overflow-scrolling: touch;
+            scrollbar-width: none; /* Hide scrollbar Firefox */
+          }
+          .svc-slider-wrap::-webkit-scrollbar {
+            display: none; /* Hide scrollbar Chrome/Safari */
           }
           .svc-slider-track {
             transform: none !important;
+            padding: 0 24px; /* offset alignment on swipe */
           }
           .svc-slide-card {
-            width: 290px;
+            width: 280px !important;
+            max-width: 85vw !important; /* visual hint showing next card */
           }
         }
 
@@ -1138,6 +1144,20 @@ export default function Home({ setActivePage }) {
         @media (max-width: 600px) {
           .nrx-kinetic-line {
             font-size: clamp(1.5rem, 8.2vw, 2.8rem) !important;
+          }
+          .hero-title {
+            font-size: clamp(2rem, 9vw, 2.4rem) !important;
+            line-height: 1.15;
+          }
+          .hero-subtitle {
+            font-size: 1.05rem !important;
+            margin-bottom: 30px;
+          }
+          .timeline-container {
+            padding-left: 12px;
+          }
+          .timeline-content {
+            padding: 16px 20px;
           }
         }
         .nrx-kinetic-line.active {
