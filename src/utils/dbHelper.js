@@ -1,32 +1,14 @@
 // dbHelper.js
 // Client-side Database Helper with dynamic HTTP fetch sync and local storage fallbacks
 
-const seedContacts = [];
-const seedMeetings = [];
+const seedContacts = [
+  { id: 101, name: "Alexander Wright", company: "Apex Health Group", email: "a.wright@apexhealth.co", phone: "+1 (555) 234-5678", service: "AI Voice Agents", message: "Looking to deploy Chloe receptionists across 3 regional clinics.", status: "unread", created_at: new Date(Date.now() - 3600000 * 2).toISOString() },
+  { id: 102, name: "Emily Chen", company: "Chen Legal LLC", email: "emily@chenlaw.com", phone: "+1 (555) 987-6543", service: "AI Receptionists", message: "Need an AI to screen client intake calls after business hours.", status: "read", created_at: new Date(Date.now() - 3600000 * 24).toISOString() }
+];
 
-// Clean up existing local cache from old seeds
-const filterMockData = () => {
-  try {
-    const contacts = localStorage.getItem('noryvex_contacts');
-    if (contacts) {
-      const filtered = JSON.parse(contacts).filter(c => c.id !== 101 && c.id !== 102);
-      localStorage.setItem('noryvex_contacts', JSON.stringify(filtered));
-    }
-    const meetings = localStorage.getItem('noryvex_meetings');
-    if (meetings) {
-      const filtered = JSON.parse(meetings).filter(m => m.id !== 201);
-      localStorage.setItem('noryvex_meetings', JSON.stringify(filtered));
-    }
-    const trials = localStorage.getItem('noryvex_trials');
-    if (trials) {
-      const filtered = JSON.parse(trials).filter(t => t.id !== 1 && t.id !== 2);
-      localStorage.setItem('noryvex_trials', JSON.stringify(filtered));
-    }
-  } catch (e) {
-    console.error('purging seeds failed', e);
-  }
-};
-filterMockData();
+const seedMeetings = [
+  { id: 201, name: "Marcus Thorne", email: "m.thorne@apexlogistics.com", company: "Apex Logistics", phone: "+1 (555) 876-5432", date: "2026-08-05", time: "14:00", notes: "Discuss CRM workflow triggers integration with Vapi Voice backend.", status: "pending", created_at: new Date().toISOString() }
+];
 
 const getStoredData = (key, defaultVal) => {
   const data = localStorage.getItem(key);
@@ -261,7 +243,10 @@ export const dbGetTrials = async (authToken) => {
       console.warn('Failed to fetch trials from server, using local storage fallback.', e);
     }
   }
-  return getStoredData('noryvex_trials', []);
+  return getStoredData('noryvex_trials', [
+    { id: 1, business_name: 'Bright Dental', contact_name: 'Sarah Jenkins', email: 'sarah@brightdental.com', phone: '+1 (555) 234-5678', business_type: 'Dental Clinic', ai_handling: 'both', trial_status: 'converted', call_duration_seconds: 980, limit_duration_seconds: 1800, created_at: new Date(Date.now() - 3600000 * 48).toISOString() },
+    { id: 2, business_name: 'Fast Pizza', contact_name: 'Mario Rossi', email: 'mario@fastpizza.com', phone: '+1 (555) 987-6543', business_type: 'Restaurant', ai_handling: 'bookings', trial_status: 'active', call_duration_seconds: 1450, limit_duration_seconds: 1800, created_at: new Date(Date.now() - 3600000 * 24).toISOString() }
+  ]);
 };
 
 export const dbUpdateTrialStatus = async (id, status, authToken) => {
