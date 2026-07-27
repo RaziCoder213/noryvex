@@ -149,7 +149,7 @@ export default function Footer({ setActivePage, addToast }) {
         }
         
         .footer-title {
-          font-family: var(--font-display);
+          font-family: 'Syne', sans-serif;
           font-weight: 800;
           font-size: 1.3rem;
           color: var(--text-white);

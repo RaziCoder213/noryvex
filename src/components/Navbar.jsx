@@ -146,7 +146,7 @@ export default function Navbar({ activePage, setActivePage }) {
         }
         
         .nav-title {
-          font-family: var(--font-display);
+          font-family: 'Syne', sans-serif;
           font-weight: 800;
           font-size: 1.4rem;
           color: var(--text-white);
