@@ -14,7 +14,11 @@ import {
   saveMeeting, 
   getMeetings, 
   markMeetingCompleted, 
-  deleteMeeting 
+  deleteMeeting,
+  saveTrial,
+  getTrials,
+  updateTrialStatus,
+  updateTrialDuration
 } from './database.js';
 
 dotenv.config();
@@ -164,6 +168,95 @@ app.post('/api/meeting', async (req, res) => {
   }
 });
 
+// Submit trial request form
+app.post('/api/trial', async (req, res) => {
+  try {
+    const { businessName, contactName, email, phone, businessType, aiHandling } = req.body;
+    if (!contactName || !email || !businessName) {
+      return res.status(400).json({ error: 'Business Name, Contact Name, and Email are required fields.' });
+    }
+    
+    await saveTrial(businessName, contactName, email, phone, businessType, aiHandling);
+    
+    // Also save to contacts table for general logs listing
+    await saveContact(contactName, businessName, email, phone, `7-Day Trial (${businessType})`, `AI Tasks: ${aiHandling.toUpperCase()}`);
+
+    // Trigger email notification
+    const subject = `[Noryvex Trial] New 7-Day Free Trial Request from ${contactName}`;
+    const htmlContent = `
+      <h2>New 7-Day Free Trial Requested</h2>
+      <p><strong>Business Name:</strong> ${businessName}</p>
+      <p><strong>Contact Name:</strong> ${contactName}</p>
+      <p><strong>Email Address:</strong> ${email}</p>
+      <p><strong>Phone Number:</strong> ${phone || '—'}</p>
+      <p><strong>Business Type/Niche:</strong> ${businessType}</p>
+      <p><strong>AI Tasks:</strong> ${aiHandling.toUpperCase()}</p>
+      <p><strong>Trial Status:</strong> REQUESTED</p>
+      <p><strong>Limit:</strong> 30 Minutes call time / 7 Days</p>
+      <p style="font-size: 0.85rem; color: #777; margin-top: 24px;">Sent from Noryvex Operations Hub.</p>
+    `;
+    sendEmailNotification(subject, htmlContent);
+
+    res.status(201).json({ message: 'Free trial request received.' });
+  } catch (error) {
+    console.error('Error saving trial:', error);
+    res.status(500).json({ error: 'Server error. Please try again later.' });
+  }
+});
+
+// Log call duration and trigger auto-cutoff check
+app.post('/api/trial/duration', async (req, res) => {
+  try {
+    const { emailOrPhone, durationSeconds } = req.body;
+    if (!emailOrPhone || !durationSeconds) {
+      return res.status(400).json({ error: 'emailOrPhone and durationSeconds are required.' });
+    }
+    
+    const result = await updateTrialDuration(emailOrPhone, durationSeconds);
+    if (!result.success) {
+      return res.status(404).json({ error: result.error });
+    }
+    
+    res.json({ message: 'Trial duration updated.', expired: result.expired });
+  } catch (error) {
+    console.error('Error updating trial duration:', error);
+    res.status(500).json({ error: 'Internal server error.' });
+  }
+});
+
+// Vapi Webhook receiver endpoint for end-of-call auto-cutoff reports
+app.post('/api/vapi/webhook', async (req, res) => {
+  try {
+    const event = req.body;
+    if (event?.message?.type === 'end-of-call-report') {
+      const call = event.message.call;
+      const durationSeconds = call.duration || 0;
+      const phone = call.customer?.number || '';
+      
+      if (phone && durationSeconds > 0) {
+        console.log(`[Vapi Webhook] Call ended for ${phone}. Duration: ${durationSeconds} seconds.`);
+        const result = await updateTrialDuration(phone, durationSeconds);
+        
+        // Send email alert if trial limit is reached/expired
+        if (result.success && result.expired) {
+          const subject = `[Trial Cap Reached] Call time expired for ${phone}`;
+          const htmlContent = `
+            <h2>Trial Limit Exceeded</h2>
+            <p>The trial for phone number <strong>${phone}</strong> has exceeded its 30-minute (1800s) call limit and has been automatically deactivated.</p>
+            <p><strong>Call duration logged:</strong> ${durationSeconds} seconds</p>
+            <p>— Noryvex Automated Cut-off System</p>
+          `;
+          sendEmailNotification(subject, htmlContent);
+        }
+      }
+    }
+    res.json({ received: true });
+  } catch (error) {
+    console.error('Error in Vapi webhook:', error);
+    res.status(500).json({ error: 'Webhook processing failed.' });
+  }
+});
+
 // Admin Authentication Login
 app.post('/api/admin/login', (req, res) => {
   const { email, password } = req.body;
@@ -244,6 +337,29 @@ app.delete('/api/admin/meetings/:id', authenticateToken, async (req, res) => {
   } catch (error) {
     console.error('Error deleting meeting:', error);
     res.status(500).json({ error: 'Failed to delete meeting.' });
+  }
+});
+
+// Get all trials
+app.get('/api/admin/trials', authenticateToken, async (req, res) => {
+  try {
+    const trials = await getTrials();
+    res.json(trials);
+  } catch (error) {
+    console.error('Error fetching trials:', error);
+    res.status(500).json({ error: 'Failed to fetch trials.' });
+  }
+});
+
+// Update trial status
+app.patch('/api/admin/trials/:id', authenticateToken, async (req, res) => {
+  try {
+    const { trial_status } = req.body;
+    await updateTrialStatus(req.params.id, trial_status);
+    res.json({ message: 'Trial status updated successfully.' });
+  } catch (error) {
+    console.error('Error updating trial status:', error);
+    res.status(500).json({ error: 'Failed to update trial status.' });
   }
 });
 

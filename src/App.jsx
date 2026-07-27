@@ -122,9 +122,19 @@ export default function App() {
       const path = window.location.pathname;
       const hostname = window.location.hostname;
       const all = ['solutions','live-demo','about','contact','home','privacy','terms','admin'];
-      if (hostname.startsWith('admin.') || path === '/admin' || hash === 'admin') setActivePage('admin');
-      else if (all.includes(hash)) setActivePage(hash);
-      else setActivePage('home');
+      if (hostname.startsWith('admin.') || path === '/admin' || hash === 'admin') {
+        setActivePage('admin');
+      } else if (hash === 'trial' || hash === 'trial-form') {
+        setInitialContactTab('trial');
+        setActivePage('contact');
+      } else if (hash === 'call' || hash === 'booking') {
+        setInitialContactTab('call');
+        setActivePage('contact');
+      } else if (all.includes(hash)) {
+        setActivePage(hash);
+      } else {
+        setActivePage('home');
+      }
     };
     window.addEventListener('popstate', handle);
     window.addEventListener('hashchange', handle);

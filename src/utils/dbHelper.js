@@ -1,51 +1,20 @@
-// Local Storage Helper to simulate SQLite Database operations on client-side
+// dbHelper.js
+// Client-side Database Helper with dynamic HTTP fetch sync and local storage fallbacks
 
-// Seed initial data if empty to make the Admin Panel look alive initially
 const seedContacts = [
-  {
-    id: 1,
-    name: 'Sarah Connor',
-    company: 'Skynet Solutions',
-    email: 'sarah@skynet.com',
-    phone: '+1 555-0199',
-    service: 'AI Voice Agents',
-    message: 'We are looking to implement a conversational receptionist to handle our customer inquiries. Muhammad Razi came highly recommended.',
-    status: 'unread',
-    created_at: new Date(Date.now() - 3600000 * 4).toISOString() // 4 hours ago
-  },
-  {
-    id: 2,
-    name: 'Bruce Wayne',
-    company: 'Wayne Enterprises',
-    email: 'bruce@waynecorp.com',
-    phone: '+1 555-1939',
-    service: 'Workflow Automation',
-    message: 'Need to automate Batman logistics database sync with legacy CRM systems. High priority.',
-    status: 'read',
-    created_at: new Date(Date.now() - 3600000 * 24).toISOString() // 24 hours ago
-  }
+  { id: 101, name: "Alexander Wright", company: "Apex Health Group", email: "a.wright@apexhealth.co", phone: "+1 (555) 234-5678", service: "AI Voice Agents", message: "Looking to deploy Chloe receptionists across 3 regional clinics.", status: "unread", created_at: new Date(Date.now() - 3600000 * 2).toISOString() },
+  { id: 102, name: "Emily Chen", company: "Chen Legal LLC", email: "emily@chenlaw.com", phone: "+1 (555) 987-6543", service: "AI Receptionists", message: "Need an AI to screen client intake calls after business hours.", status: "read", created_at: new Date(Date.now() - 3600000 * 24).toISOString() }
 ];
 
 const seedMeetings = [
-  {
-    id: 1,
-    name: 'Tony Stark',
-    email: 'tony@starkindustries.com',
-    company: 'Stark Industries',
-    phone: '+1 555-3000',
-    date: '2026-08-05',
-    time: '10:00',
-    notes: 'Discussing JARVIS core architecture and pipeline automation.',
-    status: 'pending',
-    created_at: new Date(Date.now() - 3600000 * 2).toISOString()
-  }
+  { id: 201, name: "Marcus Thorne", email: "m.thorne@apexlogistics.com", company: "Apex Logistics", phone: "+1 (555) 876-5432", date: "2026-08-05", time: "14:00", notes: "Discuss CRM workflow triggers integration with Vapi Voice backend.", status: "pending", created_at: new Date().toISOString() }
 ];
 
-const getStoredData = (key, defaultData) => {
+const getStoredData = (key, defaultVal) => {
   const data = localStorage.getItem(key);
   if (!data) {
-    localStorage.setItem(key, JSON.stringify(defaultData));
-    return defaultData;
+    localStorage.setItem(key, JSON.stringify(defaultVal));
+    return defaultVal;
   }
   return JSON.parse(data);
 };
@@ -59,7 +28,7 @@ getStoredData('noryvex_contacts', seedContacts);
 getStoredData('noryvex_meetings', seedMeetings);
 
 // CONTACT OPERATIONS
-export const dbSaveContact = (contact) => {
+export const dbSaveContact = async (contact) => {
   const contacts = getStoredData('noryvex_contacts', []);
   const newContact = {
     id: Date.now(),
@@ -74,40 +43,72 @@ export const dbSaveContact = (contact) => {
   };
   contacts.unshift(newContact);
   setStoredData('noryvex_contacts', contacts);
+
+  // Sync to backend server
+  try {
+    await fetch('/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newContact)
+    });
+  } catch (e) {
+    console.warn('Server offline. Contact saved locally in browser storage.', e);
+  }
   return { success: true, lastID: newContact.id };
 };
 
-export const dbSaveTrial = (trial) => {
-  return dbSaveContact({
-    name: trial.contactName,
-    company: trial.businessName,
-    email: trial.email,
-    phone: trial.phone,
-    service: `7-Day Trial (${trial.businessType || 'General'})`,
-    message: `AI Tasks: ${trial.aiHandling.toUpperCase()}`
-  });
-};
-
-export const dbGetContacts = () => {
+export const dbGetContacts = async (authToken) => {
+  if (authToken) {
+    try {
+      const res = await fetch('/api/admin/contacts', {
+        headers: { 'Authorization': `Bearer ${authToken}` }
+      });
+      if (res.ok) return await res.json();
+    } catch (e) {
+      console.warn('Failed to fetch contacts from server, falling back to local storage.', e);
+    }
+  }
   return getStoredData('noryvex_contacts', []);
 };
 
-export const dbMarkContactRead = (id) => {
+export const dbMarkContactRead = async (id, authToken) => {
   const contacts = getStoredData('noryvex_contacts', []);
   const updated = contacts.map(c => c.id === Number(id) ? { ...c, status: 'read' } : c);
   setStoredData('noryvex_contacts', updated);
+
+  if (authToken) {
+    try {
+      await fetch(`/api/admin/contacts/${id}`, {
+        method: 'PATCH',
+        headers: { 'Authorization': `Bearer ${authToken}` }
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  }
   return { success: true };
 };
 
-export const dbDeleteContact = (id) => {
+export const dbDeleteContact = async (id, authToken) => {
   const contacts = getStoredData('noryvex_contacts', []);
   const filtered = contacts.filter(c => c.id !== Number(id));
   setStoredData('noryvex_contacts', filtered);
+
+  if (authToken) {
+    try {
+      await fetch(`/api/admin/contacts/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${authToken}` }
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  }
   return { success: true };
 };
 
 // MEETING OPERATIONS
-export const dbSaveMeeting = (meeting) => {
+export const dbSaveMeeting = async (meeting) => {
   const meetings = getStoredData('noryvex_meetings', []);
   const newMeeting = {
     id: Date.now(),
@@ -122,46 +123,182 @@ export const dbSaveMeeting = (meeting) => {
     created_at: new Date().toISOString()
   };
   meetings.push(newMeeting);
-  // Sort meetings by date/time
   meetings.sort((a, b) => new Date(`${a.date}T${a.time}`) - new Date(`${b.date}T${b.time}`));
   setStoredData('noryvex_meetings', meetings);
+
+  // Sync to backend server
+  try {
+    await fetch('/api/meeting', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newMeeting)
+    });
+  } catch (e) {
+    console.warn('Server offline. Meeting saved locally in browser storage.', e);
+  }
   return { success: true, lastID: newMeeting.id };
 };
 
-export const dbGetMeetings = () => {
+export const dbGetMeetings = async (authToken) => {
+  if (authToken) {
+    try {
+      const res = await fetch('/api/admin/meetings', {
+        headers: { 'Authorization': `Bearer ${authToken}` }
+      });
+      if (res.ok) return await res.json();
+    } catch (e) {
+      console.warn('Failed to fetch meetings from server, falling back to local storage.', e);
+    }
+  }
   return getStoredData('noryvex_meetings', []);
 };
 
-export const dbMarkMeetingCompleted = (id) => {
+export const dbMarkMeetingCompleted = async (id, authToken) => {
   const meetings = getStoredData('noryvex_meetings', []);
   const updated = meetings.map(m => m.id === Number(id) ? { ...m, status: 'completed' } : m);
   setStoredData('noryvex_meetings', updated);
+
+  if (authToken) {
+    try {
+      await fetch(`/api/admin/meetings/${id}`, {
+        method: 'PATCH',
+        headers: { 'Authorization': `Bearer ${authToken}` }
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  }
   return { success: true };
 };
 
-export const dbDeleteMeeting = (id) => {
+export const dbDeleteMeeting = async (id, authToken) => {
   const meetings = getStoredData('noryvex_meetings', []);
   const filtered = meetings.filter(m => m.id !== Number(id));
   setStoredData('noryvex_meetings', filtered);
+
+  if (authToken) {
+    try {
+      await fetch(`/api/admin/meetings/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${authToken}` }
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  }
   return { success: true };
 };
 
-// SHA-256 Hashing Helper using Web Crypto API
-async function sha256(message) {
-  const msgBuffer = new TextEncoder().encode(message);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-  return hashHex;
-}
+// TRIAL OPERATIONS
+export const dbSaveTrial = async (trial) => {
+  // Save locally as trial entity
+  const trials = getStoredData('noryvex_trials', []);
+  const newTrial = {
+    id: Date.now(),
+    business_name: trial.businessName,
+    contact_name: trial.contactName,
+    email: trial.email,
+    phone: trial.phone || '',
+    business_type: trial.businessType || 'General',
+    ai_handling: trial.aiHandling || 'both',
+    trial_status: 'requested',
+    call_duration_seconds: 0,
+    limit_duration_seconds: 1800,
+    created_at: new Date().toISOString()
+  };
+  trials.unshift(newTrial);
+  setStoredData('noryvex_trials', trials);
+
+  // Save locally as general contact log too
+  await dbSaveContact({
+    name: trial.contactName,
+    company: trial.businessName,
+    email: trial.email,
+    phone: trial.phone || '',
+    service: `7-Day Trial (${trial.businessType || 'General'})`,
+    message: `AI Tasks: ${trial.aiHandling.toUpperCase()}`
+  });
+
+  // Sync to backend server
+  try {
+    await fetch('/api/trial', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(trial)
+    });
+  } catch (e) {
+    console.warn('Server offline. Trial saved locally in browser storage.', e);
+  }
+  return { success: true };
+};
+
+export const dbGetTrials = async (authToken) => {
+  if (authToken) {
+    try {
+      const res = await fetch('/api/admin/trials', {
+        headers: { 'Authorization': `Bearer ${authToken}` }
+      });
+      if (res.ok) return await res.json();
+    } catch (e) {
+      console.warn('Failed to fetch trials from server, using local storage fallback.', e);
+    }
+  }
+  return getStoredData('noryvex_trials', [
+    { id: 1, business_name: 'Bright Dental', contact_name: 'Sarah Jenkins', email: 'sarah@brightdental.com', phone: '+1 (555) 234-5678', business_type: 'Dental Clinic', ai_handling: 'both', trial_status: 'converted', call_duration_seconds: 980, limit_duration_seconds: 1800, created_at: new Date(Date.now() - 3600000 * 48).toISOString() },
+    { id: 2, business_name: 'Fast Pizza', contact_name: 'Mario Rossi', email: 'mario@fastpizza.com', phone: '+1 (555) 987-6543', business_type: 'Restaurant', ai_handling: 'bookings', trial_status: 'active', call_duration_seconds: 1450, limit_duration_seconds: 1800, created_at: new Date(Date.now() - 3600000 * 24).toISOString() }
+  ]);
+};
+
+export const dbUpdateTrialStatus = async (id, status, authToken) => {
+  const trials = getStoredData('noryvex_trials', []);
+  const updated = trials.map(t => t.id === Number(id) ? { ...t, trial_status: status } : t);
+  setStoredData('noryvex_trials', updated);
+
+  if (authToken) {
+    try {
+      await fetch(`/api/admin/trials/${id}`, {
+        method: 'PATCH',
+        headers: { 
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ trial_status: status })
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  }
+  return { success: true };
+};
 
 // ADMIN LOGIN AUTHENTICATION
 export const dbAdminLogin = async (email, password) => {
   const allowedEmails = ['razi@trynoryvex.com', 'razi@noryvex.com', 'codingwithrazi@gmail.com'];
-  const targetHash = '37ad83dfcd34d8dec4f9d22e67b0f396232cf7159c3b07c82df7cca325699886'; // SHA-256 hash of RaziNoryvex2026!
+  // Keep same SHA-256 validation for mock local login
+  const targetHash = '37ad83dfcd34d8dec4f9d22e67b0f396232cf7159c3b07c82df7cca325699886'; // SHA-256 of RaziNoryvex2026!
   
+  // Try authenticating with backend Express API
   try {
-    const hashedPassword = await sha256(password);
+    const res = await fetch('/api/admin/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    if (res.ok) {
+      const data = await res.json();
+      return { success: true, token: data.token };
+    }
+  } catch (e) {
+    console.warn('Backend server offline. Performing local fallback hash authorization.', e);
+  }
+
+  // Fallback to local storage hash verification
+  try {
+    const msgBuffer = new TextEncoder().encode(password);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashedPassword = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    
     const cleanedEmail = (email || '').toLowerCase().trim();
     if (allowedEmails.includes(cleanedEmail) && hashedPassword === targetHash) {
       const token = 'mock-jwt-token-' + Date.now();
@@ -190,7 +327,6 @@ export const dbSaveClient = (client) => {
     rating: Number(client.rating || 5),
     quote: client.quote
   };
-  
   const filtered = clients.filter(c => c.id !== newClient.id);
   filtered.unshift(newClient);
   setStoredData('noryvex_cms_clients', filtered);
@@ -222,7 +358,6 @@ export const dbSavePartner = (partner) => {
     link: partner.link,
     image: partner.image
   };
-  
   const filtered = partners.filter(p => p.id !== newPartner.id);
   filtered.push(newPartner);
   setStoredData('noryvex_cms_partners', filtered);

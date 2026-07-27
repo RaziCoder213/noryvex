@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, Lock, Mail, Calendar, LogOut, Check, Trash2, Eye, Plus, Star, Link, Image } from 'lucide-react';
+import { Shield, Lock, Mail, Calendar, LogOut, Check, Trash2, Eye, Plus, Star, Link, Image, Activity, Award } from 'lucide-react';
 import { 
   dbGetContacts, 
   dbGetMeetings, 
@@ -13,7 +13,9 @@ import {
   dbDeleteClient,
   dbGetPartners,
   dbSavePartner,
-  dbDeletePartner
+  dbDeletePartner,
+  dbGetTrials,
+  dbUpdateTrialStatus
 } from '../utils/dbHelper';
 
 export default function Admin({ addToast }) {
@@ -21,13 +23,14 @@ export default function Admin({ addToast }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loggingIn, setLoggingIn] = useState(false);
-  const [activeTab, setActiveTab] = useState('contacts'); // 'contacts', 'meetings', 'cms-clients', 'cms-partners'
+  const [activeTab, setActiveTab] = useState('contacts'); // 'contacts', 'meetings', 'trials-tracker', 'cms-clients', 'cms-partners'
   
   // Data lists
   const [contacts, setContacts] = useState([]);
   const [meetings, setMeetings] = useState([]);
   const [clients, setClients] = useState([]);
   const [partners, setPartners] = useState([]);
+  const [trials, setTrials] = useState([]);
   const [loadingData, setLoadingData] = useState(false);
 
   // CMS forms
@@ -39,14 +42,17 @@ export default function Admin({ addToast }) {
     if (!authToken) return;
     setLoadingData(true);
     try {
-      const contactsData = dbGetContacts();
-      const meetingsData = dbGetMeetings();
+      const contactsData = await dbGetContacts(authToken);
+      const meetingsData = await dbGetMeetings(authToken);
       const clientsData = dbGetClients();
       const partnersData = dbGetPartners();
+      const trialsData = await dbGetTrials(authToken);
+      
       setContacts(contactsData);
       setMeetings(meetingsData);
       setClients(clientsData);
       setPartners(partnersData);
+      setTrials(trialsData);
     } catch (err) {
       console.error(err);
       addToast('Error fetching dashboard records.', 'error');
@@ -95,12 +101,13 @@ export default function Admin({ addToast }) {
     setMeetings([]);
     setClients([]);
     setPartners([]);
+    setTrials([]);
   };
 
   // Contact actions
   const handleMarkContactRead = async (id) => {
     try {
-      const result = dbMarkContactRead(id);
+      const result = await dbMarkContactRead(id, token);
       if (result.success) {
         setContacts((prev) => 
           prev.map((c) => c.id === id ? { ...c, status: 'read' } : c)
@@ -116,7 +123,7 @@ export default function Admin({ addToast }) {
   const handleDeleteContact = async (id) => {
     if (!window.confirm('Are you sure you want to delete this inquiry?')) return;
     try {
-      const result = dbDeleteContact(id);
+      const result = await dbDeleteContact(id, token);
       if (result.success) {
         setContacts((prev) => prev.filter((c) => c.id !== id));
         addToast('Inquiry deleted.', 'success');
@@ -130,7 +137,7 @@ export default function Admin({ addToast }) {
   // Meeting actions
   const handleMarkMeetingCompleted = async (id) => {
     try {
-      const result = dbMarkMeetingCompleted(id);
+      const result = await dbMarkMeetingCompleted(id, token);
       if (result.success) {
         setMeetings((prev) => 
           prev.map((m) => m.id === id ? { ...m, status: 'completed' } : m)
@@ -146,7 +153,7 @@ export default function Admin({ addToast }) {
   const handleDeleteMeeting = async (id) => {
     if (!window.confirm('Are you sure you want to delete this meeting slot?')) return;
     try {
-      const result = dbDeleteMeeting(id);
+      const result = await dbDeleteMeeting(id, token);
       if (result.success) {
         setMeetings((prev) => prev.filter((m) => m.id !== id));
         addToast('Meeting deleted.', 'success');
@@ -154,6 +161,22 @@ export default function Admin({ addToast }) {
     } catch (err) {
       console.error(err);
       addToast('Failed to delete meeting.', 'error');
+    }
+  };
+
+  // Trial actions
+  const handleUpdateTrialStatus = async (id, status) => {
+    try {
+      const result = await dbUpdateTrialStatus(id, status, token);
+      if (result.success) {
+        setTrials((prev) => 
+          prev.map((t) => t.id === id ? { ...t, trial_status: status } : t)
+        );
+        addToast(`Trial campaign status updated to ${status.toUpperCase()}!`, 'success');
+      }
+    } catch (err) {
+      console.error(err);
+      addToast('Failed to update trial campaign status.', 'error');
     }
   };
 
@@ -204,6 +227,13 @@ export default function Admin({ addToast }) {
     totalMeetings: meetings.length,
     pendingMeetings: meetings.filter(m => m.status === 'pending').length
   };
+
+  // Trial analytics calculations
+  const totalTrials = trials.length;
+  const convertedTrials = trials.filter(t => t.trial_status === 'converted').length;
+  const activeTrials = trials.filter(t => t.trial_status === 'active').length;
+  const expiredTrials = trials.filter(t => t.trial_status === 'expired').length;
+  const conversionRate = totalTrials > 0 ? ((convertedTrials / totalTrials) * 100).toFixed(1) + '%' : '0.0%';
 
   // Login Screen Render
   if (!token) {
@@ -364,6 +394,12 @@ export default function Admin({ addToast }) {
               Meetings ({meetings.length})
             </button>
             <button 
+              onClick={() => setActiveTab('trials-tracker')} 
+              className={`tab-btn ${activeTab === 'trials-tracker' ? 'active' : ''}`}
+            >
+              Trial Tracker ({trials.length})
+            </button>
+            <button 
               onClick={() => setActiveTab('cms-clients')} 
               className={`tab-btn ${activeTab === 'cms-clients' ? 'active' : ''}`}
             >
@@ -373,7 +409,7 @@ export default function Admin({ addToast }) {
               onClick={() => setActiveTab('cms-partners')} 
               className={`tab-btn ${activeTab === 'cms-partners' ? 'active' : ''}`}
             >
-              CMS: Trusted Sites ({partners.length})
+              CMS: Trusted Badges ({partners.length})
             </button>
           </div>
 
@@ -520,7 +556,122 @@ export default function Admin({ addToast }) {
                 </div>
               )}
 
-              {/* Tab 3: Testimonials CMS */}
+              {/* Tab 3: Trial Campaigns CRM Tracker */}
+              {activeTab === 'trials-tracker' && (
+                <div>
+                  {/* Campaign analytics metrics row */}
+                  <div className="analytics-metrics-strip">
+                    <div className="glass-card metric-pill">
+                      <span className="metric-pill-label">Total Requests</span>
+                      <span className="metric-pill-val">{totalTrials}</span>
+                    </div>
+                    <div className="glass-card metric-pill highlight-green">
+                      <span className="metric-pill-label">Conversion Rate</span>
+                      <span className="metric-pill-val">{conversionRate}</span>
+                      <span className="metric-pill-subtext">{convertedTrials} converted</span>
+                    </div>
+                    <div className="glass-card metric-pill">
+                      <span className="metric-pill-label">Active Agents</span>
+                      <span className="metric-pill-val">{activeTrials}</span>
+                    </div>
+                    <div className="glass-card metric-pill">
+                      <span className="metric-pill-label">Expired Caps</span>
+                      <span className="metric-pill-val">{expiredTrials}</span>
+                    </div>
+                  </div>
+
+                  <div className="admin-table-container">
+                    {trials.length === 0 ? (
+                      <div className="empty-table-message">No trial campaigns found.</div>
+                    ) : (
+                      <table className="admin-table">
+                        <thead>
+                          <tr>
+                            <th>Status Checklist</th>
+                            <th>Business / Client Name</th>
+                            <th>Niche</th>
+                            <th>Vapi Call Duration Cap</th>
+                            <th>Operational Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {trials.map((t) => {
+                            const minutesUsed = (t.call_duration_seconds / 60).toFixed(1);
+                            const minutesLimit = (t.limit_duration_seconds / 60);
+                            const progressPercentage = Math.min((t.call_duration_seconds / t.limit_duration_seconds) * 100, 100);
+                            
+                            return (
+                              <tr key={t.id}>
+                                <td>
+                                  <span className={`badge-status-pill status-${t.trial_status}`}>
+                                    {t.trial_status}
+                                  </span>
+                                </td>
+                                <td>
+                                  <strong className="text-white">{t.business_name}</strong>
+                                  <div className="date-subtext">Contact: {t.contact_name}</div>
+                                  <div className="date-subtext">Email: {t.email}</div>
+                                </td>
+                                <td>
+                                  <div className="service-tag-badge">{t.business_type}</div>
+                                  <div className="date-subtext">Tasks: {t.ai_handling?.toUpperCase()}</div>
+                                </td>
+                                <td>
+                                  <div style={{ minWidth: '150px' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginBottom: '4px' }}>
+                                      <span className="text-white">{minutesUsed} mins</span>
+                                      <span className="text-muted">/ {minutesLimit} mins</span>
+                                    </div>
+                                    <div className="trial-progress-bg">
+                                      <div 
+                                        className={`trial-progress-bar ${progressPercentage >= 100 ? 'cap-expired' : ''}`}
+                                        style={{ width: `${progressPercentage}%` }}
+                                      />
+                                    </div>
+                                  </div>
+                                </td>
+                                <td>
+                                  <div className="action-buttons-cell">
+                                    {t.trial_status === 'requested' && (
+                                      <button 
+                                        onClick={() => handleUpdateTrialStatus(t.id, 'active')}
+                                        className="action-btn action-btn-read"
+                                      >
+                                        Activate Agent
+                                      </button>
+                                    )}
+                                    {t.trial_status === 'active' && (
+                                      <button 
+                                        onClick={() => handleUpdateTrialStatus(t.id, 'expired')}
+                                        className="action-btn action-btn-delete"
+                                      >
+                                        Deactivate/Expire
+                                      </button>
+                                    )}
+                                    {t.trial_status !== 'converted' && (
+                                      <button 
+                                        onClick={() => handleUpdateTrialStatus(t.id, 'converted')}
+                                        className="action-btn action-btn-convert"
+                                      >
+                                        <Award size={12} /> Convert Client
+                                      </button>
+                                    )}
+                                    {t.trial_status === 'converted' && (
+                                      <span className="success-badge"><Check size={12} /> Partner Signed</span>
+                                    )}
+                                  </div>
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Tab 4: Testimonials CMS */}
               {activeTab === 'cms-clients' && (
                 <div className="cms-layout">
                   {/* Left Column: Form */}
@@ -622,7 +773,7 @@ export default function Admin({ addToast }) {
                 </div>
               )}
 
-              {/* Tab 4: Trusted Badges CMS */}
+              {/* Tab 5: Trusted Badges CMS */}
               {activeTab === 'cms-partners' && (
                 <div className="cms-layout">
                   {/* Left Column: Form */}
@@ -846,6 +997,50 @@ export default function Admin({ addToast }) {
           margin-top: 4px;
         }
 
+        /* Analytics metrics strip */
+        .analytics-metrics-strip {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 16px;
+          margin-bottom: 24px;
+        }
+
+        .metric-pill {
+          padding: 16px;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          text-align: left;
+          border: 1px solid var(--border-light);
+        }
+
+        .metric-pill.highlight-green {
+          border-color: var(--accent-neon-border);
+          background: rgba(199, 255, 61, 0.02);
+        }
+
+        .metric-pill-label {
+          font-size: 0.75rem;
+          color: var(--text-muted);
+          text-transform: uppercase;
+          font-weight: 700;
+          letter-spacing: 0.05em;
+        }
+
+        .metric-pill-val {
+          font-family: 'Outfit', sans-serif;
+          font-size: 1.6rem;
+          font-weight: 800;
+          color: var(--text-white);
+          margin-top: 4px;
+        }
+
+        .metric-pill-subtext {
+          font-size: 0.75rem;
+          color: var(--text-gray);
+          margin-top: 2px;
+        }
+
         /* Tab Navigation */
         .dashboard-tabs {
           display: flex;
@@ -980,6 +1175,7 @@ export default function Admin({ addToast }) {
         .action-buttons-cell {
           display: flex;
           gap: 8px;
+          align-items: center;
         }
 
         .action-btn {
@@ -1017,6 +1213,27 @@ export default function Admin({ addToast }) {
           color: #fff;
         }
 
+        .action-btn-convert {
+          background: rgba(199, 255, 61, 0.2);
+          border: 1px solid var(--accent-neon);
+          color: var(--text-white);
+        }
+
+        .action-btn-convert:hover {
+          background: var(--accent-neon);
+          color: #000;
+          box-shadow: 0 0 10px var(--accent-neon-glow);
+        }
+
+        .success-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          font-size: 0.75rem;
+          font-weight: 700;
+          color: var(--accent-neon);
+        }
+
         /* Status Badges */
         .badge {
           display: inline-block;
@@ -1045,6 +1262,65 @@ export default function Admin({ addToast }) {
         .badge-completed {
           background: rgba(52, 211, 153, 0.15);
           color: #34d399;
+        }
+
+        /* Trial status checklist badges */
+        .badge-status-pill {
+          display: inline-block;
+          font-size: 0.7rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          padding: 4px 10px;
+          border-radius: 6px;
+          letter-spacing: 0.05em;
+        }
+
+        .badge-status-pill.status-requested {
+          background: rgba(59, 130, 246, 0.15);
+          color: #60a5fa;
+          border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .badge-status-pill.status-active {
+          background: rgba(199, 255, 61, 0.1);
+          color: var(--accent-neon);
+          border: 1px solid var(--accent-neon-border);
+          box-shadow: 0 0 10px rgba(199, 255, 61, 0.1);
+        }
+
+        .badge-status-pill.status-expired {
+          background: rgba(239, 68, 68, 0.1);
+          color: #f87171;
+          border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .badge-status-pill.status-converted {
+          background: rgba(16, 185, 129, 0.15);
+          color: #34d399;
+          border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        /* Trial progress bar */
+        .trial-progress-bg {
+          width: 100%;
+          height: 6px;
+          background: rgba(255,255,255,0.06);
+          border-radius: 100px;
+          overflow: hidden;
+          margin-top: 4px;
+        }
+
+        .trial-progress-bar {
+          height: 100%;
+          background: var(--accent-neon);
+          box-shadow: 0 0 8px var(--accent-neon);
+          border-radius: 100px;
+          transition: width 0.4s ease;
+        }
+
+        .trial-progress-bar.cap-expired {
+          background: #ef4444;
+          box-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
         }
 
         .empty-table-message {
@@ -1118,6 +1394,10 @@ export default function Admin({ addToast }) {
           }
           .cms-layout {
             grid-template-columns: 1fr;
+          }
+          .analytics-metrics-strip {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
           }
         }
       `}</style>
