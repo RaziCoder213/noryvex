@@ -228,6 +228,9 @@ export default function Home({ setActivePage }) {
               <a href="https://wired.business" target="_blank" rel="noopener noreferrer">
                 <img src="https://wired.business/badge3-dark.svg" alt="Featured on Wired Business" className="featured-badge-img" />
               </a>
+              <a href="https://www.goodfirms.co/company/noryvex" target="_blank" rel="noopener noreferrer">
+                <img src="https://www.goodfirms.co/img/badges/recognized-on-goodfirms.png" alt="Recognized on GoodFirms" className="featured-badge-img" />
+              </a>
             </div>
           </div>
 
