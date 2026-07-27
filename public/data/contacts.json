@@ -1,0 +1,24 @@
+[
+  {
+    "id": 101,
+    "name": "Alexander Wright",
+    "company": "Apex Health Group",
+    "email": "a.wright@apexhealth.co",
+    "phone": "+1 (555) 234-5678",
+    "service": "AI Voice Agents",
+    "message": "Looking to deploy Chloe receptionists across 3 regional clinics.",
+    "status": "unread",
+    "created_at": "2026-07-28T00:00:00.000Z"
+  },
+  {
+    "id": 102,
+    "name": "Emily Chen",
+    "company": "Chen Legal LLC",
+    "email": "emily@chenlaw.com",
+    "phone": "+1 (555) 987-6543",
+    "service": "AI Receptionists",
+    "message": "Need an AI to screen client intake calls after business hours.",
+    "status": "read",
+    "created_at": "2026-07-27T18:30:00.000Z"
+  }
+]

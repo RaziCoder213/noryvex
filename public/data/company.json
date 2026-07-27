@@ -1,0 +1,30 @@
+{
+  "company": {
+    "name": "Noryvex",
+    "alternateNames": ["Noryvex AI", "TryNoryvex"],
+    "tagline": "Automate. Communicate. Grow.",
+    "description": "Noryvex is a specialized done-for-you AI development agency that builds, deploys, and manages custom AI Voice Agents, autonomous business receptionists, workflow automation pipelines, and enterprise software.",
+    "website": "https://trynoryvex.com",
+    "founded": "2026",
+    "emails": {
+      "general": "hello@trynoryvex.com",
+      "founder": "razi@trynoryvex.com"
+    },
+    "founder": {
+      "name": "Muhammad Razi",
+      "title": "Founder & Lead AI Architect / Full-Stack AI Developer",
+      "linkedin": "https://www.linkedin.com/in/mrazi-dev/",
+      "email": "razi@trynoryvex.com"
+    },
+    "socials": {
+      "companyLinkedin": "https://www.linkedin.com/company/noryvex",
+      "founderLinkedin": "https://www.linkedin.com/in/mrazi-dev/"
+    },
+    "stats": {
+      "agentsDeployed": "150+",
+      "clientRetention": "98%",
+      "systemUptime": "99.9%",
+      "targetLatency": "<800ms"
+    }
+  }
+}

@@ -46,7 +46,7 @@ export default function Navbar({ activePage, setActivePage }) {
   return (
     <header className={`navbar-wrapper ${scrolled ? 'scrolled' : ''}`}>
       <div className="container nav-container">
-        <a href="#home" className="nav-brand" onClick={() => handleNavClick('home')}>
+        <a href="/" className="nav-brand" onClick={(e) => { e.preventDefault(); handleNavClick('home'); }}>
           <img src="/logo.png" alt="Noryvex" className="nav-logo" />
           <span className="nav-title">NORYVE<span className="nav-title-x">X</span></span>
         </a>

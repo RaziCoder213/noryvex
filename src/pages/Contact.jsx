@@ -68,7 +68,7 @@ export default function Contact({ addToast, initialTab = 'trial' }) {
     setSubmittingContact(true);
 
     try {
-      const result = dbSaveContact(contactData);
+      const result = await dbSaveContact(contactData);
       if (result.success) {
         addToast('Contact inquiry submitted successfully!', 'success');
         setContactData({ name: '', company: '', email: '', phone: '', service: 'AI Voice Agents', message: '' });
@@ -92,7 +92,7 @@ export default function Contact({ addToast, initialTab = 'trial' }) {
     setSubmittingMeeting(true);
 
     try {
-      const result = dbSaveMeeting(meetingData);
+      const result = await dbSaveMeeting(meetingData);
       if (result.success) {
         addToast('Meeting scheduled successfully!', 'success');
         setMeetingSuccess(true);
@@ -117,7 +117,7 @@ export default function Contact({ addToast, initialTab = 'trial' }) {
     setSubmittingTrial(true);
 
     try {
-      const result = dbSaveTrial(trialData);
+      const result = await dbSaveTrial(trialData);
       if (result.success) {
         addToast('Free Trial request submitted successfully!', 'success');
         setTrialSuccess(true);

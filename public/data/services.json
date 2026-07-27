@@ -1,0 +1,76 @@
+{
+  "services": [
+    {
+      "id": "voice-agents",
+      "title": "AI Voice Agents",
+      "category": "Voice Solutions",
+      "description": "Futuristic human-sounding voice agents capable of conducting outbound campaigns and inbound support with realistic emotional cues.",
+      "features": [
+        "Dynamic appointment scheduling",
+        "Lead qualification & screening",
+        "CRM data sync",
+        "Sub-800ms response optimization"
+      ]
+    },
+    {
+      "id": "ai-receptionists",
+      "title": "AI Receptionists",
+      "category": "Voice Solutions",
+      "description": "Fully autonomous 24/7 receptionists answering calls, qualifying leads, and scheduling appointments directly inside your CRM.",
+      "features": [
+        "24/7 365 availability",
+        "Multi-branch call routing",
+        "Custom greeting prompts",
+        "Instant SMS/Email notifications"
+      ]
+    },
+    {
+      "id": "business-automation",
+      "title": "Business Automation",
+      "category": "Workflow Automation",
+      "description": "Save hundreds of hours by automating repetitive administrative processes, reporting, and operational tasks.",
+      "features": [
+        "Document & PDF information extraction",
+        "Automated invoice processing",
+        "Multi-app data synchronization",
+        "Custom Webhook triggers"
+      ]
+    },
+    {
+      "id": "workflow-automation",
+      "title": "Workflow Automation",
+      "category": "Workflow Automation",
+      "description": "Connect your entire software stack and orchestrate multi-step data flows that trigger automatically with zero human effort.",
+      "features": [
+        "Zapier/Make/Custom webhooks",
+        "Database automated backups",
+        "Slack/Discord bot notifications",
+        "Multi-step lead pipeline updates"
+      ]
+    },
+    {
+      "id": "ai-chatbots",
+      "title": "AI Chatbots",
+      "category": "Conversational AI",
+      "description": "Conversational agents that understand context, resolve customer concerns, and convert web traffic into booked sales calls.",
+      "features": [
+        "RAG / Vector Database knowledge retrieval",
+        "Custom brand tone configuration",
+        "Multilingual response support",
+        "Live agent handoff trigger"
+      ]
+    },
+    {
+      "id": "custom-software",
+      "title": "Web & Mobile Applications",
+      "category": "Software Engineering",
+      "description": "Bespoke web and mobile applications built from scratch with modern technology, optimized for lightning performance and security.",
+      "features": [
+        "React / Vite / Node.js stack",
+        "PostgreSQL / Supabase / SQLite integration",
+        "Custom Admin dashboards",
+        "JWT secure authentication"
+      ]
+    }
+  ]
+}

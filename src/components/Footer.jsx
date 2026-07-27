@@ -12,12 +12,12 @@ export default function Footer({ setActivePage, addToast }) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleSubscribe = (e) => {
+  const handleSubscribe = async (e) => {
     e.preventDefault();
     if (!emailInput.trim()) return;
     setSubscribing(true);
     try {
-      dbSaveContact({
+      await dbSaveContact({
         name: 'Newsletter Subscriber',
         email: emailInput,
         phone: 'N/A',

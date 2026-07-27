@@ -119,11 +119,13 @@ export default function App() {
   useEffect(() => {
     const handle = () => {
       const hash = window.location.hash.replace('#', '');
-      const path = window.location.pathname;
+      const path = window.location.pathname.replace(/^\//, '').replace(/\/$/, '');
       const hostname = window.location.hostname;
       const all = ['solutions','live-demo','about','contact','home','privacy','terms','admin'];
-      if (hostname.startsWith('admin.') || path === '/admin' || hash === 'admin') {
+      if (hostname.startsWith('admin.') || path === 'admin' || hash === 'admin') {
         setActivePage('admin');
+      } else if (all.includes(path)) {
+        setActivePage(path);
       } else if (hash === 'trial' || hash === 'trial-form') {
         setInitialContactTab('trial');
         setActivePage('contact');
@@ -150,7 +152,8 @@ export default function App() {
       setInitialContactTab(option);
     }
     setActivePage(pageId);
-    window.location.hash = pageId;
+    const targetUrl = pageId === 'home' ? '/' : `/${pageId}`;
+    window.history.pushState({}, '', targetUrl);
     window.scrollTo({ top: 0, behavior: 'instant' });
   };
 

@@ -210,8 +210,8 @@ export default function Home({ setActivePage }) {
               <span className="badge-text">NEVER SLEEPS. NEVER SLOWS.</span>
             </div>
             <h1 className="hero-title txt-reveal">
-              Your AI Employee <br />
-              <span className="text-neon-gradient txt-gradient-animate">That Never Sleeps.</span>
+              AI Automation Agency <br />
+              <span className="text-neon-gradient txt-gradient-animate">For Autonomous Business Scaling.</span>
             </h1>
             <p className="hero-subtitle txt-blur-in">
               Noryvex is a leading AI Automation Agency. We build custom AI Voice Calling Agents, Autonomous Receptionist AI systems, and Intelligent Software that answer calls, automate workflows, and help businesses scale exponentially.

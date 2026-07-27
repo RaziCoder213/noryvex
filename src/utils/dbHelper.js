@@ -1,5 +1,36 @@
 // dbHelper.js
-// Client-side Database Helper with dynamic HTTP fetch sync and local storage fallbacks
+// Client-side Database Helper with dynamic HTTP fetch sync, zero-cache headers, and real JSON exports
+
+// Helper to fetch live JSON data with zero caching
+export const fetchNoCacheJSON = async (url) => {
+  const cacheBustUrl = `${url}${url.includes('?') ? '&' : '?'}t=${Date.now()}`;
+  const response = await fetch(cacheBustUrl, {
+    cache: 'no-store',
+    headers: {
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0'
+    }
+  });
+  if (!response.ok) {
+    throw new Error(`Failed to fetch JSON from ${url}: ${response.statusText}`);
+  }
+  return await response.json();
+};
+
+// Helper to export/download live state as a JSON file
+export const exportToJsonFile = (data, filename = 'export.json') => {
+  const jsonStr = JSON.stringify(data, null, 2);
+  const blob = new Blob([jsonStr], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+};
 
 const seedContacts = [
   { id: 101, name: "Alexander Wright", company: "Apex Health Group", email: "a.wright@apexhealth.co", phone: "+1 (555) 234-5678", service: "AI Voice Agents", message: "Looking to deploy Chloe receptionists across 3 regional clinics.", status: "unread", created_at: new Date(Date.now() - 3600000 * 2).toISOString() },
@@ -10,13 +41,22 @@ const seedMeetings = [
   { id: 201, name: "Marcus Thorne", email: "m.thorne@apexlogistics.com", company: "Apex Logistics", phone: "+1 (555) 876-5432", date: "2026-08-05", time: "14:00", notes: "Discuss CRM workflow triggers integration with Vapi Voice backend.", status: "pending", created_at: new Date().toISOString() }
 ];
 
+const seedTrials = [
+  { id: 1, business_name: 'Bright Dental', contact_name: 'Sarah Jenkins', email: 'sarah@brightdental.com', phone: '+1 (555) 234-5678', business_type: 'Dental Clinic', ai_handling: 'both', trial_status: 'converted', call_duration_seconds: 980, limit_duration_seconds: 1800, created_at: new Date(Date.now() - 3600000 * 48).toISOString() },
+  { id: 2, business_name: 'Fast Pizza', contact_name: 'Mario Rossi', email: 'mario@fastpizza.com', phone: '+1 (555) 987-6543', business_type: 'Restaurant', ai_handling: 'bookings', trial_status: 'active', call_duration_seconds: 1450, limit_duration_seconds: 1800, created_at: new Date(Date.now() - 3600000 * 24).toISOString() }
+];
+
 const getStoredData = (key, defaultVal) => {
   const data = localStorage.getItem(key);
   if (!data) {
     localStorage.setItem(key, JSON.stringify(defaultVal));
     return defaultVal;
   }
-  return JSON.parse(data);
+  try {
+    return JSON.parse(data);
+  } catch (e) {
+    return defaultVal;
+  }
 };
 
 const setStoredData = (key, data) => {
@@ -26,10 +66,11 @@ const setStoredData = (key, data) => {
 // INITIALIZE DB KEYS
 getStoredData('noryvex_contacts', seedContacts);
 getStoredData('noryvex_meetings', seedMeetings);
+getStoredData('noryvex_trials', seedTrials);
 
 // CONTACT OPERATIONS
 export const dbSaveContact = async (contact) => {
-  const contacts = getStoredData('noryvex_contacts', []);
+  const contacts = getStoredData('noryvex_contacts', seedContacts);
   const newContact = {
     id: Date.now(),
     name: contact.name,
@@ -44,15 +85,20 @@ export const dbSaveContact = async (contact) => {
   contacts.unshift(newContact);
   setStoredData('noryvex_contacts', contacts);
 
-  // Sync to backend server
+  // Sync to backend server with zero cache
   try {
-    await fetch('/api/contact', {
+    await fetch(`/api/contact?t=${Date.now()}`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      cache: 'no-store',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache'
+      },
       body: JSON.stringify(newContact)
     });
   } catch (e) {
-    console.warn('Server offline. Contact saved locally in browser storage.', e);
+    console.warn('Backend offline. Saved locally to browser storage.', e);
   }
   return { success: true, lastID: newContact.id };
 };
@@ -60,15 +106,31 @@ export const dbSaveContact = async (contact) => {
 export const dbGetContacts = async (authToken) => {
   if (authToken) {
     try {
-      const res = await fetch('/api/admin/contacts', {
-        headers: { 'Authorization': `Bearer ${authToken}` }
-      });
-      if (res.ok) return await res.json();
+      const data = await fetchNoCacheJSON(`/api/admin/contacts?token=${authToken}`);
+      if (Array.isArray(data)) return data;
     } catch (e) {
-      console.warn('Failed to fetch contacts from server, falling back to local storage.', e);
+      console.warn('Falling back to static JSON or local storage for contacts.', e);
     }
   }
-  return getStoredData('noryvex_contacts', []);
+
+  // Try static JSON endpoint fallback with zero cache
+  try {
+    const staticContacts = await fetchNoCacheJSON('/data/contacts.json');
+    if (Array.isArray(staticContacts) && staticContacts.length > 0) {
+      const local = getStoredData('noryvex_contacts', []);
+      // Merge unique
+      const ids = new Set(local.map(c => c.id));
+      staticContacts.forEach(sc => {
+        if (!ids.has(sc.id)) local.push(sc);
+      });
+      setStoredData('noryvex_contacts', local);
+      return local;
+    }
+  } catch (e) {
+    // Ignore static fetch error and return local storage
+  }
+
+  return getStoredData('noryvex_contacts', seedContacts);
 };
 
 export const dbMarkContactRead = async (id, authToken) => {
@@ -78,9 +140,13 @@ export const dbMarkContactRead = async (id, authToken) => {
 
   if (authToken) {
     try {
-      await fetch(`/api/admin/contacts/${id}`, {
+      await fetch(`/api/admin/contacts/${id}?t=${Date.now()}`, {
         method: 'PATCH',
-        headers: { 'Authorization': `Bearer ${authToken}` }
+        cache: 'no-store',
+        headers: { 
+          'Authorization': `Bearer ${authToken}`,
+          'Cache-Control': 'no-cache, no-store, must-revalidate'
+        }
       });
     } catch (e) {
       console.error(e);
@@ -96,9 +162,13 @@ export const dbDeleteContact = async (id, authToken) => {
 
   if (authToken) {
     try {
-      await fetch(`/api/admin/contacts/${id}`, {
+      await fetch(`/api/admin/contacts/${id}?t=${Date.now()}`, {
         method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${authToken}` }
+        cache: 'no-store',
+        headers: { 
+          'Authorization': `Bearer ${authToken}`,
+          'Cache-Control': 'no-cache, no-store, must-revalidate'
+        }
       });
     } catch (e) {
       console.error(e);
@@ -109,7 +179,7 @@ export const dbDeleteContact = async (id, authToken) => {
 
 // MEETING OPERATIONS
 export const dbSaveMeeting = async (meeting) => {
-  const meetings = getStoredData('noryvex_meetings', []);
+  const meetings = getStoredData('noryvex_meetings', seedMeetings);
   const newMeeting = {
     id: Date.now(),
     name: meeting.name,
@@ -126,15 +196,19 @@ export const dbSaveMeeting = async (meeting) => {
   meetings.sort((a, b) => new Date(`${a.date}T${a.time}`) - new Date(`${b.date}T${b.time}`));
   setStoredData('noryvex_meetings', meetings);
 
-  // Sync to backend server
+  // Sync to backend server with zero cache
   try {
-    await fetch('/api/meeting', {
+    await fetch(`/api/meeting?t=${Date.now()}`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      cache: 'no-store',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache, no-store, must-revalidate'
+      },
       body: JSON.stringify(newMeeting)
     });
   } catch (e) {
-    console.warn('Server offline. Meeting saved locally in browser storage.', e);
+    console.warn('Backend offline. Meeting saved locally.', e);
   }
   return { success: true, lastID: newMeeting.id };
 };
@@ -142,15 +216,30 @@ export const dbSaveMeeting = async (meeting) => {
 export const dbGetMeetings = async (authToken) => {
   if (authToken) {
     try {
-      const res = await fetch('/api/admin/meetings', {
-        headers: { 'Authorization': `Bearer ${authToken}` }
-      });
-      if (res.ok) return await res.json();
+      const data = await fetchNoCacheJSON(`/api/admin/meetings?token=${authToken}`);
+      if (Array.isArray(data)) return data;
     } catch (e) {
-      console.warn('Failed to fetch meetings from server, falling back to local storage.', e);
+      console.warn('Falling back to static JSON or local storage for meetings.', e);
     }
   }
-  return getStoredData('noryvex_meetings', []);
+
+  // Try static JSON endpoint fallback with zero cache
+  try {
+    const staticMeetings = await fetchNoCacheJSON('/data/meetings.json');
+    if (Array.isArray(staticMeetings) && staticMeetings.length > 0) {
+      const local = getStoredData('noryvex_meetings', []);
+      const ids = new Set(local.map(m => m.id));
+      staticMeetings.forEach(sm => {
+        if (!ids.has(sm.id)) local.push(sm);
+      });
+      setStoredData('noryvex_meetings', local);
+      return local;
+    }
+  } catch (e) {
+    // Ignore static fetch error
+  }
+
+  return getStoredData('noryvex_meetings', seedMeetings);
 };
 
 export const dbMarkMeetingCompleted = async (id, authToken) => {
@@ -160,9 +249,13 @@ export const dbMarkMeetingCompleted = async (id, authToken) => {
 
   if (authToken) {
     try {
-      await fetch(`/api/admin/meetings/${id}`, {
+      await fetch(`/api/admin/meetings/${id}?t=${Date.now()}`, {
         method: 'PATCH',
-        headers: { 'Authorization': `Bearer ${authToken}` }
+        cache: 'no-store',
+        headers: { 
+          'Authorization': `Bearer ${authToken}`,
+          'Cache-Control': 'no-cache, no-store, must-revalidate'
+        }
       });
     } catch (e) {
       console.error(e);
@@ -178,9 +271,13 @@ export const dbDeleteMeeting = async (id, authToken) => {
 
   if (authToken) {
     try {
-      await fetch(`/api/admin/meetings/${id}`, {
+      await fetch(`/api/admin/meetings/${id}?t=${Date.now()}`, {
         method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${authToken}` }
+        cache: 'no-store',
+        headers: { 
+          'Authorization': `Bearer ${authToken}`,
+          'Cache-Control': 'no-cache, no-store, must-revalidate'
+        }
       });
     } catch (e) {
       console.error(e);
@@ -191,8 +288,7 @@ export const dbDeleteMeeting = async (id, authToken) => {
 
 // TRIAL OPERATIONS
 export const dbSaveTrial = async (trial) => {
-  // Save locally as trial entity
-  const trials = getStoredData('noryvex_trials', []);
+  const trials = getStoredData('noryvex_trials', seedTrials);
   const newTrial = {
     id: Date.now(),
     business_name: trial.businessName,
@@ -209,7 +305,6 @@ export const dbSaveTrial = async (trial) => {
   trials.unshift(newTrial);
   setStoredData('noryvex_trials', trials);
 
-  // Save locally as general contact log too
   await dbSaveContact({
     name: trial.contactName,
     company: trial.businessName,
@@ -219,15 +314,18 @@ export const dbSaveTrial = async (trial) => {
     message: `AI Tasks: ${trial.aiHandling.toUpperCase()}`
   });
 
-  // Sync to backend server
   try {
-    await fetch('/api/trial', {
+    await fetch(`/api/trial?t=${Date.now()}`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      cache: 'no-store',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache, no-store, must-revalidate'
+      },
       body: JSON.stringify(trial)
     });
   } catch (e) {
-    console.warn('Server offline. Trial saved locally in browser storage.', e);
+    console.warn('Backend offline. Trial saved locally.', e);
   }
   return { success: true };
 };
@@ -235,18 +333,30 @@ export const dbSaveTrial = async (trial) => {
 export const dbGetTrials = async (authToken) => {
   if (authToken) {
     try {
-      const res = await fetch('/api/admin/trials', {
-        headers: { 'Authorization': `Bearer ${authToken}` }
-      });
-      if (res.ok) return await res.json();
+      const data = await fetchNoCacheJSON(`/api/admin/trials?token=${authToken}`);
+      if (Array.isArray(data)) return data;
     } catch (e) {
-      console.warn('Failed to fetch trials from server, using local storage fallback.', e);
+      console.warn('Falling back to static JSON or local storage for trials.', e);
     }
   }
-  return getStoredData('noryvex_trials', [
-    { id: 1, business_name: 'Bright Dental', contact_name: 'Sarah Jenkins', email: 'sarah@brightdental.com', phone: '+1 (555) 234-5678', business_type: 'Dental Clinic', ai_handling: 'both', trial_status: 'converted', call_duration_seconds: 980, limit_duration_seconds: 1800, created_at: new Date(Date.now() - 3600000 * 48).toISOString() },
-    { id: 2, business_name: 'Fast Pizza', contact_name: 'Mario Rossi', email: 'mario@fastpizza.com', phone: '+1 (555) 987-6543', business_type: 'Restaurant', ai_handling: 'bookings', trial_status: 'active', call_duration_seconds: 1450, limit_duration_seconds: 1800, created_at: new Date(Date.now() - 3600000 * 24).toISOString() }
-  ]);
+
+  // Try static JSON endpoint fallback with zero cache
+  try {
+    const staticTrials = await fetchNoCacheJSON('/data/trials.json');
+    if (Array.isArray(staticTrials) && staticTrials.length > 0) {
+      const local = getStoredData('noryvex_trials', []);
+      const ids = new Set(local.map(t => t.id));
+      staticTrials.forEach(st => {
+        if (!ids.has(st.id)) local.push(st);
+      });
+      setStoredData('noryvex_trials', local);
+      return local;
+    }
+  } catch (e) {
+    // Ignore static fetch error
+  }
+
+  return getStoredData('noryvex_trials', seedTrials);
 };
 
 export const dbUpdateTrialStatus = async (id, status, authToken) => {
@@ -256,11 +366,13 @@ export const dbUpdateTrialStatus = async (id, status, authToken) => {
 
   if (authToken) {
     try {
-      await fetch(`/api/admin/trials/${id}`, {
+      await fetch(`/api/admin/trials/${id}?t=${Date.now()}`, {
         method: 'PATCH',
+        cache: 'no-store',
         headers: { 
           'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache, no-store, must-revalidate'
         },
         body: JSON.stringify({ trial_status: status })
       });
@@ -274,14 +386,16 @@ export const dbUpdateTrialStatus = async (id, status, authToken) => {
 // ADMIN LOGIN AUTHENTICATION
 export const dbAdminLogin = async (email, password) => {
   const allowedEmails = ['razi@trynoryvex.com', 'razi@noryvex.com', 'codingwithrazi@gmail.com'];
-  // Keep same SHA-256 validation for mock local login
   const targetHash = '37ad83dfcd34d8dec4f9d22e67b0f396232cf7159c3b07c82df7cca325699886'; // SHA-256 of RaziNoryvex2026!
   
-  // Try authenticating with backend Express API
   try {
-    const res = await fetch('/api/admin/login', {
+    const res = await fetch(`/api/admin/login?t=${Date.now()}`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      cache: 'no-store',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache, no-store, must-revalidate'
+      },
       body: JSON.stringify({ email, password })
     });
     if (res.ok) {
@@ -292,7 +406,6 @@ export const dbAdminLogin = async (email, password) => {
     console.warn('Backend server offline. Performing local fallback hash authorization.', e);
   }
 
-  // Fallback to local storage hash verification
   try {
     const msgBuffer = new TextEncoder().encode(password);
     const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
