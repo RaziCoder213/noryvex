@@ -157,7 +157,7 @@ async function sha256(message) {
 
 // ADMIN LOGIN AUTHENTICATION
 export const dbAdminLogin = async (email, password) => {
-  const allowedEmails = ['razi@noryvex.com', 'codingwithrazi@gmail.com'];
+  const allowedEmails = ['razi@trynoryvex.com', 'razi@noryvex.com', 'codingwithrazi@gmail.com'];
   const targetHash = '37ad83dfcd34d8dec4f9d22e67b0f396232cf7159c3b07c82df7cca325699886'; // SHA-256 hash of RaziNoryvex2026!
   
   try {
@@ -171,4 +171,67 @@ export const dbAdminLogin = async (email, password) => {
     console.error('Hashing failed:', e);
   }
   return { success: false, error: 'Invalid admin credentials.' };
+};
+
+// CMS OPERATIONS: TESTIMONIALS / CLIENTS
+export const dbGetClients = () => {
+  return getStoredData('noryvex_cms_clients', [
+    { id: 1, name: "Sarah Jenkins", company: "Bright Dental", rating: 5, quote: "Chloe resolved 92% of our FAQ calls and booked 45 meetings in her first week." },
+    { id: 2, name: "Marcus Thorne", company: "Apex Logistics", rating: 5, quote: "The workflow integration saves our dispatch team at least 15 hours every single week." }
+  ]);
+};
+
+export const dbSaveClient = (client) => {
+  const clients = dbGetClients();
+  const newClient = {
+    id: client.id || Date.now(),
+    name: client.name,
+    company: client.company,
+    rating: Number(client.rating || 5),
+    quote: client.quote
+  };
+  
+  const filtered = clients.filter(c => c.id !== newClient.id);
+  filtered.unshift(newClient);
+  setStoredData('noryvex_cms_clients', filtered);
+  return { success: true };
+};
+
+export const dbDeleteClient = (id) => {
+  const clients = dbGetClients();
+  const filtered = clients.filter(c => c.id !== Number(id));
+  setStoredData('noryvex_cms_clients', filtered);
+  return { success: true };
+};
+
+// CMS OPERATIONS: TRUSTED SITES / PARTNERS
+export const dbGetPartners = () => {
+  return getStoredData('noryvex_cms_partners', [
+    { id: 1, name: "Super Launch", link: "https://www.superlaun.ch/products/2926", image: "https://www.superlaun.ch/badge.png" },
+    { id: 2, name: "Twelve Tools", link: "https://twelve.tools", image: "https://twelve.tools/badge3-dark.svg" },
+    { id: 3, name: "Wired Business", link: "https://wired.business", image: "https://wired.business/badge3-dark.svg" },
+    { id: 4, name: "GoodFirms", link: "https://www.goodfirms.co/company/noryvex", image: "https://www.goodfirms.co/img/badges/recognized-on-goodfirms.png" }
+  ]);
+};
+
+export const dbSavePartner = (partner) => {
+  const partners = dbGetPartners();
+  const newPartner = {
+    id: partner.id || Date.now(),
+    name: partner.name,
+    link: partner.link,
+    image: partner.image
+  };
+  
+  const filtered = partners.filter(p => p.id !== newPartner.id);
+  filtered.push(newPartner);
+  setStoredData('noryvex_cms_partners', filtered);
+  return { success: true };
+};
+
+export const dbDeletePartner = (id) => {
+  const partners = dbGetPartners();
+  const filtered = partners.filter(p => p.id !== Number(id));
+  setStoredData('noryvex_cms_partners', filtered);
+  return { success: true };
 };

@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import nodemailer from 'nodemailer';
 import { 
   initDb, 
   saveContact, 
@@ -51,6 +52,47 @@ function authenticateToken(req, res, next) {
   });
 }
 
+// EMAIL SENDER HELPER
+async function sendEmailNotification(subject, htmlContent) {
+  const smtpUser = process.env.SMTP_USER;
+  const smtpPass = process.env.SMTP_PASS;
+  const smtpHost = process.env.SMTP_HOST || 'smtp.gmail.com';
+  const smtpPort = parseInt(process.env.SMTP_PORT || '465', 10);
+  
+  if (!smtpUser || !smtpPass) {
+    console.log('--------------------------------------------------');
+    console.log('EMAIL NOTIFICATION SIMULATION (Set SMTP_USER & SMTP_PASS in .env to send real emails)');
+    console.log('To: codingwithrazi@gmail.com, razi@trynoryvex.com');
+    console.log(`Subject: ${subject}`);
+    console.log(`Content:\n${htmlContent}`);
+    console.log('--------------------------------------------------');
+    return;
+  }
+  
+  try {
+    const transporter = nodemailer.createTransport({
+      host: smtpHost,
+      port: smtpPort,
+      secure: smtpPort === 465,
+      auth: {
+        user: smtpUser,
+        pass: smtpPass
+      }
+    });
+    
+    const info = await transporter.sendMail({
+      from: `"Noryvex Notifications" <${smtpUser}>`,
+      to: 'codingwithrazi@gmail.com, razi@trynoryvex.com',
+      subject: subject,
+      html: htmlContent
+    });
+    
+    console.log('Email notification sent successfully:', info.messageId);
+  } catch (error) {
+    console.error('Failed to send email notification:', error);
+  }
+}
+
 // PUBLIC ENDPOINTS
 
 // Submit contact form
@@ -62,6 +104,24 @@ app.post('/api/contact', async (req, res) => {
     }
     
     await saveContact(name, company, email, phone, service, message);
+
+    // Trigger email notification
+    const subject = `[Noryvex Lead] New Inquiry/Trial from ${name}`;
+    const htmlContent = `
+      <h2>New Lead Received</h2>
+      <p><strong>Name:</strong> ${name}</p>
+      <p><strong>Company:</strong> ${company || '—'}</p>
+      <p><strong>Email:</strong> ${email}</p>
+      <p><strong>Phone:</strong> ${phone || '—'}</p>
+      <p><strong>Service/Campaign:</strong> ${service}</p>
+      <p><strong>Details:</strong></p>
+      <div style="background: #f4f5f7; padding: 16px; border-radius: 8px; border-left: 4px solid #C7FF3D; color: #111;">
+        ${(message || '').replace(/\n/g, '<br/>')}
+      </div>
+      <p style="font-size: 0.85rem; color: #777; margin-top: 24px;">Sent from Noryvex Operations Hub.</p>
+    `;
+    sendEmailNotification(subject, htmlContent);
+
     res.status(201).json({ message: 'Contact inquiry received successfully.' });
   } catch (error) {
     console.error('Error saving contact:', error);
@@ -78,6 +138,25 @@ app.post('/api/meeting', async (req, res) => {
     }
     
     await saveMeeting(name, email, company, phone, date, time, notes);
+
+    // Trigger email notification
+    const subject = `[Noryvex Booking] Strategy Call with ${name}`;
+    const htmlContent = `
+      <h2>New Meeting Scheduled</h2>
+      <p><strong>Name:</strong> ${name}</p>
+      <p><strong>Company:</strong> ${company || '—'}</p>
+      <p><strong>Email:</strong> ${email}</p>
+      <p><strong>Phone:</strong> ${phone || '—'}</p>
+      <p><strong>Requested Date:</strong> ${date}</p>
+      <p><strong>Requested Time:</strong> ${time}</p>
+      <p><strong>Meeting Notes:</strong></p>
+      <div style="background: #f4f5f7; padding: 16px; border-radius: 8px; border-left: 4px solid #C7FF3D; color: #111;">
+        ${(notes || 'No extra notes provided.').replace(/\n/g, '<br/>')}
+      </div>
+      <p style="font-size: 0.85rem; color: #777; margin-top: 24px;">Sent from Noryvex Operations Hub.</p>
+    `;
+    sendEmailNotification(subject, htmlContent);
+
     res.status(201).json({ message: 'Meeting scheduled successfully.' });
   } catch (error) {
     console.error('Error saving meeting:', error);
@@ -88,11 +167,12 @@ app.post('/api/meeting', async (req, res) => {
 // Admin Authentication Login
 app.post('/api/admin/login', (req, res) => {
   const { email, password } = req.body;
-  const adminEmail = 'codingwithrazi@gmail.com';
+  const allowedEmails = ['razi@trynoryvex.com', 'razi@noryvex.com', 'codingwithrazi@gmail.com'];
   const adminPassword = process.env.ADMIN_PASSWORD || 'RaziNoryvex2026!';
   
-  if (email === adminEmail && password === adminPassword) {
-    const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: '24h' });
+  const cleanedEmail = (email || '').toLowerCase().trim();
+  if (allowedEmails.includes(cleanedEmail) && password === adminPassword) {
+    const token = jwt.sign({ email: cleanedEmail }, JWT_SECRET, { expiresIn: '24h' });
     return res.json({ token });
   }
   

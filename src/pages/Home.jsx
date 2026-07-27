@@ -4,16 +4,22 @@ import {
   Layers, Link2, Database, Shield, CheckCircle2, ChevronRight, ChevronLeft
 } from 'lucide-react';
 import ParticleCanvas from '../components/ParticleCanvas';
+import { dbGetPartners } from '../utils/dbHelper';
 
 export default function Home({ setActivePage }) {
   const [mousePos, setMousePos]       = useState({ x: 0.5, y: 0.5 });
   const [translateX, setTranslateX] = useState(0);
   const [taglineProgress, setTaglineProgress] = useState(0);
+  const [partners, setPartners] = useState([]);
   const heroRef    = useRef(null);
   const sliderRef  = useRef(null);
   const servicesSectionRef = useRef(null);
   const taglineSectionRef = useRef(null);
   const CARDS_PER_VIEW = 3;
+
+  useEffect(() => {
+    setPartners(dbGetPartners());
+  }, []);
 
   // Mouse parallax for hero (normalised 0–1)
   const handleMouseMove = useCallback((e) => {
@@ -219,18 +225,11 @@ export default function Home({ setActivePage }) {
               </button>
             </div>
             <div className="hero-featured-badges nrx-reveal" style={{ transitionDelay: '0.15s' }}>
-              <a href="https://www.superlaun.ch/products/2926" target="_blank" rel="noopener noreferrer">
-                <img src="https://www.superlaun.ch/badge.png" alt="Featured on Super Launch" className="featured-badge-img" />
-              </a>
-              <a href="https://twelve.tools" target="_blank" rel="noopener noreferrer">
-                <img src="https://twelve.tools/badge3-dark.svg" alt="Featured on Twelve Tools" className="featured-badge-img" />
-              </a>
-              <a href="https://wired.business" target="_blank" rel="noopener noreferrer">
-                <img src="https://wired.business/badge3-dark.svg" alt="Featured on Wired Business" className="featured-badge-img" />
-              </a>
-              <a href="https://www.goodfirms.co/company/noryvex" target="_blank" rel="noopener noreferrer">
-                <img src="https://www.goodfirms.co/img/badges/recognized-on-goodfirms.png" alt="Recognized on GoodFirms" className="featured-badge-img" />
-              </a>
+              {partners.map((p) => (
+                <a key={p.id} href={p.link} target="_blank" rel="noopener noreferrer" title={p.name}>
+                  <img src={p.image} alt={p.name} className="featured-badge-img" style={{ height: '32px', width: 'auto', objectFit: 'contain' }} />
+                </a>
+              ))}
             </div>
           </div>
 

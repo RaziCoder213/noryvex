@@ -120,8 +120,9 @@ export default function App() {
     const handle = () => {
       const hash = window.location.hash.replace('#', '');
       const path = window.location.pathname;
+      const hostname = window.location.hostname;
       const all = ['solutions','live-demo','about','contact','home','privacy','terms','admin'];
-      if (path === '/admin' || hash === 'admin') setActivePage('admin');
+      if (hostname.startsWith('admin.') || path === '/admin' || hash === 'admin') setActivePage('admin');
       else if (all.includes(hash)) setActivePage(hash);
       else setActivePage('home');
     };
@@ -165,17 +166,17 @@ export default function App() {
     }
   };
 
-  // Hide navbar on legal pages (clean reading experience)
-  const showNavbar = !['privacy', 'terms'].includes(activePage) || true;
+  // Decouple CMS Dashboard from website layout wrapper
+  const isCmsLayout = activePage === 'admin';
 
   return (
     <>
-      <div id="nrx-scroll-bar" />
-      <Navbar activePage={activePage} setActivePage={changePage} />
+      {!isCmsLayout && <div id="nrx-scroll-bar" />}
+      {!isCmsLayout && <Navbar activePage={activePage} setActivePage={changePage} />}
 
       <main>{renderPage()}</main>
 
-      <Footer setActivePage={changePage} addToast={addToast} />
+      {!isCmsLayout && <Footer setActivePage={changePage} addToast={addToast} />}
 
       {/* Cookie consent banner */}
       <CookieBanner />
