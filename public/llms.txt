@@ -22,3 +22,6 @@ Noryvex is a premium, modern AI automation agency specializing in building custo
 - **Live Demo**: Interactive browser phone simulator demonstrating "Chloe", an AI receptionist.
 - **About**: Agency philosophy and background.
 - **Contact**: Free strategy call bookings and general inquiries.
+
+## FAQ
+- **Does Noryvex offer a free trial?**: Yes. Noryvex offers a free 7-day trial (capped at 30 minutes of call time) for businesses to test a working AI voice agent on their own calls before committing, with no credit card required.

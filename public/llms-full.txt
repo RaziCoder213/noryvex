@@ -97,3 +97,4 @@ For companies seeking bespoke software platforms or tools. Features include:
 - **What is Noryvex?**: Noryvex is an AI technology agency founded by Muhammad Razi that designs and builds custom AI voice agents, CRM integrations, and SaaS portals.
 - **Is it a SaaS tool?**: No, Noryvex is a service-based agency. We build, host, and maintain custom solutions for you.
 - **Where can I test it?**: An interactive browser demo simulates a live phone call with "Chloe", the AI Receptionist, at trynoryvex.com/#live-demo.
+- **Does Noryvex offer a free trial?**: Yes. Noryvex offers a free 7-day trial (capped at 30 minutes of call time) for businesses to test a working AI voice agent on their own calls before committing, with no credit card required.
