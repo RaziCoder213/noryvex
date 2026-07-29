@@ -441,6 +441,106 @@ export default function Home({ setActivePage }) {
         </div>
       </section>
 
+      {/* ── 48-Hour AI Receptionist Trial Offer Section ── */}
+      <section className="trial-offer-section">
+        <div className="container">
+          <div className="trial-offer-card glass-card">
+            <div className="trial-offer-header">
+              <span className="section-tag txt-slide">Exclusive Offer</span>
+              <h2 className="trial-offer-title">🚀 Try Your Own AI Receptionist — Free for 7 Days</h2>
+              <p className="trial-offer-subtitle">
+                Book a meeting with us. We'll have your AI receptionist live in 48 hours. Try it free for 7 days.
+              </p>
+            </div>
+
+            <div className="trial-offer-grid">
+              {/* Left Column: What we train */}
+              <div className="trial-info-panel">
+                <h3 className="panel-title">Trained Specifically On:</h3>
+                <ul className="panel-list">
+                  <li>
+                    <CheckCircle2 className="list-icon" />
+                    <div>
+                      <strong>Your Business &amp; Services</strong>
+                      <p>Full understanding of what your agency, clinic, or business does.</p>
+                    </div>
+                  </li>
+                  <li>
+                    <CheckCircle2 className="list-icon" />
+                    <div>
+                      <strong>Your FAQs &amp; Knowledge Base</strong>
+                      <p>Instant answers to common customer queries and pricing details.</p>
+                    </div>
+                  </li>
+                  <li>
+                    <CheckCircle2 className="list-icon" />
+                    <div>
+                      <strong>Your Booking &amp; Hours</strong>
+                      <p>Autonomous scheduling during your business hours synced to calendar.</p>
+                    </div>
+                  </li>
+                </ul>
+
+                <div className="trial-features-strip">
+                  <div className="strip-item">No software to learn</div>
+                  <div className="strip-item">No technical setup</div>
+                  <div className="strip-item">No complex dashboards</div>
+                </div>
+              </div>
+
+              {/* Right Column: Mini Dashboard Preview */}
+              <div className="trial-dashboard-preview">
+                <div className="preview-header">
+                  <span className="preview-dot green"></span>
+                  <span className="preview-title">Your Private Client Portal</span>
+                </div>
+                
+                <p className="preview-intro-text">
+                  You'll receive a private dashboard containing only the metrics that matter to your business:
+                </p>
+
+                <div className="preview-metrics-grid">
+                  <div className="preview-metric-card">
+                    <span className="metric-icon">📞</span>
+                    <span className="metric-name">Call History</span>
+                  </div>
+                  <div className="preview-metric-card">
+                    <span className="metric-icon">🎙️</span>
+                    <span className="metric-name">Call Recordings</span>
+                  </div>
+                  <div className="preview-metric-card">
+                    <span className="metric-icon">📝</span>
+                    <span className="metric-name">Transcripts</span>
+                  </div>
+                  <div className="preview-metric-card">
+                    <span className="metric-icon">👥</span>
+                    <span className="metric-name">New Leads</span>
+                  </div>
+                  <div className="preview-metric-card">
+                    <span className="metric-icon">📅</span>
+                    <span className="metric-name">Bookings</span>
+                  </div>
+                  <div className="preview-metric-card">
+                    <span className="metric-icon">📊</span>
+                    <span className="metric-name">Simple Analytics</span>
+                  </div>
+                </div>
+
+                <div className="preview-footer-note">
+                  <strong>100% Industry Tailored:</strong> Whether you're a dental clinic, restaurant, law firm, salon, real estate agency, or local service business—we configure the portal exactly around how your business works. Just the information you need, with zero technical complexity.
+                </div>
+              </div>
+            </div>
+
+            <div className="trial-offer-cta-container">
+              <button onClick={() => setActivePage('contact', 'trial')} className="btn btn-primary btn-lg">
+                Activate Your 48-Hour Setup <ArrowRight size={18} />
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── Big Kinetic Tagline (Sticky Pin & Scroll Reveal) ── */}
       <section className="nrx-tagline-sticky-parent" ref={taglineSectionRef}>
         <div className="nrx-tagline-sticky-wrapper">
@@ -506,6 +606,231 @@ export default function Home({ setActivePage }) {
       </section>
 
       <style>{`
+        /* ── 48-Hour Trial Section ──────────────── */
+        .trial-offer-section {
+          padding: 80px 0;
+          background: #000;
+          position: relative;
+          z-index: 5;
+        }
+
+        .trial-offer-card {
+          padding: 60px 40px;
+          border: 1px solid rgba(199, 255, 61, 0.15);
+          background: rgba(10, 10, 13, 0.6);
+          backdrop-filter: blur(12px);
+          border-radius: 24px;
+          position: relative;
+          overflow: hidden;
+          box-shadow: 0 0 50px rgba(199, 255, 61, 0.02);
+        }
+
+        .trial-offer-card::before {
+          content: "";
+          position: absolute;
+          top: -20%; right: -20%;
+          width: 350px; height: 350px;
+          background: radial-gradient(circle, rgba(199, 255, 61, 0.05) 0%, transparent 70%);
+          border-radius: 50%;
+          pointer-events: none;
+        }
+
+        .trial-offer-header {
+          text-align: center;
+          margin-bottom: 48px;
+          max-width: 800px;
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        .trial-offer-title {
+          font-family: 'Syne', sans-serif;
+          font-weight: 800;
+          font-size: 2.2rem;
+          color: #fff;
+          margin-top: 12px;
+          margin-bottom: 16px;
+        }
+
+        .trial-offer-subtitle {
+          font-size: 1.15rem;
+          color: var(--text-gray);
+          line-height: 1.6;
+        }
+
+        .trial-offer-grid {
+          display: grid;
+          grid-template-columns: 1.1fr 1fr;
+          gap: 48px;
+          align-items: start;
+        }
+
+        .panel-title {
+          font-family: 'Syne', sans-serif;
+          font-weight: 700;
+          font-size: 1.3rem;
+          color: #fff;
+          margin-bottom: 24px;
+        }
+
+        .panel-list {
+          list-style: none;
+          padding: 0;
+          margin: 0 0 32px 0;
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+        }
+
+        .panel-list li {
+          display: flex;
+          gap: 16px;
+          align-items: start;
+          text-align: left;
+        }
+
+        .list-icon {
+          color: var(--accent-neon);
+          flex-shrink: 0;
+          margin-top: 4px;
+        }
+
+        .panel-list strong {
+          color: #fff;
+          font-size: 0.95rem;
+          display: block;
+          margin-bottom: 4px;
+        }
+
+        .panel-list p {
+          color: var(--text-gray);
+          font-size: 0.85rem;
+          line-height: 1.4;
+          margin: 0;
+        }
+
+        .trial-features-strip {
+          display: flex;
+          flex-direction: row;
+          flex-wrap: wrap;
+          gap: 12px;
+        }
+
+        .strip-item {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 0.85rem;
+          color: var(--accent-neon);
+          background: rgba(199, 255, 61, 0.05);
+          border: 1px solid rgba(199, 255, 61, 0.1);
+          padding: 10px 16px;
+          border-radius: 8px;
+          font-weight: 600;
+        }
+
+        .trial-dashboard-preview {
+          background: rgba(0, 0, 0, 0.35);
+          border: 1px solid var(--border-light);
+          border-radius: 16px;
+          padding: 24px;
+          text-align: left;
+        }
+
+        .preview-header {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 16px;
+        }
+
+        .preview-dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+        }
+
+        .preview-dot.green {
+          background: var(--accent-neon);
+          box-shadow: 0 0 8px var(--accent-neon);
+        }
+
+        .preview-title {
+          font-size: 0.8rem;
+          font-weight: 700;
+          color: var(--text-muted);
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+        }
+
+        .preview-intro-text {
+          font-size: 0.85rem;
+          color: var(--text-gray);
+          line-height: 1.5;
+          margin-bottom: 20px;
+        }
+
+        .preview-metrics-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 12px;
+          margin-bottom: 24px;
+        }
+
+        .preview-metric-card {
+          background: rgba(255, 255, 255, 0.015);
+          border: 1px solid var(--border-light);
+          border-radius: 10px;
+          padding: 14px 8px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 8px;
+          text-align: center;
+        }
+
+        .metric-icon {
+          font-size: 1.25rem;
+        }
+
+        .metric-name {
+          font-size: 0.75rem;
+          color: #fff;
+          font-weight: 600;
+        }
+
+        .preview-footer-note {
+          font-size: 0.8rem;
+          color: var(--text-gray);
+          line-height: 1.5;
+          border-top: 1px solid var(--border-light);
+          padding-top: 16px;
+        }
+
+        .preview-footer-note strong {
+          color: #fff;
+          display: block;
+          margin-bottom: 4px;
+        }
+
+        .trial-offer-cta-container {
+          text-align: center;
+          margin-top: 48px;
+        }
+
+        @media (max-width: 991px) {
+          .trial-offer-grid {
+            grid-template-columns: 1fr;
+            gap: 40px;
+          }
+          .trial-offer-card {
+            padding: 40px 24px;
+          }
+          .trial-offer-title {
+            font-size: 1.8rem;
+          }
+        }
+
         /* Hero mouse-follow glow */
         .hero-mouse-glow {
           position: absolute;
