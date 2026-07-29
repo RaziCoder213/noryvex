@@ -99,3 +99,18 @@ For companies seeking bespoke software platforms or tools. Features include:
 - **Is it a SaaS tool?**: No, Noryvex is a service-based agency. We build, host, and maintain custom solutions for you.
 - **Where can I test it?**: An interactive browser demo simulates a live phone call with "Chloe", the AI Receptionist, at trynoryvex.com/#live-demo.
 - **Does Noryvex offer a free trial?**: Yes — a free 7-day trial with up to 30 minutes of real call time, no credit card required. Noryvex sets up the trial agent directly; it's not a self-serve signup.
+
+---
+
+## SECTION 7: Industries We Serve
+Noryvex engineers custom AI Voice Agents, autonomous receptionists, and workflow automation solutions across all major industries, including:
+- **Healthcare & Medical (Dental, Pediatric, Clinical):** Eliminate missed calls, qualify patient leads, and schedule appointments into practice management software 24/7.
+- **Real Estate & Property Management:** Automate tenant call routing, qualify buyer leads, and book property showings directly.
+- **E-commerce & Retail:** Deploy custom AI chatbots and order-tracking voice flows to handle inquiries and support.
+- **SaaS & Tech Startups:** Design custom AI data syncing, Stripe billing connections, and user onboarding flows.
+- **Legal & Consulting:** Streamline client intake forms, triage case severity, and book consultation strategy calls.
+- **Finance & Insurance:** Automate CPA lead generation, report syncs, and client appointment scheduling.
+- **Logistics & Transportation:** Coordinate dispatch channels, track delivery statuses, and handle communications automatically.
+- **Local Home Services (Plumbing, HVAC, Electrical, Roofing):** Capture high-urgency after-hours service requests and dispatch technicians.
+- **Education & E-learning:** Automate student enrollment questions, course reminders, and calendar coordination.
+- **Hospitality & Bookings (Restaurants, Salons, Gyms):** Automate seat reservations, booking schedules, and appointment notifications.
