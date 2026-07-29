@@ -213,15 +213,20 @@ export default function Home({ setActivePage }) {
           >
             <div className="hero-badge txt-slide">
               <span className="badge-glow"></span>
-              <span className="badge-text">NEVER SLEEPS. NEVER SLOWS.</span>
+              <span className="badge-text">FIRST CHECK, THEN PAY — NORYVEX POLICY</span>
             </div>
             <h1 className="hero-title txt-reveal">
-              AI Automation Agency <br />
-              <span className="text-neon-gradient txt-gradient-animate">For Autonomous Business Scaling.</span>
+              AI Receptionist Live In 48 Hours. <br />
+              <span className="text-neon-gradient txt-gradient-animate">Try It Free For 7 Days.</span>
             </h1>
             <p className="hero-subtitle txt-blur-in">
-              Noryvex is a leading AI Automation Agency. We build custom AI Voice Calling Agents, Autonomous Receptionist AI systems, and Intelligent Software that answer calls, automate workflows, and help businesses scale exponentially.
+              Noryvex is a premier AI service agency. We design, train, and deploy your custom AI receptionist in 48 hours. No software to learn. No technical setup. No complicated dashboards. Book a meeting and we handle the rest.
             </p>
+            <div className="hero-policy-strip txt-blur-in">
+              <span className="policy-item">✓ No software to learn</span>
+              <span className="policy-item">✓ No technical setup</span>
+              <span className="policy-item">✓ No complicated dashboards</span>
+            </div>
             <div className="hero-ctas">
               <button onClick={() => setActivePage('contact', 'trial')} className="btn btn-primary btn-lg">
                 Start Your Free 7-Day Trial <ArrowRight size={18} />
@@ -1003,6 +1008,32 @@ export default function Home({ setActivePage }) {
           line-height: 1.1;
           margin-bottom: 24px;
           letter-spacing: -0.025em;
+        }
+
+        .hero-policy-strip {
+          display: flex;
+          gap: 12px;
+          margin-bottom: 32px;
+          flex-wrap: wrap;
+        }
+
+        .policy-item {
+          font-size: 0.82rem;
+          color: var(--accent-neon);
+          background: rgba(199, 255, 61, 0.05);
+          border: 1px solid rgba(199, 255, 61, 0.1);
+          padding: 6px 14px;
+          border-radius: 100px;
+          font-weight: 600;
+          letter-spacing: 0.02em;
+        }
+        
+        @media (max-width: 768px) {
+          .hero-policy-strip {
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 24px;
+          }
         }
         
         .text-neon-gradient {
