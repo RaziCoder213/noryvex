@@ -1,10 +1,9 @@
 {
   "cleanUrls": true,
-  "rewrites": [
-    {
-      "source": "/((?!assets/|logo.png|favicon.svg|llms.txt|llms-full.txt|robots.txt|sitemap.xml|favicon.ico|.*\\..*$).*)",
-      "destination": "/index.html"
-    }
+  "routes": [
+    { "src": "/assets/(.*)", "headers": { "cache-control": "public, max-age=31536000, immutable" } },
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/index.html" }
   ],
   "headers": [
     {

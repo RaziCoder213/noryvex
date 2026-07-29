@@ -17,6 +17,7 @@ import Contact from './pages/Contact';
 import Admin from './pages/Admin';
 import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
+import NotFound from './pages/NotFound';
 
 export default function App() {
   const [activePage, setActivePage] = useState('home');
@@ -132,10 +133,15 @@ export default function App() {
       setInitialContactTab('call');
       return 'contact';
     }
-    if (all.includes(path)) {
-      return path;
+    
+    if (path) {
+      if (all.includes(path)) {
+        return path;
+      }
+      return 'not-found';
     }
-    if (all.includes(hash)) {
+    
+    if (hash && all.includes(hash)) {
       return hash;
     }
     return 'home';
@@ -184,6 +190,7 @@ export default function App() {
       case 'admin':     return <Admin addToast={addToast} />;
       case 'privacy':   return <Privacy setActivePage={changePage} />;
       case 'terms':     return <Terms setActivePage={changePage} />;
+      case 'not-found': return <NotFound setActivePage={changePage} />;
       default:          return <Home setActivePage={changePage} />;
     }
   };
