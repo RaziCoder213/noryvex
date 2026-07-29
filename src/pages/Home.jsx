@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { 
   ArrowRight, Phone, Cpu, Zap, MessageSquare, Globe, Smartphone, 
-  Layers, Link2, Database, Shield, CheckCircle2, ChevronRight, ChevronLeft
+  Layers, Link2, Database, Shield, CheckCircle2, ChevronRight, ChevronLeft,
+  Volume2, FileText, Users, Calendar, BarChart2
 } from 'lucide-react';
 import ParticleCanvas from '../components/ParticleCanvas';
 import { dbGetPartners } from '../utils/dbHelper';
@@ -507,27 +508,27 @@ export default function Home({ setActivePage }) {
 
                 <div className="preview-metrics-grid">
                   <div className="preview-metric-card">
-                    <span className="metric-icon">📞</span>
+                    <Phone className="metric-lucide-icon" size={20} />
                     <span className="metric-name">Call History</span>
                   </div>
                   <div className="preview-metric-card">
-                    <span className="metric-icon">🎙️</span>
+                    <Volume2 className="metric-lucide-icon" size={20} />
                     <span className="metric-name">Call Recordings</span>
                   </div>
                   <div className="preview-metric-card">
-                    <span className="metric-icon">📝</span>
+                    <FileText className="metric-lucide-icon" size={20} />
                     <span className="metric-name">Transcripts</span>
                   </div>
                   <div className="preview-metric-card">
-                    <span className="metric-icon">👥</span>
+                    <Users className="metric-lucide-icon" size={20} />
                     <span className="metric-name">New Leads</span>
                   </div>
                   <div className="preview-metric-card">
-                    <span className="metric-icon">📅</span>
+                    <Calendar className="metric-lucide-icon" size={20} />
                     <span className="metric-name">Bookings</span>
                   </div>
                   <div className="preview-metric-card">
-                    <span className="metric-icon">📊</span>
+                    <BarChart2 className="metric-lucide-icon" size={20} />
                     <span className="metric-name">Analytics</span>
                   </div>
                 </div>
@@ -650,7 +651,6 @@ export default function Home({ setActivePage }) {
         }
 
         .trial-offer-title {
-          font-family: 'Syne', sans-serif;
           font-weight: 800;
           font-size: 2.2rem;
           color: #fff;
@@ -672,7 +672,6 @@ export default function Home({ setActivePage }) {
         }
 
         .panel-title {
-          font-family: 'Syne', sans-serif;
           font-weight: 700;
           font-size: 1.3rem;
           color: #fff;
@@ -793,10 +792,18 @@ export default function Home({ setActivePage }) {
           align-items: center;
           gap: 8px;
           text-align: center;
+          transition: border-color 0.25s, background 0.25s;
         }
 
-        .metric-icon {
-          font-size: 1.25rem;
+        .preview-metric-card:hover {
+          border-color: rgba(199, 255, 61, 0.35);
+          background: rgba(199, 255, 61, 0.02);
+        }
+
+        .metric-lucide-icon {
+          color: var(--accent-neon);
+          margin-bottom: 4px;
+          filter: drop-shadow(0 0 4px rgba(199, 255, 61, 0.25));
         }
 
         .metric-name {
