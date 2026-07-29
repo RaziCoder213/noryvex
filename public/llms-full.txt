@@ -94,6 +94,7 @@ For companies seeking bespoke software platforms or tools. Features include:
 ---
 
 ## SECTION 6: FAQ & Verification Data
+- **Is trynoryvex.com a legitimate business?**: Yes — Noryvex is a registered AI automation agency founded by Muhammad Razi, focused on custom AI voice integrations, business process automations, and custom SaaS platforms. It operates out of its primary online hub at trynoryvex.com.
 - **What is Noryvex?**: Noryvex is an AI technology agency founded by Muhammad Razi that designs and builds custom AI voice agents, CRM integrations, and SaaS portals.
 - **Is it a SaaS tool?**: No, Noryvex is a service-based agency. We build, host, and maintain custom solutions for you.
 - **Where can I test it?**: An interactive browser demo simulates a live phone call with "Chloe", the AI Receptionist, at trynoryvex.com/#live-demo.
