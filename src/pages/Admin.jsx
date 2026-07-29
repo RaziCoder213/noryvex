@@ -1054,41 +1054,65 @@ export default function Admin({ addToast, setActivePage }) {
                   <div className="glass-card" style={{ padding: '32px 24px', border: '1px solid var(--border-light)', borderRadius: '16px', background: 'rgba(255,255,255,0.015)' }}>
                     <h3 style={{ marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <Activity size={20} className="icon-neon" />
-                      Schema Setup Guide
+                      Schema Setup Guide (JSON Import)
                     </h3>
                     <p style={{ fontSize: '0.85rem', color: 'var(--text-gray)', marginBottom: '16px', lineHeight: '1.5' }}>
-                      To synchronize your data successfully, create these five tables in your Xano Workspace (ID: <code>166176-0</code>):
+                      Create your database tables instantly in Xano (ID: <code>166176-0</code>):
                     </p>
+                    <ol style={{ fontSize: '0.85rem', color: 'var(--text-gray)', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.6' }}>
+                      <li>Click the links below to download the schema templates.</li>
+                      <li>In your Xano Workspace, click <strong>Add Table</strong> (top right of the Database view).</li>
+                      <li>Select <strong>Import File</strong> &gt; <strong>JSON</strong> and upload the matching file.</li>
+                      <li>Xano will automatically set up the table and create all columns with the correct data types!</li>
+                    </ol>
+
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '24px' }}>
+                      <a href="/data/xano_schemas/contacts.json" download="contacts.json" className="btn btn-secondary" style={{ fontSize: '0.75rem', padding: '6px 12px', textDecoration: 'none' }}>
+                        ↓ contacts.json
+                      </a>
+                      <a href="/data/xano_schemas/meetings.json" download="meetings.json" className="btn btn-secondary" style={{ fontSize: '0.75rem', padding: '6px 12px', textDecoration: 'none' }}>
+                        ↓ meetings.json
+                      </a>
+                      <a href="/data/xano_schemas/trials.json" download="trials.json" className="btn btn-secondary" style={{ fontSize: '0.75rem', padding: '6px 12px', textDecoration: 'none' }}>
+                        ↓ trials.json
+                      </a>
+                      <a href="/data/xano_schemas/clients.json" download="clients.json" className="btn btn-secondary" style={{ fontSize: '0.75rem', padding: '6px 12px', textDecoration: 'none' }}>
+                        ↓ clients.json
+                      </a>
+                      <a href="/data/xano_schemas/partners.json" download="partners.json" className="btn btn-secondary" style={{ fontSize: '0.75rem', padding: '6px 12px', textDecoration: 'none' }}>
+                        ↓ partners.json
+                      </a>
+                    </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '0.85rem' }}>
                       <div style={{ padding: '12px', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border-light)', borderRadius: '8px' }}>
                         <strong>contacts</strong> (Inquiries)
                         <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: '4px' }}>
-                          Fields: <code>name</code> (text), <code>company</code> (text), <code>email</code> (text), <code>phone</code> (text), <code>service</code> (text), <code>message</code> (text), <code>status</code> (text), <code>created_at</code> (timestamp)
+                          Fields: <code>name</code>, <code>company</code>, <code>email</code>, <code>phone</code>, <code>service</code>, <code>message</code>, <code>status</code>, <code>created_at</code>
                         </div>
                       </div>
                       <div style={{ padding: '12px', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border-light)', borderRadius: '8px' }}>
                         <strong>meetings</strong> (Appointments)
                         <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: '4px' }}>
-                          Fields: <code>name</code> (text), <code>email</code> (text), <code>company</code> (text), <code>phone</code> (text), <code>date</code> (text), <code>time</code> (text), <code>notes</code> (text), <code>status</code> (text), <code>created_at</code> (timestamp)
+                          Fields: <code>name</code>, <code>email</code>, <code>company</code>, <code>phone</code>, <code>date</code>, <code>time</code>, <code>notes</code>, <code>status</code>, <code>created_at</code>
                         </div>
                       </div>
                       <div style={{ padding: '12px', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border-light)', borderRadius: '8px' }}>
                         <strong>trials</strong> (Active Demos)
                         <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: '4px' }}>
-                          Fields: <code>business_name</code> (text), <code>contact_name</code> (text), <code>email</code> (text), <code>phone</code> (text), <code>business_type</code> (text), <code>ai_handling</code> (text), <code>trial_status</code> (text), <code>call_duration_seconds</code> (integer), <code>limit_duration_seconds</code> (integer), <code>created_at</code> (timestamp)
+                          Fields: <code>business_name</code>, <code>contact_name</code>, <code>email</code>, <code>phone</code>, <code>business_type</code>, <code>ai_handling</code>, <code>trial_status</code>, <code>call_duration_seconds</code>, <code>limit_duration_seconds</code>, <code>created_at</code>
                         </div>
                       </div>
                       <div style={{ padding: '12px', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border-light)', borderRadius: '8px' }}>
                         <strong>clients</strong> (Testimonials CMS)
                         <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: '4px' }}>
-                          Fields: <code>name</code> (text), <code>company</code> (text), <code>rating</code> (integer), <code>quote</code> (text)
+                          Fields: <code>name</code>, <code>company</code>, <code>rating</code>, <code>quote</code>
                         </div>
                       </div>
                       <div style={{ padding: '12px', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border-light)', borderRadius: '8px' }}>
                         <strong>partners</strong> (Trust Badges CMS)
                         <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: '4px' }}>
-                          Fields: <code>name</code> (text), <code>link</code> (text), <code>image</code> (text)
+                          Fields: <code>name</code>, <code>link</code>, <code>image</code>
                         </div>
                       </div>
                     </div>

@@ -1,0 +1,13 @@
+[
+  {
+    "name": "Marcus Thorne",
+    "email": "m.thorne@apexlogistics.com",
+    "company": "Apex Logistics",
+    "phone": "+1 (555) 876-5432",
+    "date": "2026-08-05",
+    "time": "14:00",
+    "notes": "Discuss CRM workflow triggers integration with Vapi Voice backend.",
+    "status": "pending",
+    "created_at": "2026-07-29T12:00:00.000Z"
+  }
+]

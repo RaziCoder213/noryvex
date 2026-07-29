@@ -1,0 +1,14 @@
+[
+  {
+    "business_name": "Bright Dental",
+    "contact_name": "Sarah Jenkins",
+    "email": "sarah@brightdental.com",
+    "phone": "+1 (555) 234-5678",
+    "business_type": "Dental Clinic",
+    "ai_handling": "both",
+    "trial_status": "converted",
+    "call_duration_seconds": 980,
+    "limit_duration_seconds": 1800,
+    "created_at": "2026-07-29T12:00:00.000Z"
+  }
+]
