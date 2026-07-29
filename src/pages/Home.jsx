@@ -18,7 +18,16 @@ export default function Home({ setActivePage }) {
   const CARDS_PER_VIEW = 3;
 
   useEffect(() => {
-    setPartners(dbGetPartners());
+    const loadPartners = async () => {
+      try {
+        const data = await dbGetPartners();
+        setPartners(Array.isArray(data) ? data : []);
+      } catch (err) {
+        console.error('Failed to load partners:', err);
+        setPartners([]);
+      }
+    };
+    loadPartners();
   }, []);
 
   // Mouse parallax for hero (normalised 0–1)
