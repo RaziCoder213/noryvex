@@ -123,7 +123,7 @@ export default function Footer({ setActivePage, addToast }) {
         
         .footer-container {
           display: grid;
-          grid-template-columns: 1.5fr 2fr;
+          grid-template-columns: 1.2fr 2.5fr;
           gap: 64px;
           margin-bottom: 64px;
         }
@@ -178,7 +178,7 @@ export default function Footer({ setActivePage, addToast }) {
         
         .footer-links-grid {
           display: grid;
-          grid-template-columns: repeat(3, 1fr);
+          grid-template-columns: repeat(4, 1fr);
           gap: 32px;
           text-align: left;
         }
@@ -275,32 +275,39 @@ export default function Footer({ setActivePage, addToast }) {
             gap: 48px;
           }
           .footer-brand-section {
-            align-items: center;
-            text-align: center;
+            align-items: flex-start;
+            text-align: left;
           }
           .footer-desc {
             max-width: 100%;
           }
           .footer-links-grid {
-            grid-template-columns: repeat(3, 1fr);
-            justify-items: center;
-            text-align: center;
+            grid-template-columns: repeat(2, 1fr);
+            justify-items: start;
+            text-align: left;
+            gap: 24px;
           }
           .footer-btn-link, .footer-link {
-            text-align: center;
-            margin: 0 auto;
+            text-align: left;
+            margin: 0;
           }
         }
         
         @media (max-width: 600px) {
           .footer-links-grid {
             grid-template-columns: 1fr;
-            gap: 32px;
+            gap: 24px;
           }
           .footer-bottom-container {
             flex-direction: column;
             gap: 16px;
-            text-align: center;
+            align-items: flex-start;
+            text-align: left;
+          }
+          .legal-links {
+            flex-direction: column;
+            gap: 12px;
+            align-items: flex-start;
           }
         }
 

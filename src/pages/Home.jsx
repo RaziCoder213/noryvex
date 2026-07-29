@@ -167,10 +167,6 @@ export default function Home({ setActivePage }) {
   // Scroll-driven tagline word-by-word reveal progress
   useEffect(() => {
     const handleScroll = () => {
-      if (window.innerWidth <= 768) {
-        setTaglineProgress(1.0);
-        return;
-      }
       const parent = taglineSectionRef.current;
       if (!parent) return;
       
@@ -456,20 +452,20 @@ export default function Home({ setActivePage }) {
         <div className="container">
           <div className="trial-offer-card glass-card">
             <div className="trial-offer-header">
-              <span className="section-tag txt-slide">Full-Service Agency Offer</span>
-              <h2 className="trial-offer-title">🚀 Try Your Own AI Receptionist — Free for 7 Days</h2>
+              <span className="section-tag txt-slide">Noryvex Operational Policy</span>
+              <h2 className="trial-offer-title">🚀 First Check, Then Pay — Try Your Custom AI Receptionist Free for 7 Days</h2>
               <p className="trial-offer-subtitle">
-                Book a meeting with us. We'll have your AI receptionist live in 48 hours. Try it free for 7 days.
+                We'll design, train, and deploy your custom AI receptionist live in 48 hours. Test run it free for 7 days before paying a single dollar. First check, then get.
               </p>
             </div>
 
             <div className="trial-offer-grid">
               {/* Left Column: What we train */}
               <div className="trial-info-panel">
-                <h3 className="panel-title">End-to-End Managed Service</h3>
+                <h3 className="panel-title">100% Built &amp; Managed For You</h3>
                 <p style={{ fontSize: '0.9rem', color: 'var(--text-gray)', marginBottom: '24px', lineHeight: '1.6' }}>
-                  We are a full-service AI agency. We design, build, train, host, and integrate your custom receptionist for you. 
-                  You don't need to write code, configure servers, or handle API keys.
+                  Noryvex is a full-service AI agency, not a SaaS platform. We design, build, train, and host your custom AI receptionist for you. 
+                  We handle the setup, configuration, and CRM integrations end-to-end.
                 </p>
                 <ul className="panel-list" style={{ marginBottom: '24px' }}>
                   <li>
@@ -1546,32 +1542,25 @@ export default function Home({ setActivePage }) {
           will-change: opacity, transform;
         }
 
+        @media (max-width: 1024px) {
+          .nrx-tagline-sticky-wrapper {
+            top: 66px;
+            height: calc(100vh - 66px);
+          }
+        }
+
         @media (max-width: 768px) {
           .nrx-tagline-sticky-parent {
-            height: auto !important;
-            padding: 100px 0;
+            height: 200vh !important;
+            background: linear-gradient(180deg, var(--bg-dark) 0%, #000 100%);
           }
           .nrx-tagline-sticky-wrapper {
-            position: relative !important;
-            height: auto !important;
-          }
-          .nrx-kinetic-line {
-            opacity: 1 !important;
-            transform: none !important;
-            color: rgba(255, 255, 255, 0.95);
-            -webkit-text-stroke: 0px transparent;
-          }
-          .nrx-kinetic-accent {
-            color: transparent !important;
+            position: sticky !important;
           }
           .nrx-kinetic-sub {
-            opacity: 1 !important;
-            transform: none !important;
             margin-top: 24px;
           }
           .nrx-tagline-btn-wrap {
-            opacity: 1 !important;
-            transform: none !important;
             margin-top: 16px;
           }
         }
