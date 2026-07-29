@@ -1,9 +1,5 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import { resolve, dirname } from 'path'
-import { fileURLToPath } from 'url'
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -12,12 +8,12 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'index.html'),
-        about: resolve(__dirname, 'about/index.html'),
-        contact: resolve(__dirname, 'contact/index.html'),
-        solutions: resolve(__dirname, 'solutions/index.html'),
-        liveDemo: resolve(__dirname, 'live-demo/index.html'),
-        privacy: resolve(__dirname, 'privacy/index.html'),
+        main: './index.html',
+        about: './about/index.html',
+        contact: './contact/index.html',
+        solutions: './solutions/index.html',
+        liveDemo: './live-demo/index.html',
+        privacy: './privacy/index.html',
       }
     }
   },
