@@ -217,10 +217,10 @@ export default function Home({ setActivePage }) {
             </div>
             <h1 className="hero-title txt-reveal">
               AI Receptionist Live In 48 Hours. <br />
-              <span className="text-neon-gradient txt-gradient-animate">Try It Free For 7 Days.</span>
+              <span className="text-neon-gradient txt-gradient-animate">7-Day Checking Warranty.</span>
             </h1>
             <p className="hero-subtitle txt-blur-in">
-              Noryvex is a premier AI service agency. We design, train, and deploy your custom AI receptionist in 48 hours. No software to learn. No technical setup. No complicated dashboards. Book a meeting and we handle the rest.
+              Noryvex is a premier AI service agency. We design, train, and deploy your custom AI receptionist in 48 hours, protected by our 7-day checking warranty. No software to learn. No technical setup. No complicated dashboards. Book a meeting and we handle the rest.
             </p>
             <div className="hero-policy-strip txt-blur-in">
               <span className="policy-item">✓ No software to learn</span>
@@ -229,7 +229,7 @@ export default function Home({ setActivePage }) {
             </div>
             <div className="hero-ctas">
               <button onClick={() => setActivePage('contact', 'trial')} className="btn btn-primary btn-lg">
-                Start Your Free 7-Day Trial <ArrowRight size={18} />
+                Start 7-Day Checking Warranty <ArrowRight size={18} />
               </button>
               <button onClick={() => setActivePage('contact', 'call')} className="btn btn-secondary btn-lg">
                 Book a Strategy Call
@@ -458,9 +458,9 @@ export default function Home({ setActivePage }) {
           <div className="trial-offer-card glass-card">
             <div className="trial-offer-header">
               <span className="section-tag txt-slide">Noryvex Operational Policy</span>
-              <h2 className="trial-offer-title">🚀 First Check, Then Pay — Try Your Custom AI Receptionist Free for 7 Days</h2>
+              <h2 className="trial-offer-title">🚀 First Check, Then Pay — Try Your Custom AI Receptionist Under Our 7-Day Checking Warranty</h2>
               <p className="trial-offer-subtitle">
-                We'll design, train, and deploy your custom AI receptionist live in 48 hours. Test run it free for 7 days before paying a single dollar. First check, then get.
+                We'll design, train, and deploy your custom AI receptionist live in 48 hours. Test run it free for 7 days under our checking warranty before paying a single dollar. First check, then get.
               </p>
             </div>
 
@@ -607,7 +607,7 @@ export default function Home({ setActivePage }) {
               className="btn btn-primary btn-lg"
               onClick={() => setActivePage('contact', 'trial')}
             >
-              Start Your Free Trial
+              Start Checking Warranty
             </button>
           </div>
         </div>

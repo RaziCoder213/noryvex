@@ -71,7 +71,7 @@ export default function Solutions({ setActivePage }) {
                   onClick={() => setActivePage('contact', cat.title.toLowerCase().includes('voice') ? 'trial' : 'call')} 
                   className="btn btn-outline-neon"
                 >
-                  {cat.title.toLowerCase().includes('voice') ? 'Start Free Trial' : 'Book a Call'}
+                  {cat.title.toLowerCase().includes('voice') ? 'Checking Warranty' : 'Book a Call'}
                 </button>
               </div>
 

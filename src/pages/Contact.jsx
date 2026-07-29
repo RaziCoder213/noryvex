@@ -118,8 +118,8 @@ export default function Contact({ addToast, initialTab = 'trial' }) {
 
     try {
       const result = await dbSaveTrial(trialData);
-      if (result.success) {
-        addToast('Free Trial request submitted successfully!', 'success');
+      if (result) {
+        addToast('Checking warranty request submitted successfully!', 'success');
         setTrialSuccess(true);
         setTrialData({
           businessName: '',
@@ -130,11 +130,10 @@ export default function Contact({ addToast, initialTab = 'trial' }) {
           aiHandling: 'both'
         });
       } else {
-        addToast('Trial submission failed.', 'error');
+        addToast('Request submission failed.', 'error');
       }
     } catch (err) {
-      console.error(err);
-      addToast('Trial submission failed.', 'error');
+      addToast('Request submission failed.', 'error');
     } finally {
       setSubmittingTrial(false);
     }
@@ -147,7 +146,7 @@ export default function Contact({ addToast, initialTab = 'trial' }) {
           <div className="section-header">
             <span className="section-tag">Get in Touch</span>
             <h1 className="contact-title">Start Automating Today</h1>
-            <p className="contact-subtitle">Get a custom AI voice calling receptionist running on a free 7-day trial or sync directly for an operational audit.</p>
+            <p className="contact-subtitle">Get a custom AI voice calling receptionist running under a 7-day checking warranty or sync directly for an operational audit.</p>
           </div>
         </div>
       </section>
@@ -160,7 +159,7 @@ export default function Contact({ addToast, initialTab = 'trial' }) {
             <div className="glass-card contact-info-card">
               <div className="card-header-icon-title">
                 <Sparkles className="title-icon icon-neon" />
-                <h2>Risk-Free 7-Day Trial</h2>
+                <h2>7-Day Checking Warranty</h2>
               </div>
               <p className="card-desc" style={{ marginBottom: '24px' }}>
                 Experience the power of Chloe, our advanced human-sounding AI Voice Receptionist, custom-configured for your business workflow.
@@ -168,7 +167,7 @@ export default function Contact({ addToast, initialTab = 'trial' }) {
 
               {/* Trial terms list */}
               <div className="trial-terms-box" style={{ background: 'rgba(199, 255, 61, 0.04)', border: '1px dashed rgba(199, 255, 61, 0.2)', padding: '20px', borderRadius: '12px', marginBottom: '28px' }}>
-                <h3 style={{ fontSize: '0.9rem', color: 'var(--text-white)', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: '800' }}>Upfront Trial Parameters:</h3>
+                <h3 style={{ fontSize: '0.9rem', color: 'var(--text-white)', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: '800' }}>Warranty Parameters:</h3>
                 <ul className="trial-terms-list" style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   <li style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.88rem', color: 'var(--text-gray)' }}>
                     <CheckCircle2 size={16} color="#C7FF3D" style={{ flexShrink: 0 }} />
@@ -214,7 +213,7 @@ export default function Contact({ addToast, initialTab = 'trial' }) {
                   className={`contact-tab-btn ${activeTab === 'trial' ? 'active' : ''}`}
                   onClick={() => { setActiveTab('trial'); setTrialSuccess(false); }}
                 >
-                  Start Free Trial
+                  7-Day Checking Warranty
                 </button>
                 <button 
                   className={`contact-tab-btn ${activeTab === 'call' ? 'active' : ''}`}
@@ -236,14 +235,14 @@ export default function Contact({ addToast, initialTab = 'trial' }) {
                   <div className="success-screen-box">
                     <CheckCircle2 size={48} className="success-check" />
                     <h3>Request Submitted!</h3>
-                    <p>We'll set up your trial agent and reach out within 24 hours to activate it.</p>
+                    <p>We'll set up your custom agent and reach out within 24 hours to activate your checking phase.</p>
                     <button onClick={() => setTrialSuccess(false)} className="btn btn-outline-neon">
                       Request Another Setup
                     </button>
                   </div>
                 ) : (
                   <form onSubmit={handleTrialSubmit}>
-                    <p className="card-desc" style={{ marginBottom: '20px' }}>Request your custom AI voice agent trial. No technical setup or credit cards needed.</p>
+                    <p className="card-desc" style={{ marginBottom: '20px' }}>Request your custom AI voice receptionist setup under a 7-day checking warranty. No technical setup or credit cards needed.</p>
                     <div className="form-row">
                       <div className="form-group">
                         <label className="form-label">Business Name</label>
@@ -321,7 +320,7 @@ export default function Contact({ addToast, initialTab = 'trial' }) {
                     </div>
 
                     <button type="submit" disabled={submittingTrial} className="btn btn-primary w-full">
-                      {submittingTrial ? 'Submitting request...' : 'Start Free 7-Day Trial'}
+                      {submittingTrial ? 'Submitting request...' : 'Activate 7-Day Checking Warranty'}
                     </button>
                   </form>
                 )
