@@ -115,6 +115,32 @@ export default function App() {
     return () => io.disconnect();
   }, [activePage]);
 
+  const getInitialPage = () => {
+    const hash = window.location.hash.replace('#', '');
+    const path = window.location.pathname.replace(/^\//, '').replace(/\/$/, '').toLowerCase();
+    const hostname = window.location.hostname;
+    const all = ['solutions','live-demo','about','contact','home','privacy','terms','admin'];
+    
+    if (hostname.startsWith('admin.') || path === 'admin' || hash === 'admin') {
+      return 'admin';
+    }
+    if (hash === 'trial' || hash === 'trial-form' || path === 'trial') {
+      setInitialContactTab('trial');
+      return 'contact';
+    }
+    if (hash === 'call' || hash === 'booking' || path === 'call') {
+      setInitialContactTab('call');
+      return 'contact';
+    }
+    if (all.includes(path)) {
+      return path;
+    }
+    if (all.includes(hash)) {
+      return hash;
+    }
+    return 'home';
+  };
+
   // ── URL routing ─────────────────────────────────────────
   useEffect(() => {
     const handle = () => {
@@ -123,6 +149,7 @@ export default function App() {
     };
     window.addEventListener('popstate', handle);
     window.addEventListener('hashchange', handle);
+    handle();
     return () => {
       window.removeEventListener('popstate', handle);
       window.removeEventListener('hashchange', handle);
