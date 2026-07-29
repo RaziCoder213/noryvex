@@ -950,7 +950,7 @@ export default function Home({ setActivePage }) {
         }
         .hero-section {
           position: relative;
-          padding: 110px 0 35px 0; /* compact vertical white space */
+          padding: 90px 0 35px 0; /* 90px top padding = 88px nav height + 2px gap */
           overflow: hidden;
           background: radial-gradient(circle at 50% 35%, rgba(199,255,61,0.05) 0%, rgba(7,7,8,1) 75%);
           min-height: auto;
@@ -996,10 +996,10 @@ export default function Home({ setActivePage }) {
         }
         
         .hero-title {
-          font-size: 4.2rem;
-          line-height: 1.05;
+          font-size: 3.2rem;
+          line-height: 1.1;
           margin-bottom: 24px;
-          letter-spacing: -0.035em;
+          letter-spacing: -0.025em;
         }
         
         .text-neon-gradient {
@@ -1327,6 +1327,9 @@ export default function Home({ setActivePage }) {
         }
         
         @media (max-width: 1024px) {
+          .hero-section {
+            padding: 66px 0 35px 0; /* 66px top padding = 64px mobile nav height + 2px gap */
+          }
           .hero-container {
             grid-template-columns: 1fr;
             text-align: center;
@@ -1342,7 +1345,7 @@ export default function Home({ setActivePage }) {
             margin-right: auto;
           }
           .hero-title {
-            font-size: 3rem;
+            font-size: 2.2rem;
           }
           .hero-visualizer-container {
             margin-top: 40px;
