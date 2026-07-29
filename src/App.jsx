@@ -8,6 +8,7 @@ import { SpeedInsights } from '@vercel/speed-insights/react';
 import { ChevronUp, ChevronDown } from 'lucide-react';
 
 
+
 // Pages
 import Home from './pages/Home';
 import Solutions from './pages/Solutions';
