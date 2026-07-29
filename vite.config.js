@@ -14,6 +14,8 @@ export default defineConfig({
         solutions: './solutions/index.html',
         liveDemo: './live-demo/index.html',
         privacy: './privacy/index.html',
+        admin: './admin/index.html',
+        notFound: './404.html',
       }
     }
   },
