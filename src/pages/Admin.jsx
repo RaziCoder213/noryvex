@@ -18,7 +18,7 @@ import {
   dbUpdateTrialStatus
 } from '../utils/dbHelper';
 
-export default function Admin({ addToast }) {
+export default function Admin({ addToast, setActivePage }) {
   const [token, setToken] = useState(localStorage.getItem('noryvex_admin_token') || '');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -102,6 +102,9 @@ export default function Admin({ addToast }) {
     setClients([]);
     setPartners([]);
     setTrials([]);
+    if (setActivePage) {
+      setActivePage('home');
+    }
   };
 
   // Contact actions
@@ -277,6 +280,19 @@ export default function Admin({ addToast }) {
                   {loggingIn ? 'Authenticating...' : 'Access Operations'}
                 </button>
               </form>
+
+              {setActivePage && (
+                <div style={{ marginTop: '20px', textAlign: 'center' }}>
+                  <button 
+                    onClick={() => setActivePage('home')} 
+                    style={{ background: 'none', border: 'none', color: '#777', cursor: 'pointer', fontSize: '0.9rem', transition: 'color 0.2s' }}
+                    onMouseEnter={(e) => e.target.style.color = '#C7FF3D'}
+                    onMouseLeave={(e) => e.target.style.color = '#777'}
+                  >
+                    ← Back to Website
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </section>

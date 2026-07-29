@@ -187,7 +187,7 @@ export default function App() {
       case 'live-demo': return <LiveDemo setActivePage={changePage} />;
       case 'about':     return <About />;
       case 'contact':   return <Contact addToast={addToast} initialTab={initialContactTab} />;
-      case 'admin':     return <Admin addToast={addToast} />;
+      case 'admin':     return <Admin addToast={addToast} setActivePage={changePage} />;
       case 'privacy':   return <Privacy setActivePage={changePage} />;
       case 'terms':     return <Terms setActivePage={changePage} />;
       case 'not-found': return <NotFound setActivePage={changePage} />;
