@@ -455,7 +455,7 @@ export default function Home({ setActivePage }) {
         <div className="container">
           <div className="trial-offer-card glass-card">
             <div className="trial-offer-header">
-              <span className="section-tag txt-slide">Exclusive Offer</span>
+              <span className="section-tag txt-slide">Full-Service Agency Offer</span>
               <h2 className="trial-offer-title">🚀 Try Your Own AI Receptionist — Free for 7 Days</h2>
               <p className="trial-offer-subtitle">
                 Book a meeting with us. We'll have your AI receptionist live in 48 hours. Try it free for 7 days.
@@ -465,35 +465,32 @@ export default function Home({ setActivePage }) {
             <div className="trial-offer-grid">
               {/* Left Column: What we train */}
               <div className="trial-info-panel">
-                <h3 className="panel-title">Trained Specifically On:</h3>
-                <ul className="panel-list">
+                <h3 className="panel-title">End-to-End Managed Service</h3>
+                <p style={{ fontSize: '0.9rem', color: 'var(--text-gray)', marginBottom: '24px', lineHeight: '1.6' }}>
+                  We are a full-service AI agency. We design, build, train, host, and integrate your custom receptionist for you. 
+                  You don't need to write code, configure servers, or handle API keys.
+                </p>
+                <ul className="panel-list" style={{ marginBottom: '24px' }}>
                   <li>
                     <CheckCircle2 className="list-icon" />
                     <div>
-                      <strong>Your Business &amp; Services</strong>
-                      <p>Full understanding of what your agency, clinic, or business does.</p>
+                      <strong>Your Custom Voice Agent</strong>
+                      <p>Configured specifically with your business details, services, hours, pricing, and FAQ answers.</p>
                     </div>
                   </li>
                   <li>
                     <CheckCircle2 className="list-icon" />
                     <div>
-                      <strong>Your FAQs &amp; Knowledge Base</strong>
-                      <p>Instant answers to common customer queries and pricing details.</p>
-                    </div>
-                  </li>
-                  <li>
-                    <CheckCircle2 className="list-icon" />
-                    <div>
-                      <strong>Your Booking &amp; Hours</strong>
-                      <p>Autonomous scheduling during your business hours synced to calendar.</p>
+                      <strong>Seamless CRM Booking Link</strong>
+                      <p>We connect the agent directly to book appointments inside your existing calendar systems.</p>
                     </div>
                   </li>
                 </ul>
 
-                <div className="trial-features-strip">
-                  <div className="strip-item">No software to learn</div>
-                  <div className="strip-item">No technical setup</div>
-                  <div className="strip-item">No complex dashboards</div>
+                <div className="trial-features-strip" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <div className="strip-item">✓ No software to learn.</div>
+                  <div className="strip-item">✓ No technical setup.</div>
+                  <div className="strip-item">✓ No complicated dashboards.</div>
                 </div>
               </div>
 
@@ -501,11 +498,11 @@ export default function Home({ setActivePage }) {
               <div className="trial-dashboard-preview">
                 <div className="preview-header">
                   <span className="preview-dot green"></span>
-                  <span className="preview-title">Your Private Client Portal</span>
+                  <span className="preview-title">We Deliver Ready-to-Use Portals</span>
                 </div>
                 
                 <p className="preview-intro-text">
-                  You'll receive a private dashboard containing only the metrics that matter to your business:
+                  Just book a short meeting, tell us about your business, and we'll handle the rest. You'll receive a private client dashboard containing only what matters:
                 </p>
 
                 <div className="preview-metrics-grid">
@@ -531,12 +528,12 @@ export default function Home({ setActivePage }) {
                   </div>
                   <div className="preview-metric-card">
                     <span className="metric-icon">📊</span>
-                    <span className="metric-name">Simple Analytics</span>
+                    <span className="metric-name">Analytics</span>
                   </div>
                 </div>
 
                 <div className="preview-footer-note">
-                  <strong>100% Industry Tailored:</strong> Whether you're a dental clinic, restaurant, law firm, salon, real estate agency, or local service business—we configure the portal exactly around how your business works. Just the information you need, with zero technical complexity.
+                  <strong>100% Industry Tailored:</strong> Whether you're a dental clinic, restaurant, law firm, salon, real estate agency, or any service business—we configure the portal exactly around how your business works. Just the information you need, with zero technical complexity.
                 </div>
               </div>
             </div>
