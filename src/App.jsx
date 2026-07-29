@@ -118,29 +118,11 @@ export default function App() {
   // ── URL routing ─────────────────────────────────────────
   useEffect(() => {
     const handle = () => {
-      const hash = window.location.hash.replace('#', '');
-      const path = window.location.pathname.replace(/^\//, '').replace(/\/$/, '');
-      const hostname = window.location.hostname;
-      const all = ['solutions','live-demo','about','contact','home','privacy','terms','admin'];
-      if (hostname.startsWith('admin.') || path === 'admin' || hash === 'admin') {
-        setActivePage('admin');
-      } else if (all.includes(path)) {
-        setActivePage(path);
-      } else if (hash === 'trial' || hash === 'trial-form') {
-        setInitialContactTab('trial');
-        setActivePage('contact');
-      } else if (hash === 'call' || hash === 'booking') {
-        setInitialContactTab('call');
-        setActivePage('contact');
-      } else if (all.includes(hash)) {
-        setActivePage(hash);
-      } else {
-        setActivePage('home');
-      }
+      const page = getInitialPage();
+      setActivePage(page);
     };
     window.addEventListener('popstate', handle);
     window.addEventListener('hashchange', handle);
-    handle();
     return () => {
       window.removeEventListener('popstate', handle);
       window.removeEventListener('hashchange', handle);

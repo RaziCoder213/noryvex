@@ -528,24 +528,25 @@ export default function Home({ setActivePage }) {
           height: 250vh; /* scrollable distance for the pinning effect */
           background-color: var(--bg-pure);
           border-top: 1px solid var(--border-light);
-          margin-top: 80px; /* Generous top margin to prevent overlapping hero/marquee */
-          padding-top: 40px;
+          margin-top: 40px;
+          padding-top: 20px;
           z-index: 5;
         }
         .services-sticky-wrapper {
           position: sticky;
-          top: 100px; /* align below the 80px navbar with 20px clearance */
-          height: calc(100vh - 100px); /* remaining viewport height */
+          top: 85px; /* align below navbar with 5px bottom clearance */
+          height: calc(100vh - 90px); /* 5px bottom clearance from viewport bottom edge */
           display: flex;
           flex-direction: column;
           justify-content: center;
           overflow: hidden;
           padding-top: 10px;
+          padding-bottom: 5px;
         }
         .svc-slider-wrap {
           position: relative;
           overflow: visible; /* let cards scale and hover extend nicely */
-          padding: 30px 0;
+          padding: 20px 0;
           width: 100%;
         }
         .svc-slider-track {
@@ -571,13 +572,13 @@ export default function Home({ setActivePage }) {
         @media (max-width: 768px) {
           .services-sticky-parent {
             height: auto !important;
-            margin-top: 40px !important;
+            margin-top: 30px !important;
             padding-top: 0 !important;
           }
           .services-sticky-wrapper {
             position: relative !important;
             height: auto !important;
-            padding: 60px 0 !important;
+            padding: 40px 0 !important;
             top: 0 !important;
           }
           .svc-slider-wrap {
@@ -594,7 +595,7 @@ export default function Home({ setActivePage }) {
             padding: 0 24px; /* offset alignment on swipe */
           }
           .svc-slide-card {
-            width: 280px !important;
+            width: 290px;
             max-width: 85vw !important; /* visual hint showing next card */
           }
         }
@@ -618,10 +619,10 @@ export default function Home({ setActivePage }) {
         }
         .hero-section {
           position: relative;
-          padding: 80px 0 80px 0; /* reduced top spacing from header */
+          padding: 110px 0 35px 0; /* compact vertical white space */
           overflow: hidden;
-          background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(7,7,8,1) 100%);
-          min-height: 75vh;
+          background: radial-gradient(circle at 50% 35%, rgba(199,255,61,0.05) 0%, rgba(7,7,8,1) 75%);
+          min-height: auto;
           display: flex;
           align-items: center;
         }
