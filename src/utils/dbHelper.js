@@ -1,5 +1,5 @@
 // dbHelper.js
-// Client-side Database Helper with dynamic HTTP fetch sync, zero-cache headers, and real JSON exports
+// Client-side Database Helper with dynamic HTTP fetch sync, Xano cloud database support, and local storage fallbacks.
 
 // Helper to fetch live JSON data with zero caching
 export const fetchNoCacheJSON = async (url) => {
@@ -32,6 +32,15 @@ export const exportToJsonFile = (data, filename = 'export.json') => {
   URL.revokeObjectURL(url);
 };
 
+// Dynamic database configuration helper
+export const getDbConfig = () => {
+  return {
+    provider: localStorage.getItem('noryvex_db_provider') || 'local',
+    baseUrl: localStorage.getItem('noryvex_xano_base_url') || '',
+    token: localStorage.getItem('noryvex_xano_token') || ''
+  };
+};
+
 const seedContacts = [
   { id: 101, name: "Alexander Wright", company: "Apex Health Group", email: "a.wright@apexhealth.co", phone: "+1 (555) 234-5678", service: "AI Voice Agents", message: "Looking to deploy Chloe receptionists across 3 regional clinics.", status: "unread", created_at: new Date(Date.now() - 3600000 * 2).toISOString() },
   { id: 102, name: "Emily Chen", company: "Chen Legal LLC", email: "emily@chenlaw.com", phone: "+1 (555) 987-6543", service: "AI Receptionists", message: "Need an AI to screen client intake calls after business hours.", status: "read", created_at: new Date(Date.now() - 3600000 * 24).toISOString() }
@@ -48,12 +57,8 @@ const seedTrials = [
 
 const getStoredData = (key, defaultVal) => {
   const data = localStorage.getItem(key);
-  if (!data) {
-    localStorage.setItem(key, JSON.stringify(defaultVal));
-    return defaultVal;
-  }
   try {
-    return JSON.parse(data);
+    return data ? JSON.parse(data) : defaultVal;
   } catch (e) {
     return defaultVal;
   }
@@ -63,62 +68,92 @@ const setStoredData = (key, data) => {
   localStorage.setItem(key, JSON.stringify(data));
 };
 
-// INITIALIZE DB KEYS
-getStoredData('noryvex_contacts', seedContacts);
-getStoredData('noryvex_meetings', seedMeetings);
-getStoredData('noryvex_trials', seedTrials);
+// ── CONTACT OPERATIONS ─────────────────────────────────
 
-// CONTACT OPERATIONS
 export const dbSaveContact = async (contact) => {
-  const contacts = getStoredData('noryvex_contacts', seedContacts);
   const newContact = {
-    id: Date.now(),
     name: contact.name,
     company: contact.company || '',
     email: contact.email,
     phone: contact.phone || '',
-    service: contact.service || 'AI Voice Agents',
+    service: contact.service || '',
     message: contact.message || '',
     status: 'unread',
     created_at: new Date().toISOString()
   };
-  contacts.unshift(newContact);
+
+  const config = getDbConfig();
+  if (config.provider === 'xano' && config.baseUrl) {
+    try {
+      const res = await fetch(`${config.baseUrl}/contacts`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(config.token ? { 'Authorization': `Bearer ${config.token}` } : {})
+        },
+        body: JSON.stringify(newContact)
+      });
+      if (res.ok) {
+        const data = await res.json();
+        return { success: true, lastID: data.id };
+      }
+    } catch (e) {
+      console.warn('Xano contact save failed. Saving locally to browser.', e);
+    }
+  }
+
+  // Local storage fallback
+  const contacts = getStoredData('noryvex_contacts', seedContacts);
+  const localContact = { id: Date.now(), ...newContact };
+  contacts.unshift(localContact);
   setStoredData('noryvex_contacts', contacts);
 
-  // Sync to backend server with zero cache
+  // Sync to local server if it is active
   try {
     await fetch(`/api/contact?t=${Date.now()}`, {
       method: 'POST',
-      cache: 'no-store',
-      headers: { 
-        'Content-Type': 'application/json',
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
-        'Pragma': 'no-cache'
-      },
-      body: JSON.stringify(newContact)
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(localContact)
     });
   } catch (e) {
-    console.warn('Backend offline. Saved locally to browser storage.', e);
+    // Ignore server sync failure
   }
-  return { success: true, lastID: newContact.id };
+  return { success: true, lastID: localContact.id };
 };
 
 export const dbGetContacts = async (authToken) => {
+  const config = getDbConfig();
+  if (config.provider === 'xano' && config.baseUrl) {
+    try {
+      const res = await fetch(`${config.baseUrl}/contacts`, {
+        headers: {
+          ...(config.token ? { 'Authorization': `Bearer ${config.token}` } : {})
+        }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          return data.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+        }
+      }
+    } catch (e) {
+      console.warn('Xano fetch contacts failed. Falling back to local/static database.', e);
+    }
+  }
+
   if (authToken) {
     try {
       const data = await fetchNoCacheJSON(`/api/admin/contacts?token=${authToken}`);
       if (Array.isArray(data)) return data;
     } catch (e) {
-      console.warn('Falling back to static JSON or local storage for contacts.', e);
+      // Ignore
     }
   }
 
-  // Try static JSON endpoint fallback with zero cache
   try {
     const staticContacts = await fetchNoCacheJSON('/data/contacts.json');
     if (Array.isArray(staticContacts) && staticContacts.length > 0) {
       const local = getStoredData('noryvex_contacts', []);
-      // Merge unique
       const ids = new Set(local.map(c => c.id));
       staticContacts.forEach(sc => {
         if (!ids.has(sc.id)) local.push(sc);
@@ -127,13 +162,40 @@ export const dbGetContacts = async (authToken) => {
       return local;
     }
   } catch (e) {
-    // Ignore static fetch error and return local storage
+    // Ignore
   }
 
   return getStoredData('noryvex_contacts', seedContacts);
 };
 
 export const dbMarkContactRead = async (id, authToken) => {
+  const config = getDbConfig();
+  if (config.provider === 'xano' && config.baseUrl) {
+    try {
+      // Try PATCH first, fallback to POST
+      const res = await fetch(`${config.baseUrl}/contacts/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(config.token ? { 'Authorization': `Bearer ${config.token}` } : {})
+        },
+        body: JSON.stringify({ status: 'read' })
+      });
+      if (!res.ok) {
+        await fetch(`${config.baseUrl}/contacts/${id}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(config.token ? { 'Authorization': `Bearer ${config.token}` } : {})
+          },
+          body: JSON.stringify({ status: 'read' })
+        });
+      }
+    } catch (e) {
+      console.warn('Xano mark contact read failed.', e);
+    }
+  }
+
   const contacts = getStoredData('noryvex_contacts', []);
   const updated = contacts.map(c => c.id === Number(id) ? { ...c, status: 'read' } : c);
   setStoredData('noryvex_contacts', updated);
@@ -142,20 +204,30 @@ export const dbMarkContactRead = async (id, authToken) => {
     try {
       await fetch(`/api/admin/contacts/${id}?t=${Date.now()}`, {
         method: 'PATCH',
-        cache: 'no-store',
-        headers: { 
-          'Authorization': `Bearer ${authToken}`,
-          'Cache-Control': 'no-cache, no-store, must-revalidate'
-        }
+        headers: { 'Authorization': `Bearer ${authToken}` }
       });
     } catch (e) {
-      console.error(e);
+      // Ignore
     }
   }
   return { success: true };
 };
 
 export const dbDeleteContact = async (id, authToken) => {
+  const config = getDbConfig();
+  if (config.provider === 'xano' && config.baseUrl) {
+    try {
+      await fetch(`${config.baseUrl}/contacts/${id}`, {
+        method: 'DELETE',
+        headers: {
+          ...(config.token ? { 'Authorization': `Bearer ${config.token}` } : {})
+        }
+      });
+    } catch (e) {
+      console.warn('Xano delete contact failed.', e);
+    }
+  }
+
   const contacts = getStoredData('noryvex_contacts', []);
   const filtered = contacts.filter(c => c.id !== Number(id));
   setStoredData('noryvex_contacts', filtered);
@@ -164,24 +236,19 @@ export const dbDeleteContact = async (id, authToken) => {
     try {
       await fetch(`/api/admin/contacts/${id}?t=${Date.now()}`, {
         method: 'DELETE',
-        cache: 'no-store',
-        headers: { 
-          'Authorization': `Bearer ${authToken}`,
-          'Cache-Control': 'no-cache, no-store, must-revalidate'
-        }
+        headers: { 'Authorization': `Bearer ${authToken}` }
       });
     } catch (e) {
-      console.error(e);
+      // Ignore
     }
   }
   return { success: true };
 };
 
-// MEETING OPERATIONS
+// ── MEETING OPERATIONS ─────────────────────────────────
+
 export const dbSaveMeeting = async (meeting) => {
-  const meetings = getStoredData('noryvex_meetings', seedMeetings);
   const newMeeting = {
-    id: Date.now(),
     name: meeting.name,
     email: meeting.email,
     company: meeting.company || '',
@@ -192,38 +259,74 @@ export const dbSaveMeeting = async (meeting) => {
     status: 'pending',
     created_at: new Date().toISOString()
   };
-  meetings.push(newMeeting);
+
+  const config = getDbConfig();
+  if (config.provider === 'xano' && config.baseUrl) {
+    try {
+      const res = await fetch(`${config.baseUrl}/meetings`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(config.token ? { 'Authorization': `Bearer ${config.token}` } : {})
+        },
+        body: JSON.stringify(newMeeting)
+      });
+      if (res.ok) {
+        const data = await res.json();
+        return { success: true, lastID: data.id };
+      }
+    } catch (e) {
+      console.warn('Xano meeting save failed.', e);
+    }
+  }
+
+  const meetings = getStoredData('noryvex_meetings', seedMeetings);
+  const localMeeting = { id: Date.now(), ...newMeeting };
+  meetings.push(localMeeting);
   meetings.sort((a, b) => new Date(`${a.date}T${a.time}`) - new Date(`${b.date}T${b.time}`));
   setStoredData('noryvex_meetings', meetings);
 
-  // Sync to backend server with zero cache
   try {
     await fetch(`/api/meeting?t=${Date.now()}`, {
       method: 'POST',
-      cache: 'no-store',
-      headers: { 
-        'Content-Type': 'application/json',
-        'Cache-Control': 'no-cache, no-store, must-revalidate'
-      },
-      body: JSON.stringify(newMeeting)
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(localMeeting)
     });
   } catch (e) {
-    console.warn('Backend offline. Meeting saved locally.', e);
+    // Ignore
   }
-  return { success: true, lastID: newMeeting.id };
+  return { success: true, lastID: localMeeting.id };
 };
 
 export const dbGetMeetings = async (authToken) => {
+  const config = getDbConfig();
+  if (config.provider === 'xano' && config.baseUrl) {
+    try {
+      const res = await fetch(`${config.baseUrl}/meetings`, {
+        headers: {
+          ...(config.token ? { 'Authorization': `Bearer ${config.token}` } : {})
+        }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          return data.sort((a, b) => new Date(`${a.date}T${a.time}`) - new Date(`${b.date}T${b.time}`));
+        }
+      }
+    } catch (e) {
+      console.warn('Xano fetch meetings failed.', e);
+    }
+  }
+
   if (authToken) {
     try {
       const data = await fetchNoCacheJSON(`/api/admin/meetings?token=${authToken}`);
       if (Array.isArray(data)) return data;
     } catch (e) {
-      console.warn('Falling back to static JSON or local storage for meetings.', e);
+      // Ignore
     }
   }
 
-  // Try static JSON endpoint fallback with zero cache
   try {
     const staticMeetings = await fetchNoCacheJSON('/data/meetings.json');
     if (Array.isArray(staticMeetings) && staticMeetings.length > 0) {
@@ -236,13 +339,39 @@ export const dbGetMeetings = async (authToken) => {
       return local;
     }
   } catch (e) {
-    // Ignore static fetch error
+    // Ignore
   }
 
   return getStoredData('noryvex_meetings', seedMeetings);
 };
 
 export const dbMarkMeetingCompleted = async (id, authToken) => {
+  const config = getDbConfig();
+  if (config.provider === 'xano' && config.baseUrl) {
+    try {
+      const res = await fetch(`${config.baseUrl}/meetings/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(config.token ? { 'Authorization': `Bearer ${config.token}` } : {})
+        },
+        body: JSON.stringify({ status: 'completed' })
+      });
+      if (!res.ok) {
+        await fetch(`${config.baseUrl}/meetings/${id}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(config.token ? { 'Authorization': `Bearer ${config.token}` } : {})
+          },
+          body: JSON.stringify({ status: 'completed' })
+        });
+      }
+    } catch (e) {
+      console.warn('Xano mark meeting completed failed.', e);
+    }
+  }
+
   const meetings = getStoredData('noryvex_meetings', []);
   const updated = meetings.map(m => m.id === Number(id) ? { ...m, status: 'completed' } : m);
   setStoredData('noryvex_meetings', updated);
@@ -251,20 +380,30 @@ export const dbMarkMeetingCompleted = async (id, authToken) => {
     try {
       await fetch(`/api/admin/meetings/${id}?t=${Date.now()}`, {
         method: 'PATCH',
-        cache: 'no-store',
-        headers: { 
-          'Authorization': `Bearer ${authToken}`,
-          'Cache-Control': 'no-cache, no-store, must-revalidate'
-        }
+        headers: { 'Authorization': `Bearer ${authToken}` }
       });
     } catch (e) {
-      console.error(e);
+      // Ignore
     }
   }
   return { success: true };
 };
 
 export const dbDeleteMeeting = async (id, authToken) => {
+  const config = getDbConfig();
+  if (config.provider === 'xano' && config.baseUrl) {
+    try {
+      await fetch(`${config.baseUrl}/meetings/${id}`, {
+        method: 'DELETE',
+        headers: {
+          ...(config.token ? { 'Authorization': `Bearer ${config.token}` } : {})
+        }
+      });
+    } catch (e) {
+      console.warn('Xano delete meeting failed.', e);
+    }
+  }
+
   const meetings = getStoredData('noryvex_meetings', []);
   const filtered = meetings.filter(m => m.id !== Number(id));
   setStoredData('noryvex_meetings', filtered);
@@ -273,24 +412,19 @@ export const dbDeleteMeeting = async (id, authToken) => {
     try {
       await fetch(`/api/admin/meetings/${id}?t=${Date.now()}`, {
         method: 'DELETE',
-        cache: 'no-store',
-        headers: { 
-          'Authorization': `Bearer ${authToken}`,
-          'Cache-Control': 'no-cache, no-store, must-revalidate'
-        }
+        headers: { 'Authorization': `Bearer ${authToken}` }
       });
     } catch (e) {
-      console.error(e);
+      // Ignore
     }
   }
   return { success: true };
 };
 
-// TRIAL OPERATIONS
+// ── TRIAL OPERATIONS ───────────────────────────────────
+
 export const dbSaveTrial = async (trial) => {
-  const trials = getStoredData('noryvex_trials', seedTrials);
   const newTrial = {
-    id: Date.now(),
     business_name: trial.businessName,
     contact_name: trial.contactName,
     email: trial.email,
@@ -302,7 +436,39 @@ export const dbSaveTrial = async (trial) => {
     limit_duration_seconds: 1800,
     created_at: new Date().toISOString()
   };
-  trials.unshift(newTrial);
+
+  const config = getDbConfig();
+  if (config.provider === 'xano' && config.baseUrl) {
+    try {
+      const res = await fetch(`${config.baseUrl}/trials`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(config.token ? { 'Authorization': `Bearer ${config.token}` } : {})
+        },
+        body: JSON.stringify(newTrial)
+      });
+      if (res.ok) {
+        // Also save to contacts
+        await dbSaveContact({
+          name: trial.contactName,
+          company: trial.businessName,
+          email: trial.email,
+          phone: trial.phone || '',
+          service: `7-Day Trial (${trial.businessType || 'General'})`,
+          message: `AI Tasks: ${trial.aiHandling.toUpperCase()}`
+        });
+        const data = await res.json();
+        return { success: true, lastID: data.id };
+      }
+    } catch (e) {
+      console.warn('Xano trial save failed. Falling back to local storage.', e);
+    }
+  }
+
+  const trials = getStoredData('noryvex_trials', seedTrials);
+  const localTrial = { id: Date.now(), ...newTrial };
+  trials.unshift(localTrial);
   setStoredData('noryvex_trials', trials);
 
   await dbSaveContact({
@@ -317,30 +483,44 @@ export const dbSaveTrial = async (trial) => {
   try {
     await fetch(`/api/trial?t=${Date.now()}`, {
       method: 'POST',
-      cache: 'no-store',
-      headers: { 
-        'Content-Type': 'application/json',
-        'Cache-Control': 'no-cache, no-store, must-revalidate'
-      },
-      body: JSON.stringify(trial)
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(localTrial)
     });
   } catch (e) {
-    console.warn('Backend offline. Trial saved locally.', e);
+    // Ignore
   }
   return { success: true };
 };
 
 export const dbGetTrials = async (authToken) => {
+  const config = getDbConfig();
+  if (config.provider === 'xano' && config.baseUrl) {
+    try {
+      const res = await fetch(`${config.baseUrl}/trials`, {
+        headers: {
+          ...(config.token ? { 'Authorization': `Bearer ${config.token}` } : {})
+        }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          return data.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+        }
+      }
+    } catch (e) {
+      console.warn('Xano fetch trials failed.', e);
+    }
+  }
+
   if (authToken) {
     try {
       const data = await fetchNoCacheJSON(`/api/admin/trials?token=${authToken}`);
       if (Array.isArray(data)) return data;
     } catch (e) {
-      console.warn('Falling back to static JSON or local storage for trials.', e);
+      // Ignore
     }
   }
 
-  // Try static JSON endpoint fallback with zero cache
   try {
     const staticTrials = await fetchNoCacheJSON('/data/trials.json');
     if (Array.isArray(staticTrials) && staticTrials.length > 0) {
@@ -353,13 +533,39 @@ export const dbGetTrials = async (authToken) => {
       return local;
     }
   } catch (e) {
-    // Ignore static fetch error
+    // Ignore
   }
 
   return getStoredData('noryvex_trials', seedTrials);
 };
 
 export const dbUpdateTrialStatus = async (id, status, authToken) => {
+  const config = getDbConfig();
+  if (config.provider === 'xano' && config.baseUrl) {
+    try {
+      const res = await fetch(`${config.baseUrl}/trials/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(config.token ? { 'Authorization': `Bearer ${config.token}` } : {})
+        },
+        body: JSON.stringify({ trial_status: status })
+      });
+      if (!res.ok) {
+        await fetch(`${config.baseUrl}/trials/${id}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(config.token ? { 'Authorization': `Bearer ${config.token}` } : {})
+          },
+          body: JSON.stringify({ trial_status: status })
+        });
+      }
+    } catch (e) {
+      console.warn('Xano update trial status failed.', e);
+    }
+  }
+
   const trials = getStoredData('noryvex_trials', []);
   const updated = trials.map(t => t.id === Number(id) ? { ...t, trial_status: status } : t);
   setStoredData('noryvex_trials', updated);
@@ -368,22 +574,21 @@ export const dbUpdateTrialStatus = async (id, status, authToken) => {
     try {
       await fetch(`/api/admin/trials/${id}?t=${Date.now()}`, {
         method: 'PATCH',
-        cache: 'no-store',
         headers: { 
           'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-          'Cache-Control': 'no-cache, no-store, must-revalidate'
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({ trial_status: status })
       });
     } catch (e) {
-      console.error(e);
+      // Ignore
     }
   }
   return { success: true };
 };
 
-// ADMIN LOGIN AUTHENTICATION
+// ── ADMIN LOGIN AUTHENTICATION ─────────────────────────
+
 export const dbAdminLogin = async (email, password) => {
   const allowedEmails = ['razi@trynoryvex.com', 'razi@noryvex.com', 'codingwithrazi@gmail.com'];
   const targetHash = '37ad83dfcd34d8dec4f9d22e67b0f396232cf7159c3b07c82df7cca325699886'; // SHA-256 of RaziNoryvex2026!
@@ -403,7 +608,7 @@ export const dbAdminLogin = async (email, password) => {
       return { success: true, token: data.token };
     }
   } catch (e) {
-    console.warn('Backend server offline. Performing local fallback hash authorization.', e);
+    // Ignore backend server offline
   }
 
   try {
@@ -423,38 +628,122 @@ export const dbAdminLogin = async (email, password) => {
   return { success: false, error: 'Invalid admin credentials.' };
 };
 
-// CMS OPERATIONS: TESTIMONIALS / CLIENTS
-export const dbGetClients = () => {
+// ── CMS OPERATIONS: TESTIMONIALS / CLIENTS ───────────────
+
+export const dbGetClients = async () => {
+  const config = getDbConfig();
+  if (config.provider === 'xano' && config.baseUrl) {
+    try {
+      const res = await fetch(`${config.baseUrl}/clients`, {
+        headers: {
+          ...(config.token ? { 'Authorization': `Bearer ${config.token}` } : {})
+        }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data)) return data;
+      }
+    } catch (e) {
+      console.warn('Xano get clients failed. Falling back to local storage.', e);
+    }
+  }
+
   return getStoredData('noryvex_cms_clients', [
     { id: 1, name: "Sarah Jenkins", company: "Bright Dental", rating: 5, quote: "Chloe resolved 92% of our FAQ calls and booked 45 meetings in her first week." },
     { id: 2, name: "Marcus Thorne", company: "Apex Logistics", rating: 5, quote: "The workflow integration saves our dispatch team at least 15 hours every single week." }
   ]);
 };
 
-export const dbSaveClient = (client) => {
-  const clients = dbGetClients();
+export const dbSaveClient = async (client) => {
   const newClient = {
-    id: client.id || Date.now(),
     name: client.name,
     company: client.company,
     rating: Number(client.rating || 5),
     quote: client.quote
   };
-  const filtered = clients.filter(c => c.id !== newClient.id);
-  filtered.unshift(newClient);
+
+  const config = getDbConfig();
+  if (config.provider === 'xano' && config.baseUrl) {
+    try {
+      const url = client.id ? `${config.baseUrl}/clients/${client.id}` : `${config.baseUrl}/clients`;
+      const method = client.id ? 'PATCH' : 'POST';
+      const res = await fetch(url, {
+        method: method,
+        headers: {
+          'Content-Type': 'application/json',
+          ...(config.token ? { 'Authorization': `Bearer ${config.token}` } : {})
+        },
+        body: JSON.stringify(newClient)
+      });
+      if (!res.ok && client.id) {
+        // Fallback POST for edit if PATCH fails
+        await fetch(`${config.baseUrl}/clients/${client.id}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(config.token ? { 'Authorization': `Bearer ${config.token}` } : {})
+          },
+          body: JSON.stringify(newClient)
+        });
+      }
+      if (res.ok) return { success: true };
+    } catch (e) {
+      console.warn('Xano save client failed.', e);
+    }
+  }
+
+  const clients = await dbGetClients();
+  const localClient = {
+    id: client.id || Date.now(),
+    ...newClient
+  };
+  const filtered = clients.filter(c => c.id !== localClient.id);
+  filtered.unshift(localClient);
   setStoredData('noryvex_cms_clients', filtered);
   return { success: true };
 };
 
-export const dbDeleteClient = (id) => {
-  const clients = dbGetClients();
+export const dbDeleteClient = async (id) => {
+  const config = getDbConfig();
+  if (config.provider === 'xano' && config.baseUrl) {
+    try {
+      await fetch(`${config.baseUrl}/clients/${id}`, {
+        method: 'DELETE',
+        headers: {
+          ...(config.token ? { 'Authorization': `Bearer ${config.token}` } : {})
+        }
+      });
+    } catch (e) {
+      console.warn('Xano delete client failed.', e);
+    }
+  }
+
+  const clients = await dbGetClients();
   const filtered = clients.filter(c => c.id !== Number(id));
   setStoredData('noryvex_cms_clients', filtered);
   return { success: true };
 };
 
-// CMS OPERATIONS: TRUSTED SITES / PARTNERS
-export const dbGetPartners = () => {
+// ── CMS OPERATIONS: TRUSTED SITES / PARTNERS ─────────────
+
+export const dbGetPartners = async () => {
+  const config = getDbConfig();
+  if (config.provider === 'xano' && config.baseUrl) {
+    try {
+      const res = await fetch(`${config.baseUrl}/partners`, {
+        headers: {
+          ...(config.token ? { 'Authorization': `Bearer ${config.token}` } : {})
+        }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data)) return data;
+      }
+    } catch (e) {
+      console.warn('Xano get partners failed.', e);
+    }
+  }
+
   return getStoredData('noryvex_cms_partners', [
     { id: 1, name: "Super Launch", link: "https://www.superlaun.ch/products/2926", image: "https://www.superlaun.ch/badge.png" },
     { id: 2, name: "Twelve Tools", link: "https://twelve.tools", image: "https://twelve.tools/badge3-dark.svg" },
@@ -463,22 +752,69 @@ export const dbGetPartners = () => {
   ]);
 };
 
-export const dbSavePartner = (partner) => {
-  const partners = dbGetPartners();
+export const dbSavePartner = async (partner) => {
   const newPartner = {
-    id: partner.id || Date.now(),
     name: partner.name,
     link: partner.link,
     image: partner.image
   };
-  const filtered = partners.filter(p => p.id !== newPartner.id);
-  filtered.push(newPartner);
+
+  const config = getDbConfig();
+  if (config.provider === 'xano' && config.baseUrl) {
+    try {
+      const url = partner.id ? `${config.baseUrl}/partners/${partner.id}` : `${config.baseUrl}/partners`;
+      const method = partner.id ? 'PATCH' : 'POST';
+      const res = await fetch(url, {
+        method: method,
+        headers: {
+          'Content-Type': 'application/json',
+          ...(config.token ? { 'Authorization': `Bearer ${config.token}` } : {})
+        },
+        body: JSON.stringify(newPartner)
+      });
+      if (!res.ok && partner.id) {
+        await fetch(`${config.baseUrl}/partners/${partner.id}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(config.token ? { 'Authorization': `Bearer ${config.token}` } : {})
+          },
+          body: JSON.stringify(newPartner)
+        });
+      }
+      if (res.ok) return { success: true };
+    } catch (e) {
+      console.warn('Xano save partner failed.', e);
+    }
+  }
+
+  const partners = await dbGetPartners();
+  const localPartner = {
+    id: partner.id || Date.now(),
+    ...newPartner
+  };
+  const filtered = partners.filter(p => p.id !== localPartner.id);
+  filtered.push(localPartner);
   setStoredData('noryvex_cms_partners', filtered);
   return { success: true };
 };
 
-export const dbDeletePartner = (id) => {
-  const partners = dbGetPartners();
+export const dbDeletePartner = async (id) => {
+  const config = getDbConfig();
+  if (config.provider === 'xano' && config.baseUrl) {
+    try {
+      await fetch(`${config.baseUrl}/partners/${id}`, {
+        method: 'DELETE',
+        headers: {
+          ...(config.token ? { 'Authorization': `Bearer ${config.token}` } : {})
+        }
+      });
+    } catch (e) {
+      console.warn('Xano delete partner failed.', e);
+    }
+  }
+
+  const partners = await dbGetPartners();
   const filtered = partners.filter(p => p.id !== Number(id));
   setStoredData('noryvex_cms_partners', filtered);
   return { success: true };

@@ -25,6 +25,12 @@ export default function Admin({ addToast, setActivePage }) {
   const [loggingIn, setLoggingIn] = useState(false);
   const [activeTab, setActiveTab] = useState('contacts'); // 'contacts', 'meetings', 'trials-tracker', 'cms-clients', 'cms-partners'
   
+  // Xano database settings states
+  const [dbProvider, setDbProvider] = useState(localStorage.getItem('noryvex_db_provider') || 'local');
+  const [xanoBaseUrl, setXanoBaseUrl] = useState(localStorage.getItem('noryvex_xano_base_url') || '');
+  const [xanoToken, setXanoToken] = useState(localStorage.getItem('noryvex_xano_token') || '');
+  const [testingConnection, setTestingConnection] = useState(false);
+  
   // Data lists
   const [contacts, setContacts] = useState([]);
   const [meetings, setMeetings] = useState([]);
@@ -44,8 +50,8 @@ export default function Admin({ addToast, setActivePage }) {
     try {
       const contactsData = await dbGetContacts(authToken);
       const meetingsData = await dbGetMeetings(authToken);
-      const clientsData = dbGetClients();
-      const partnersData = dbGetPartners();
+      const clientsData = await dbGetClients();
+      const partnersData = await dbGetPartners();
       const trialsData = await dbGetTrials(authToken);
       
       setContacts(contactsData);
@@ -104,6 +110,40 @@ export default function Admin({ addToast, setActivePage }) {
     setTrials([]);
     if (setActivePage) {
       setActivePage('home');
+    }
+  };
+
+  const handleSaveDbSettings = (e) => {
+    e.preventDefault();
+    localStorage.setItem('noryvex_db_provider', dbProvider);
+    localStorage.setItem('noryvex_xano_base_url', xanoBaseUrl.trim());
+    localStorage.setItem('noryvex_xano_token', xanoToken.trim());
+    addToast('Database settings saved successfully!', 'success');
+    fetchData(token);
+  };
+
+  const handleTestConnection = async () => {
+    if (!xanoBaseUrl.trim()) {
+      addToast('Please enter a Xano API Base URL to test.', 'error');
+      return;
+    }
+    setTestingConnection(true);
+    try {
+      const baseUrlClean = xanoBaseUrl.trim().replace(/\/$/, '');
+      const testUrl = `${baseUrlClean}/contacts`;
+      const res = await fetch(testUrl, {
+        headers: xanoToken.trim() ? { 'Authorization': `Bearer ${xanoToken.trim()}` } : {}
+      });
+      if (res.ok) {
+        addToast('Connection successful! Validated contacts endpoint.', 'success');
+      } else {
+        addToast(`Endpoint returned status ${res.status}. Make sure the contacts table is set up in Xano.`, 'warning');
+      }
+    } catch (err) {
+      console.error(err);
+      addToast('Connection failed. Verify your Base URL and internet connection.', 'error');
+    } finally {
+      setTestingConnection(false);
     }
   };
 
@@ -184,42 +224,46 @@ export default function Admin({ addToast, setActivePage }) {
   };
 
   // CMS: Clients Testimonials
-  const handleAddClient = (e) => {
+  const handleAddClient = async (e) => {
     e.preventDefault();
     if (!newClient.name || !newClient.quote) {
       addToast('Name and testimonial quote are required.', 'error');
       return;
     }
-    dbSaveClient(newClient);
-    setClients(dbGetClients());
+    await dbSaveClient(newClient);
+    const updated = await dbGetClients();
+    setClients(updated);
     setNewClient({ name: '', company: '', rating: 5, quote: '' });
     addToast('Client testimonial saved successfully!', 'success');
   };
 
-  const handleDeleteClient = (id) => {
+  const handleDeleteClient = async (id) => {
     if (!window.confirm('Delete this client testimonial?')) return;
-    dbDeleteClient(id);
-    setClients(dbGetClients());
+    await dbDeleteClient(id);
+    const updated = await dbGetClients();
+    setClients(updated);
     addToast('Testimonial removed.', 'success');
   };
 
   // CMS: Trusted Partners / Badges
-  const handleAddPartner = (e) => {
+  const handleAddPartner = async (e) => {
     e.preventDefault();
     if (!newPartner.name || !newPartner.image) {
       addToast('Partner name and badge image URL are required.', 'error');
       return;
     }
-    dbSavePartner(newPartner);
-    setPartners(dbGetPartners());
+    await dbSavePartner(newPartner);
+    const updated = await dbGetPartners();
+    setPartners(updated);
     setNewPartner({ name: '', link: '', image: '' });
     addToast('Trusted partner badge saved!', 'success');
   };
 
-  const handleDeletePartner = (id) => {
+  const handleDeletePartner = async (id) => {
     if (!window.confirm('Delete this partner badge?')) return;
-    dbDeletePartner(id);
-    setPartners(dbGetPartners());
+    await dbDeletePartner(id);
+    const updated = await dbGetPartners();
+    setPartners(updated);
     addToast('Partner badge removed.', 'success');
   };
 
@@ -349,85 +393,140 @@ export default function Admin({ addToast, setActivePage }) {
 
   // Dashboard Screen Render
   return (
-    <div className="admin-page page-enter">
-      <header className="cms-header">
-        <div className="container cms-header-container">
-          <div className="cms-logo-wrap">
-            <span className="cms-logo-symbol">Z</span>
-            <span className="cms-logo-text">NORYVEX ADMIN</span>
+    <div className="admin-dashboard-layout">
+      {/* Sidebar Navigation */}
+      <aside className="admin-sidebar">
+        <div className="sidebar-brand">
+          <span className="sidebar-logo-symbol">Z</span>
+          <span className="sidebar-logo-text">NORYVEX ADMIN</span>
+        </div>
+        
+        <div className="sidebar-profile">
+          <div className="profile-avatar">RC</div>
+          <div className="profile-info">
+            <span className="profile-name">Operations Control</span>
+            <span className="profile-role">codingwithrazi@gmail.com</span>
           </div>
-          <button onClick={handleLogout} className="btn btn-secondary logout-btn">
-            Logout <LogOut size={16} />
+        </div>
+
+        <nav className="sidebar-nav">
+          <button 
+            onClick={() => setActiveTab('contacts')} 
+            className={`nav-item ${activeTab === 'contacts' ? 'active' : ''}`}
+          >
+            <Mail size={18} />
+            <span>Trials & Messages</span>
+            <span className="nav-badge">{contacts.length}</span>
+          </button>
+
+          <button 
+            onClick={() => setActiveTab('meetings')} 
+            className={`nav-item ${activeTab === 'meetings' ? 'active' : ''}`}
+          >
+            <Calendar size={18} />
+            <span>Strategy Calls</span>
+            <span className="nav-badge">{meetings.length}</span>
+          </button>
+
+          <button 
+            onClick={() => setActiveTab('trials-tracker')} 
+            className={`nav-item ${activeTab === 'trials-tracker' ? 'active' : ''}`}
+          >
+            <Activity size={18} />
+            <span>Trial Tracker</span>
+            <span className="nav-badge">{trials.length}</span>
+          </button>
+
+          <div className="nav-divider">CMS MANAGEMENT</div>
+
+          <button 
+            onClick={() => setActiveTab('cms-clients')} 
+            className={`nav-item ${activeTab === 'cms-clients' ? 'active' : ''}`}
+          >
+            <Star size={18} />
+            <span>Testimonials</span>
+          </button>
+
+          <button 
+            onClick={() => setActiveTab('cms-partners')} 
+            className={`nav-item ${activeTab === 'cms-partners' ? 'active' : ''}`}
+          >
+            <Award size={18} />
+            <span>B2B Trust Badges</span>
+          </button>
+
+          <div className="nav-divider">CONNECTIONS</div>
+
+          <button 
+            onClick={() => setActiveTab('db-settings')} 
+            className={`nav-item ${activeTab === 'db-settings' ? 'active' : ''}`}
+          >
+            <Link size={18} />
+            <span>Xano Database</span>
+            <span className={`status-dot ${dbProvider === 'xano' ? 'green' : 'gray'}`}></span>
+          </button>
+        </nav>
+
+        <div className="sidebar-footer">
+          <button onClick={handleLogout} className="sidebar-logout-btn">
+            <LogOut size={16} />
+            <span>System Logout</span>
           </button>
         </div>
-      </header>
+      </aside>
 
-      <section className="admin-dashboard-hero">
-        <div className="container admin-hero-container">
-          <div>
-            <span className="section-tag">Internal Operations</span>
-            <h1 className="dashboard-title">Leads & CMS Dashboard</h1>
-            <p className="dashboard-subtitle">Manage incoming trials, calendar appointments, customer reviews, and trusted B2B brand logos.</p>
+      {/* Main Content Area */}
+      <main className="admin-main-pane">
+        <header className="main-pane-header">
+          <div className="header-breadcrumbs">
+            <span className="breadcrumb-parent">Console</span>
+            <span className="breadcrumb-divider">/</span>
+            <span className="breadcrumb-current">
+              {activeTab === 'contacts' && 'Inquiries & Leads'}
+              {activeTab === 'meetings' && 'Booked Meetings'}
+              {activeTab === 'trials-tracker' && 'Active Campaigns'}
+              {activeTab === 'cms-clients' && 'CMS Testimonials'}
+              {activeTab === 'cms-partners' && 'CMS Trust Badges'}
+              {activeTab === 'db-settings' && 'Cloud Database Settings'}
+            </span>
           </div>
-        </div>
-      </section>
-
-      <section className="admin-content-section">
-        <div className="container">
           
-          {/* Stats Cards */}
-          <div className="stats-grid">
-            <div className="glass-card stat-card">
-              <Mail className="stat-card-icon" />
-              <div className="stat-card-info">
-                <span className="stat-card-label">Total Inquiries</span>
-                <span className="stat-card-val">{stats.totalContacts}</span>
-                <span className="stat-card-subtext">{stats.unreadContacts} unread message(s)</span>
-              </div>
-            </div>
-            <div className="glass-card stat-card border-neon-glow">
-              <Calendar className="stat-card-icon icon-neon" />
-              <div className="stat-card-info">
-                <span className="stat-card-label">Booked Strategy Calls</span>
-                <span className="stat-card-val">{stats.totalMeetings}</span>
-                <span className="stat-card-subtext">{stats.pendingMeetings} pending meeting(s)</span>
-              </div>
-            </div>
+          <div className="header-status">
+            <span className="status-label">Database Provider:</span>
+            {dbProvider === 'xano' ? (
+              <span className="status-tag xano">
+                <span className="glowing-dot green"></span> Xano Cloud
+              </span>
+            ) : (
+              <span className="status-tag local">
+                <span className="glowing-dot yellow"></span> Local browser
+              </span>
+            )}
           </div>
+        </header>
 
-          {/* Navigation Tabs */}
-          <div className="dashboard-tabs">
-            <button 
-              onClick={() => setActiveTab('contacts')} 
-              className={`tab-btn ${activeTab === 'contacts' ? 'active' : ''}`}
-            >
-              Trials & Messages ({contacts.length})
-            </button>
-            <button 
-              onClick={() => setActiveTab('meetings')} 
-              className={`tab-btn ${activeTab === 'meetings' ? 'active' : ''}`}
-            >
-              Meetings ({meetings.length})
-            </button>
-            <button 
-              onClick={() => setActiveTab('trials-tracker')} 
-              className={`tab-btn ${activeTab === 'trials-tracker' ? 'active' : ''}`}
-            >
-              Trial Tracker ({trials.length})
-            </button>
-            <button 
-              onClick={() => setActiveTab('cms-clients')} 
-              className={`tab-btn ${activeTab === 'cms-clients' ? 'active' : ''}`}
-            >
-              CMS: Testimonials ({clients.length})
-            </button>
-            <button 
-              onClick={() => setActiveTab('cms-partners')} 
-              className={`tab-btn ${activeTab === 'cms-partners' ? 'active' : ''}`}
-            >
-              CMS: Trusted Badges ({partners.length})
-            </button>
-          </div>
+        <div className="pane-body">
+          {/* Stats Cards - Display on overview tabs */}
+          {(activeTab === 'contacts' || activeTab === 'meetings' || activeTab === 'trials-tracker') && (
+            <div className="stats-grid" style={{ marginBottom: '32px' }}>
+              <div className="glass-card stat-card">
+                <Mail className="stat-card-icon" />
+                <div className="stat-card-info">
+                  <span className="stat-card-label">Total Inquiries</span>
+                  <span className="stat-card-val">{stats.totalContacts}</span>
+                  <span className="stat-card-subtext">{stats.unreadContacts} unread message(s)</span>
+                </div>
+              </div>
+              <div className="glass-card stat-card border-neon-glow">
+                <Calendar className="stat-card-icon icon-neon" />
+                <div className="stat-card-info">
+                  <span className="stat-card-label">Booked Strategy Calls</span>
+                  <span className="stat-card-val">{stats.totalMeetings}</span>
+                  <span className="stat-card-subtext">{stats.pendingMeetings} pending meeting(s)</span>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Loading Indicator */}
           {loadingData ? (
@@ -879,84 +978,450 @@ export default function Admin({ addToast, setActivePage }) {
                 </div>
               )}
 
+              {/* Tab 6: Database Connection Settings */}
+              {activeTab === 'db-settings' && (
+                <div className="cms-layout">
+                  <div className="cms-form-card">
+                    <h3 style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <Link size={20} className="icon-neon" />
+                      Configure Xano Database
+                    </h3>
+                    <p style={{ fontSize: '0.85rem', color: 'var(--text-gray)', marginBottom: '24px', lineHeight: '1.5' }}>
+                      Connect your Noryvex admin panel to a cloud database hosted on Xano.
+                    </p>
+
+                    <form onSubmit={handleSaveDbSettings}>
+                      <div className="form-group" style={{ marginBottom: '16px' }}>
+                        <label className="form-label" style={{ display: 'block', marginBottom: '8px' }}>Database Provider</label>
+                        <select 
+                          className="form-control" 
+                          value={dbProvider}
+                          onChange={(e) => setDbProvider(e.target.value)}
+                          style={{ width: '100%', background: '#0a0a0d', color: '#fff', border: '1px solid var(--border-light)', borderRadius: '8px', padding: '10px' }}
+                        >
+                          <option value="local">Local Storage (Browser-only Fallback)</option>
+                          <option value="xano">Xano Cloud Database</option>
+                        </select>
+                      </div>
+
+                      {dbProvider === 'xano' && (
+                        <>
+                          <div className="form-group" style={{ marginBottom: '16px' }}>
+                            <label className="form-label" style={{ display: 'block', marginBottom: '8px' }}>Xano API Base Group URL</label>
+                            <input 
+                              type="text" 
+                              required 
+                              placeholder="https://x8ki-letl-twmt.n7.xano.io/api:Tl7OK6wd" 
+                              className="form-control"
+                              value={xanoBaseUrl}
+                              onChange={(e) => setXanoBaseUrl(e.target.value)}
+                            />
+                          </div>
+
+                          <div className="form-group" style={{ marginBottom: '16px' }}>
+                            <label className="form-label" style={{ display: 'block', marginBottom: '8px' }}>Developer Token (API Key / Auth)</label>
+                            <input 
+                              type="password" 
+                              placeholder="Paste developer access token..." 
+                              className="form-control"
+                              value={xanoToken}
+                              onChange={(e) => setXanoToken(e.target.value)}
+                            />
+                          </div>
+                        </>
+                      )}
+
+                      <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
+                        <button type="submit" className="btn btn-primary" style={{ flex: 1 }}>
+                          Save Settings
+                        </button>
+                        
+                        {dbProvider === 'xano' && (
+                          <button 
+                            type="button" 
+                            onClick={handleTestConnection}
+                            disabled={testingConnection}
+                            className="btn btn-secondary" 
+                            style={{ flex: 1 }}
+                          >
+                            {testingConnection ? 'Testing...' : 'Test Connection'}
+                          </button>
+                        )}
+                      </div>
+                    </form>
+                  </div>
+
+                  <div className="glass-card" style={{ padding: '32px 24px', border: '1px solid var(--border-light)', borderRadius: '16px', background: 'rgba(255,255,255,0.015)' }}>
+                    <h3 style={{ marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <Activity size={20} className="icon-neon" />
+                      Schema Setup Guide
+                    </h3>
+                    <p style={{ fontSize: '0.85rem', color: 'var(--text-gray)', marginBottom: '16px', lineHeight: '1.5' }}>
+                      To synchronize your data successfully, create these five tables in your Xano Workspace (ID: <code>166176-0</code>):
+                    </p>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '0.85rem' }}>
+                      <div style={{ padding: '12px', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border-light)', borderRadius: '8px' }}>
+                        <strong>contacts</strong> (Inquiries)
+                        <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: '4px' }}>
+                          Fields: <code>name</code> (text), <code>company</code> (text), <code>email</code> (text), <code>phone</code> (text), <code>service</code> (text), <code>message</code> (text), <code>status</code> (text), <code>created_at</code> (timestamp)
+                        </div>
+                      </div>
+                      <div style={{ padding: '12px', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border-light)', borderRadius: '8px' }}>
+                        <strong>meetings</strong> (Appointments)
+                        <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: '4px' }}>
+                          Fields: <code>name</code> (text), <code>email</code> (text), <code>company</code> (text), <code>phone</code> (text), <code>date</code> (text), <code>time</code> (text), <code>notes</code> (text), <code>status</code> (text), <code>created_at</code> (timestamp)
+                        </div>
+                      </div>
+                      <div style={{ padding: '12px', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border-light)', borderRadius: '8px' }}>
+                        <strong>trials</strong> (Active Demos)
+                        <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: '4px' }}>
+                          Fields: <code>business_name</code> (text), <code>contact_name</code> (text), <code>email</code> (text), <code>phone</code> (text), <code>business_type</code> (text), <code>ai_handling</code> (text), <code>trial_status</code> (text), <code>call_duration_seconds</code> (integer), <code>limit_duration_seconds</code> (integer), <code>created_at</code> (timestamp)
+                        </div>
+                      </div>
+                      <div style={{ padding: '12px', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border-light)', borderRadius: '8px' }}>
+                        <strong>clients</strong> (Testimonials CMS)
+                        <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: '4px' }}>
+                          Fields: <code>name</code> (text), <code>company</code> (text), <code>rating</code> (integer), <code>quote</code> (text)
+                        </div>
+                      </div>
+                      <div style={{ padding: '12px', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border-light)', borderRadius: '8px' }}>
+                        <strong>partners</strong> (Trust Badges CMS)
+                        <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: '4px' }}>
+                          Fields: <code>name</code> (text), <code>link</code> (text), <code>image</code> (text)
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
             </>
           )}
 
         </div>
-      </section>
+      </main>
 
-      <style>{`
-        /* Decoupled header */
-        .cms-header {
+    <style>{`
+        /* Sidebar Layout Structure */
+        .admin-dashboard-layout {
+          display: flex;
+          min-height: 100vh;
           background: #070708;
-          border-bottom: 1px solid var(--border-light);
-          padding: 16px 0;
-          position: sticky;
+          color: #fff;
+          font-family: 'Inter', sans-serif;
+        }
+
+        .admin-sidebar {
+          width: 260px;
+          background: #0a0a0d;
+          border-right: 1px solid var(--border-light);
+          display: flex;
+          flex-direction: column;
+          position: fixed;
           top: 0;
+          bottom: 0;
+          left: 0;
           z-index: 100;
         }
 
-        .cms-header-container {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-        }
-
-        .cms-logo-wrap {
+        .sidebar-brand {
+          padding: 24px;
           display: flex;
           align-items: center;
           gap: 10px;
+          border-bottom: 1px solid var(--border-light);
         }
 
-        .cms-logo-symbol {
-          background: #C7FF3D;
+        .sidebar-logo-symbol {
+          width: 32px;
+          height: 32px;
+          background: var(--accent-neon);
           color: #000;
-          font-weight: 900;
-          width: 28px;
-          height: 28px;
+          border-radius: 8px;
           display: flex;
           align-items: center;
           justify-content: center;
-          border-radius: 6px;
-          font-size: 0.9rem;
+          font-weight: 800;
+          font-size: 1.1rem;
         }
 
-        .cms-logo-text {
-          font-family: 'Outfit', sans-serif;
-          font-weight: 800;
+        .sidebar-logo-text {
+          font-weight: 700;
           font-size: 0.95rem;
-          color: #fff;
           letter-spacing: 0.05em;
+          color: #fff;
         }
 
-        .logout-btn {
-          font-size: 0.8rem;
-          padding: 6px 14px;
+        .sidebar-profile {
+          padding: 20px 24px;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          border-bottom: 1px solid var(--border-light);
+          background: rgba(255,255,255,0.005);
         }
 
-        /* Hero */
-        .admin-dashboard-hero {
-          padding: 60px 0 40px;
-          background: linear-gradient(180deg, #070708 0%, #000000 100%);
-          text-align: left;
+        .profile-avatar {
+          width: 38px;
+          height: 38px;
+          border-radius: 50%;
+          background: rgba(199, 255, 61, 0.08);
+          border: 1px solid var(--accent-neon-border);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 600;
+          font-size: 0.85rem;
+          color: var(--accent-neon);
         }
 
-        .dashboard-title {
-          font-family: 'Outfit', sans-serif;
-          font-size: 2.2rem;
-          font-weight: 800;
-          margin-bottom: 8px;
+        .profile-info {
+          display: flex;
+          flex-direction: column;
+          min-width: 0;
         }
 
-        .dashboard-subtitle {
+        .profile-name {
+          font-weight: 600;
+          font-size: 0.85rem;
+          color: #fff;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .profile-role {
+          font-size: 0.75rem;
           color: var(--text-gray);
-          font-size: 1rem;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
 
-        .admin-content-section {
-          padding: 40px 0 100px;
-          background: var(--bg-dark);
-          min-height: calc(100vh - 280px);
+        .sidebar-nav {
+          flex: 1;
+          padding: 24px 16px;
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          overflow-y: auto;
+        }
+
+        .nav-divider {
+          font-size: 0.7rem;
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          color: var(--text-muted);
+          margin: 20px 8px 8px 8px;
+        }
+
+        .nav-item {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 12px 14px;
+          border-radius: 10px;
+          background: transparent;
+          border: none;
+          color: var(--text-gray);
+          cursor: pointer;
+          font-size: 0.85rem;
+          font-weight: 500;
+          text-align: left;
+          width: 100%;
+          transition: all 0.2s;
+        }
+
+        .nav-item:hover {
+          background: rgba(255, 255, 255, 0.02);
+          color: #fff;
+        }
+
+        .nav-item.active {
+          background: rgba(199, 255, 61, 0.05);
+          border: 1px solid rgba(199, 255, 61, 0.1);
+          color: var(--accent-neon);
+          font-weight: 600;
+        }
+
+        .nav-badge {
+          margin-left: auto;
+          font-size: 0.75rem;
+          background: rgba(255, 255, 255, 0.05);
+          color: var(--text-gray);
+          padding: 2px 6px;
+          border-radius: 10px;
+          font-weight: 600;
+        }
+
+        .nav-item.active .nav-badge {
+          background: rgba(199, 255, 61, 0.1);
+          color: var(--accent-neon);
+        }
+
+        .status-dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          margin-left: auto;
+        }
+        .status-dot.green {
+          background: var(--accent-neon);
+          box-shadow: 0 0 8px var(--accent-neon);
+        }
+        .status-dot.gray {
+          background: #555;
+        }
+
+        .sidebar-footer {
+          padding: 16px;
+          border-top: 1px solid var(--border-light);
+        }
+
+        .sidebar-logout-btn {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          width: 100%;
+          padding: 12px;
+          border-radius: 10px;
+          background: rgba(255,0,0,0.02);
+          border: 1px solid rgba(255,0,0,0.05);
+          color: #ff4a4a;
+          cursor: pointer;
+          font-size: 0.85rem;
+          font-weight: 600;
+          transition: all 0.2s;
+        }
+
+        .sidebar-logout-btn:hover {
+          background: rgba(255,0,0,0.06);
+          border-color: rgba(255,0,0,0.15);
+        }
+
+        /* Main Pane Layout */
+        .admin-main-pane {
+          flex: 1;
+          margin-left: 260px;
+          min-width: 0;
+          display: flex;
+          flex-direction: column;
+          min-height: 100vh;
+        }
+
+        .main-pane-header {
+          height: 72px;
+          border-bottom: 1px solid var(--border-light);
+          padding: 0 40px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          background: rgba(10,10,13,0.4);
+          backdrop-filter: blur(8px);
+          position: sticky;
+          top: 0;
+          z-index: 90;
+        }
+
+        .header-breadcrumbs {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 0.85rem;
+        }
+
+        .breadcrumb-parent {
+          color: var(--text-gray);
+        }
+
+        .breadcrumb-divider {
+          color: #444;
+        }
+
+        .breadcrumb-current {
+          color: #fff;
+          font-weight: 600;
+        }
+
+        .header-status {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 0.8rem;
+        }
+
+        .status-label {
+          color: var(--text-gray);
+        }
+
+        .status-tag {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 4px 10px;
+          border-radius: 20px;
+          font-weight: 600;
+          font-size: 0.75rem;
+        }
+
+        .status-tag.xano {
+          background: rgba(199, 255, 61, 0.06);
+          border: 1px solid rgba(199, 255, 61, 0.15);
+          color: var(--accent-neon);
+        }
+
+        .status-tag.local {
+          background: rgba(255, 180, 0, 0.06);
+          border: 1px solid rgba(255, 180, 0, 0.15);
+          color: #ffb400;
+        }
+
+        .glowing-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+        }
+
+        .glowing-dot.green {
+          background: var(--accent-neon);
+          box-shadow: 0 0 6px var(--accent-neon);
+        }
+
+        .glowing-dot.yellow {
+          background: #ffb400;
+          box-shadow: 0 0 6px #ffb400;
+        }
+
+        .pane-body {
+          flex: 1;
+          padding: 40px;
+          max-width: 1400px;
+          width: 100%;
+          margin: 0 auto;
+        }
+
+        @media (max-width: 1024px) {
+          .admin-dashboard-layout {
+            flex-direction: column;
+          }
+          .admin-sidebar {
+            width: 100%;
+            position: relative;
+            height: auto;
+            border-right: none;
+            border-bottom: 1px solid var(--border-light);
+          }
+          .admin-main-pane {
+            margin-left: 0;
+            padding-top: 0;
+          }
+          .main-pane-header {
+            padding: 0 20px;
+          }
+          .pane-body {
+            padding: 24px 16px;
+          }
         }
 
         /* Stats Grid */
