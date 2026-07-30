@@ -26,3 +26,9 @@ dist-ssr
 # Credentials & Database
 .env
 noryvex.db
+
+# Portal (Next.js)
+portal/node_modules
+portal/.next
+portal/.env*
+portal/scripts/create-admin.ts

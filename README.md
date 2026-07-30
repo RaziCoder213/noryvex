@@ -1,16 +1,50 @@
-# React + Vite
+# Noryvex Monorepo
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+This repository contains two separate projects:
 
-Currently, two official plugins are available:
+```
+noryvex/
+├── index.html, src/, ...   → Marketing Website  (trynoryvex.com)
+└── portal/                 → Client Portal      (*.trynoryvex.com + /admin)
+```
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Vercel Deployment
 
-## React Compiler
+Two separate Vercel projects are needed:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Project 1 — Marketing Website
+- **Root Directory**: `.` (repo root)
+- **Framework**: Vite
+- **Domain**: `trynoryvex.com`
 
-## Expanding the Oxlint configuration
+### Project 2 — Client Portal
+- **Root Directory**: `portal`
+- **Framework**: Next.js
+- **Domains**:
+  - `portal.trynoryvex.com` (primary)
+  - `*.trynoryvex.com` (wildcard — for client subdomains)
+  - `trynoryvex.com/admin` (handled by middleware rewrite)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+## Portal Environment Variables (set in Vercel)
+
+```
+DATABASE_URL=<your-neon-url>
+JWT_SECRET=<64-char-random-string>
+NEXT_PUBLIC_APP_DOMAIN=trynoryvex.com
+BLOB_READ_WRITE_TOKEN=<vercel-blob-token>
+VAPI_API_KEY=<your-vapi-key>
+VAPI_WEBHOOK_SECRET=<your-vapi-webhook-secret>
+```
+
+## Client Portal Subdomain Format
+
+When you create a workspace for a client with subdomain `clinic`:
+→ Portal URL: **`https://clinic.trynoryvex.com`**
+
+Examples:
+- `smilecare.trynoryvex.com` — Smile Care Dental
+- `peakhealth.trynoryvex.com` — Peak Health Clinic
+- `cityvets.trynoryvex.com` — City Vets
+
+## Admin Panel
+`https://trynoryvex.com/admin` → Login with super_admin credentials
