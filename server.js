@@ -18,7 +18,13 @@ import {
   saveTrial,
   getTrials,
   updateTrialStatus,
-  updateTrialDuration
+  updateTrialDuration,
+  getClients,
+  saveClient,
+  deleteClient,
+  getPartners,
+  savePartner,
+  deletePartner
 } from './database.js';
 
 dotenv.config();
@@ -257,6 +263,27 @@ app.post('/api/vapi/webhook', async (req, res) => {
   }
 });
 
+// Public CMS Endpoints
+app.get('/api/clients', async (req, res) => {
+  try {
+    const clients = await getClients();
+    res.json(clients);
+  } catch (error) {
+    console.error('Error fetching clients:', error);
+    res.status(500).json({ error: 'Failed to fetch clients.' });
+  }
+});
+
+app.get('/api/partners', async (req, res) => {
+  try {
+    const partners = await getPartners();
+    res.json(partners);
+  } catch (error) {
+    console.error('Error fetching partners:', error);
+    res.status(500).json({ error: 'Failed to fetch partners.' });
+  }
+});
+
 // Admin Authentication Login
 app.post('/api/admin/login', (req, res) => {
   const { email, password } = req.body;
@@ -360,6 +387,50 @@ app.patch('/api/admin/trials/:id', authenticateToken, async (req, res) => {
   } catch (error) {
     console.error('Error updating trial status:', error);
     res.status(500).json({ error: 'Failed to update trial status.' });
+  }
+});
+
+// CMS Testimonials (Clients) Admin Operations
+app.post('/api/admin/clients', authenticateToken, async (req, res) => {
+  try {
+    const { id, name, company, rating, quote } = req.body;
+    const result = await saveClient(id, name, company, rating, quote);
+    res.status(200).json(result);
+  } catch (error) {
+    console.error('Error saving client:', error);
+    res.status(500).json({ error: 'Failed to save client.' });
+  }
+});
+
+app.delete('/api/admin/clients/:id', authenticateToken, async (req, res) => {
+  try {
+    await deleteClient(req.params.id);
+    res.json({ message: 'Client testimonial deleted.' });
+  } catch (error) {
+    console.error('Error deleting client:', error);
+    res.status(500).json({ error: 'Failed to delete client.' });
+  }
+});
+
+// CMS Partners Admin Operations
+app.post('/api/admin/partners', authenticateToken, async (req, res) => {
+  try {
+    const { id, name, link, image } = req.body;
+    const result = await savePartner(id, name, link, image);
+    res.status(200).json(result);
+  } catch (error) {
+    console.error('Error saving partner:', error);
+    res.status(500).json({ error: 'Failed to save partner.' });
+  }
+});
+
+app.delete('/api/admin/partners/:id', authenticateToken, async (req, res) => {
+  try {
+    await deletePartner(req.params.id);
+    res.json({ message: 'Partner brand deleted.' });
+  } catch (error) {
+    console.error('Error deleting partner:', error);
+    res.status(500).json({ error: 'Failed to delete partner.' });
   }
 });
 
