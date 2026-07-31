@@ -85,6 +85,14 @@ export async function initDb() {
       )
     `);
 
+    // 6. Create settings table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS settings (
+        key VARCHAR(255) PRIMARY KEY,
+        value TEXT NOT NULL
+      )
+    `);
+
     // Seed clients if table is empty
     const clientsRes = await client.query('SELECT COUNT(*) FROM clients');
     if (parseInt(clientsRes.rows[0].count, 10) === 0) {
@@ -107,10 +115,30 @@ export async function initDb() {
       `);
     }
 
+    // Seed under_construction setting if empty
+    const settingsRes = await client.query("SELECT COUNT(*) FROM settings WHERE key = 'under_construction'");
+    if (parseInt(settingsRes.rows[0].count, 10) === 0) {
+      await client.query("INSERT INTO settings (key, value) VALUES ('under_construction', 'false')");
+    }
+
     console.log('Neon Postgres Database initialized and seeded successfully.');
   } finally {
     client.release();
   }
+}
+
+// Settings Operations
+export async function getSetting(key) {
+  const res = await pool.query('SELECT value FROM settings WHERE key = $1', [key]);
+  return res.rows[0]?.value || null;
+}
+
+export async function setSetting(key, value) {
+  await pool.query(
+    'INSERT INTO settings (key, value) VALUES ($1, $2) ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value',
+    [key, value]
+  );
+  return { success: true };
 }
 
 // Trial Operations

@@ -19,11 +19,14 @@ import Admin from './pages/Admin';
 import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
 import NotFound from './pages/NotFound';
+import UnderConstruction from './pages/UnderConstruction';
+import { dbGetUnderConstruction } from './utils/dbHelper';
 
 export default function App() {
   const [activePage, setActivePage] = useState('home');
   const [toasts, setToasts] = useState([]);
   const [initialContactTab, setInitialContactTab] = useState('trial');
+  const [isUnderConstruction, setIsUnderConstruction] = useState(false);
 
   // ── Dynamic SEO per page ────────────────────────────
   useSEO(activePage);
@@ -40,6 +43,21 @@ export default function App() {
     window.addEventListener('scroll', update, { passive: true });
     return () => window.removeEventListener('scroll', update);
   }, []);
+
+  // ── Under Construction Mode Checker (Polls every 15s) ──
+  useEffect(() => {
+    const checkStatus = async () => {
+      try {
+        const status = await dbGetUnderConstruction();
+        setIsUnderConstruction(status);
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    checkStatus();
+    const interval = setInterval(checkStatus, 15000);
+    return () => clearInterval(interval);
+  }, [activePage]);
 
   // ── Scroll Navigation Assistant (Top & Bottom shortcuts) ──
   const [showScrollNav, setShowScrollNav] = useState(false);
@@ -198,15 +216,22 @@ export default function App() {
 
   // Decouple CMS Dashboard from website layout wrapper
   const isCmsLayout = activePage === 'admin';
+  const showConstruction = isUnderConstruction && !isCmsLayout;
 
   return (
     <>
-      {!isCmsLayout && <div id="nrx-scroll-bar" />}
-      {!isCmsLayout && <Navbar activePage={activePage} setActivePage={changePage} />}
+      {!isCmsLayout && !showConstruction && <div id="nrx-scroll-bar" />}
+      {!isCmsLayout && !showConstruction && <Navbar activePage={activePage} setActivePage={changePage} />}
 
-      <main>{renderPage()}</main>
+      <main className={showConstruction ? 'under-construction-active' : ''}>
+        {showConstruction ? (
+          <UnderConstruction onAdminAccess={() => changePage('admin')} />
+        ) : (
+          renderPage()
+        )}
+      </main>
 
-      {!isCmsLayout && <Footer setActivePage={changePage} addToast={addToast} />}
+      {!isCmsLayout && !showConstruction && <Footer setActivePage={changePage} addToast={addToast} />}
 
       {/* Cookie consent banner */}
       <CookieBanner />
@@ -237,7 +262,8 @@ export default function App() {
       </div>
 
       <style>{`
-        main { margin-top: 80px; }
+        main:not(.under-construction-active) { margin-top: 80px; }
+        main.under-construction-active { margin-top: 0; }
 
         /* Floating Scroll Navigation */
         .nrx-scroll-nav {

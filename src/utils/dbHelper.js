@@ -383,3 +383,31 @@ export const dbDeletePartner = async (id) => {
     return { success: false };
   }
 };
+
+export const dbGetUnderConstruction = async () => {
+  try {
+    const data = await fetchNoCacheJSON('/api/settings/under-construction');
+    return data.underConstruction;
+  } catch (e) {
+    console.error('Failed to get under construction setting:', e);
+    return false;
+  }
+};
+
+export const dbSetUnderConstruction = async (enabled) => {
+  const token = getAdminToken();
+  try {
+    const res = await fetch('/api/admin/settings/under-construction', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ underConstruction: enabled })
+    });
+    return { success: res.ok };
+  } catch (e) {
+    console.error('Failed to set under construction setting:', e);
+    return { success: false };
+  }
+};

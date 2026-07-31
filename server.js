@@ -24,7 +24,9 @@ import {
   deleteClient,
   getPartners,
   savePartner,
-  deletePartner
+  deletePartner,
+  getSetting,
+  setSetting
 } from './database.js';
 
 dotenv.config();
@@ -284,6 +286,16 @@ app.get('/api/partners', async (req, res) => {
   }
 });
 
+app.get('/api/settings/under-construction', async (req, res) => {
+  try {
+    const val = await getSetting('under_construction');
+    res.json({ underConstruction: val === 'true' });
+  } catch (error) {
+    console.error('Error fetching under construction setting:', error);
+    res.status(500).json({ error: 'Failed to fetch settings.' });
+  }
+});
+
 // Admin Authentication Login
 app.post('/api/admin/login', (req, res) => {
   const { email, password } = req.body;
@@ -431,6 +443,21 @@ app.delete('/api/admin/partners/:id', authenticateToken, async (req, res) => {
   } catch (error) {
     console.error('Error deleting partner:', error);
     res.status(500).json({ error: 'Failed to delete partner.' });
+  }
+});
+
+// System Settings Operations
+app.post('/api/admin/settings/under-construction', authenticateToken, async (req, res) => {
+  try {
+    const { underConstruction } = req.body;
+    if (typeof underConstruction !== 'boolean') {
+      return res.status(400).json({ error: 'underConstruction status must be a boolean.' });
+    }
+    await setSetting('under_construction', underConstruction ? 'true' : 'false');
+    res.json({ message: 'Settings updated successfully.' });
+  } catch (error) {
+    console.error('Error saving setting:', error);
+    res.status(500).json({ error: 'Failed to save settings.' });
   }
 });
 
