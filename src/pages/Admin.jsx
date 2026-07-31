@@ -518,16 +518,10 @@ export default function Admin({ addToast, setActivePage }) {
           </div>
           
           <div className="header-status">
-            <span className="status-label">Database Provider:</span>
-            {dbProvider === 'xano' ? (
-              <span className="status-tag xano">
-                <span className="glowing-dot green"></span> Xano Cloud
-              </span>
-            ) : (
-              <span className="status-tag local">
-                <span className="glowing-dot yellow"></span> Local browser
-              </span>
-            )}
+            <span className="status-label">Database Status:</span>
+            <span className="status-tag postgres" style={{ background: 'rgba(199, 255, 61, 0.08)', color: 'var(--accent-neon)', border: '1px solid rgba(199, 255, 61, 0.15)' }}>
+              <span className="glowing-dot green" style={{ background: 'var(--accent-neon)', boxShadow: '0 0 8px var(--accent-neon)' }}></span> Neon Postgres (Active)
+            </span>
           </div>
         </header>
 
