@@ -133,6 +133,15 @@ export async function initDb() {
   }
 }
 
+let dbInitPromise = null;
+
+export async function ensureDbConnected() {
+  if (!dbInitPromise) {
+    dbInitPromise = initDb();
+  }
+  return dbInitPromise;
+}
+
 // Settings Operations
 export async function getSetting(key) {
   const res = await pool.query('SELECT value FROM noryvex_settings WHERE key = $1', [key]);

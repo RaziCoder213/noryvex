@@ -6,7 +6,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import nodemailer from 'nodemailer';
 import { 
-  initDb, 
+  ensureDbConnected, 
   saveContact, 
   getContacts, 
   markContactRead, 
@@ -41,9 +41,20 @@ const JWT_SECRET = process.env.JWT_SECRET || 'noryvex-jwt-fallback-secret-2026';
 app.use(cors());
 app.use(express.json());
 
-// Initialize Database
-initDb().catch(err => {
-  console.error('Failed to initialize database:', err);
+// Initialize Database (non-blocking background init on start)
+ensureDbConnected().catch(err => {
+  console.error('Failed to initialize database on startup:', err);
+});
+
+// Middleware to ensure DB is initialized before any API request
+app.use('/api', async (req, res, next) => {
+  try {
+    await ensureDbConnected();
+    next();
+  } catch (err) {
+    console.error('Database initialization failed for request:', err);
+    res.status(500).json({ error: 'Database connection failed. Please try again.' });
+  }
 });
 
 // Middleware to authenticate JWT token
