@@ -177,7 +177,7 @@ export default function Navbar({ activePage, setActivePage }) {
         
         .navbar-wrapper.scrolled {
           padding: 16px 0;
-          background: rgba(5, 5, 8, 0.97);
+          background: var(--bg-navbar);
           border-bottom: 1px solid var(--border-light);
         }
         

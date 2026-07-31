@@ -557,7 +557,7 @@ export default function LiveDemo({ setActivePage }) {
           margin-bottom: 20px;
         }
         .ld-name-highlight {
-          background: linear-gradient(135deg, #C7FF3D 0%, #fff 100%);
+          background: linear-gradient(135deg, var(--accent-neon) 0%, var(--text-white) 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
@@ -584,7 +584,7 @@ export default function LiveDemo({ setActivePage }) {
           padding: 10px 16px;
           border: 1px solid var(--border-light);
           border-radius: 10px;
-          background: rgba(255,255,255,0.02);
+          background: var(--bg-preview-card);
           min-width: 70px;
         }
         .ld-trust-val {
@@ -612,7 +612,7 @@ export default function LiveDemo({ setActivePage }) {
           padding: 14px 16px;
           border: 1px solid var(--border-light);
           border-radius: 12px;
-          background: rgba(255,255,255,0.01);
+          background: var(--bg-preview-card);
           cursor: pointer;
           transition: border-color 0.25s, background 0.25s, transform 0.25s;
         }
@@ -657,8 +657,8 @@ export default function LiveDemo({ setActivePage }) {
         .ld-phone-frame {
           width: 330px;
           height: 680px;
-          background: #111114;
-          border: 10px solid #222226;
+          background: var(--bg-charcoal);
+          border: 10px solid var(--border-light);
           border-radius: 44px;
           position: relative;
           overflow: hidden;
@@ -674,7 +674,7 @@ export default function LiveDemo({ setActivePage }) {
           position: absolute; top: 8px; left: 50%;
           transform: translateX(-50%);
           width: 100px; height: 20px;
-          background: #222226;
+          background: var(--border-light);
           border-radius: 0 0 14px 14px;
           z-index: 20;
         }
@@ -685,7 +685,7 @@ export default function LiveDemo({ setActivePage }) {
           padding: 0 18px;
           font-size: 0.68rem;
           color: var(--text-muted);
-          background: #0a0a0d;
+          background: var(--bg-pure);
           border-bottom: 1px solid rgba(255,255,255,0.04);
           flex-shrink: 0;
           z-index: 10;
@@ -707,7 +707,7 @@ export default function LiveDemo({ setActivePage }) {
           flex: 1;
           display: flex; flex-direction: column;
           overflow: hidden;
-          background: #0a0a0d;
+          background: var(--bg-charcoal);
         }
 
         /* ── IDLE screen ── */
@@ -729,7 +729,7 @@ export default function LiveDemo({ setActivePage }) {
         .ld-avatar-core {
           width: 80px; height: 80px; border-radius: 50%;
           border: 2px solid rgba(199,255,61,0.3);
-          background: #161619;
+          background: var(--bg-pure);
           display: flex; align-items: center; justify-content: center;
           box-shadow: 0 0 30px rgba(199,255,61,0.12);
           z-index: 1;
@@ -741,7 +741,7 @@ export default function LiveDemo({ setActivePage }) {
         .ld-idle-chip {
           display: inline-flex; align-items: center; gap: 5px;
           font-size: 0.68rem; color: var(--text-gray);
-          background: rgba(255,255,255,0.03);
+          background: var(--bg-preview-card);
           border: 1px solid var(--border-light);
           padding: 4px 10px; border-radius: 100px;
         }
@@ -840,7 +840,7 @@ export default function LiveDemo({ setActivePage }) {
         .ld-agent-avatar {
           width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
           border: 1px solid rgba(199,255,61,0.2);
-          background: #1a1a1e; overflow: hidden;
+          background: var(--bg-charcoal); overflow: hidden;
         }
         .ld-agent-avatar img { width: 100%; height: 100%; object-fit: contain; }
         .ld-bubble {
@@ -850,8 +850,8 @@ export default function LiveDemo({ setActivePage }) {
           font-size: 0.78rem; line-height: 1.45;
         }
         .agent .ld-bubble {
-          background: rgba(255,255,255,0.04);
-          border: 1px solid rgba(255,255,255,0.07);
+          background: var(--bg-preview-card);
+          border: 1px solid var(--border-light);
           color: var(--text-light);
           border-bottom-left-radius: 4px;
         }
@@ -873,8 +873,8 @@ export default function LiveDemo({ setActivePage }) {
         /* Controls */
         .ld-controls {
           padding: 10px 12px;
-          background: #0a0a0d;
-          border-top: 1px solid rgba(255,255,255,0.05);
+          background: var(--bg-charcoal);
+          border-top: 1px solid var(--border-light);
           flex-shrink: 0;
         }
         .ld-prompts-scroll {
@@ -887,7 +887,7 @@ export default function LiveDemo({ setActivePage }) {
           white-space: nowrap; flex-shrink: 0;
           padding: 5px 10px; border-radius: 100px;
           border: 1px solid var(--border-light);
-          background: rgba(255,255,255,0.02);
+          background: var(--bg-preview-card);
           color: var(--text-gray); font-size: 0.68rem; font-weight: 500;
           cursor: pointer;
           transition: border-color 0.2s, color 0.2s, background 0.2s;
@@ -976,14 +976,14 @@ export default function LiveDemo({ setActivePage }) {
         }
 
         /* ── HOW IT WORKS ──────────────────────────── */
-        .ld-how { padding: 100px 0; background: #050507; border-top: 1px solid var(--border-light); }
+        .ld-how { padding: 100px 0; background: var(--bg-pure); border-top: 1px solid var(--border-light); }
         .ld-how-grid {
           display: grid; grid-template-columns: repeat(3, 1fr);
           gap: 2px; position: relative;
           margin-top: 48px;
         }
         .ld-how-card {
-          background: rgba(255,255,255,0.015);
+          background: var(--bg-preview-card);
           border: 1px solid var(--border-light);
           padding: 36px 28px;
           position: relative;

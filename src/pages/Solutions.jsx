@@ -134,7 +134,7 @@ export default function Solutions({ setActivePage }) {
       <style>{`
         .solutions-hero {
           padding: 140px 0 40px 0;
-          background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(7,7,8,1) 100%);
+          background: linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-pure) 100%);
         }
         
         .solutions-title {
@@ -212,7 +212,7 @@ export default function Solutions({ setActivePage }) {
         }
 
         .sol-features-block {
-          background: rgba(255, 255, 255, 0.01);
+          background: var(--bg-glass);
           border: 1px solid var(--border-light);
           padding: 32px;
           border-radius: 12px;

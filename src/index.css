@@ -66,6 +66,9 @@
   /* NO backdrop-filter — use solid bg for cards */
   --bg-glass:       rgba(14, 14, 17, 0.95);
   --bg-glass-hover: rgba(20, 20, 24, 0.98);
+  --bg-navbar:      rgba(5, 5, 8, 0.97);
+  --bg-input:       rgba(255, 255, 255, 0.03);
+  --bg-preview-card: rgba(255, 255, 255, 0.015);
 
   --accent-neon:        #C7FF3D;
   --accent-neon-glow:   rgba(199, 255, 61, 0.15);
@@ -91,6 +94,9 @@
   --bg-charcoal:    #E9ECEF;
   --bg-glass:       rgba(255, 255, 255, 0.95);
   --bg-glass-hover: rgba(248, 249, 250, 0.98);
+  --bg-navbar:      rgba(248, 249, 250, 0.97);
+  --bg-input:       rgba(0, 0, 0, 0.03);
+  --bg-preview-card: rgba(0, 0, 0, 0.02);
 
   --accent-neon:        #0D6A02; /* High-contrast green for light theme */
   --accent-neon-glow:   rgba(13, 106, 2, 0.08);
@@ -336,7 +342,7 @@ p {
                  color: var(--text-gray); margin-bottom: 7px; }
 .form-control  {
   width: 100%;
-  background: rgba(255,255,255,0.03);
+  background: var(--bg-input);
   border: 1px solid var(--border-light);
   border-radius: 8px;
   padding: 13px 15px;
@@ -348,7 +354,7 @@ p {
 .form-control:focus {
   outline: none;
   border-color: var(--accent-neon);
-  background: rgba(255,255,255,0.05);
+  background: var(--bg-input);
 }
 textarea.form-control { resize: vertical; min-height: 120px; }
 

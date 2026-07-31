@@ -512,7 +512,7 @@ export default function Contact({ addToast, initialTab = 'trial' }) {
       <style>{`
         .contact-hero {
           padding: 140px 0 40px 0;
-          background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(7,7,8,1) 100%);
+          background: linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-pure) 100%);
         }
         
         .contact-title {
@@ -541,7 +541,7 @@ export default function Contact({ addToast, initialTab = 'trial' }) {
 
         .contact-info-card {
           padding: 40px 32px;
-          background: rgba(255, 255, 255, 0.01);
+          background: var(--bg-glass);
           border: 1px solid var(--border-light);
           border-radius: 20px;
           text-align: left;
@@ -586,12 +586,12 @@ export default function Contact({ addToast, initialTab = 'trial' }) {
         }
 
         .select-control {
-          background-color: #121215;
+          background-color: var(--bg-charcoal);
           color: var(--text-white);
         }
 
         .select-control option {
-          background-color: #121215;
+          background-color: var(--bg-charcoal);
           color: var(--text-white);
         }
 
@@ -624,7 +624,7 @@ export default function Contact({ addToast, initialTab = 'trial' }) {
 
         .contact-tab-btn:hover {
           color: var(--text-white);
-          background: rgba(255, 255, 255, 0.03);
+          background: var(--bg-preview-card);
         }
 
         .contact-tab-btn.active {

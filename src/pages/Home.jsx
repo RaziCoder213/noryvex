@@ -215,8 +215,8 @@ export default function Home({ setActivePage }) {
                     fontSize: '0.75rem',
                     fontWeight: '700',
                     padding: '6px 12px',
-                    background: 'rgba(255, 255, 255, 0.03)',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    background: 'var(--bg-preview-card)',
+                    border: '1px solid var(--border-light)',
                     borderRadius: '100px',
                     color: 'var(--text-gray)',
                     letterSpacing: '0.05em'
@@ -289,7 +289,7 @@ export default function Home({ setActivePage }) {
       </div>
 
       {/* ── Services Section (4 Pillars, Equal Weight) ── */}
-      <section className="services-grid-section" style={{ padding: '100px 0', background: '#000' }}>
+      <section className="services-grid-section" style={{ padding: '100px 0', background: 'var(--bg-pure)' }}>
         <div className="container">
           <div className="section-header">
             <span className="section-tag txt-slide">Capabilities</span>
@@ -607,9 +607,9 @@ export default function Home({ setActivePage }) {
       </section>
 
       {/* ── Closing CTA Band ── */}
-      <section className="closing-cta-section" style={{ padding: '100px 0', background: '#000', borderTop: '1px solid var(--border-light)' }}>
+      <section className="closing-cta-section" style={{ padding: '100px 0', background: 'var(--bg-pure)', borderTop: '1px solid var(--border-light)' }}>
         <div className="container" style={{ textAlign: 'center', maxWidth: '800px' }}>
-          <h2 style={{ fontSize: '2.5rem', fontWeight: '800', color: '#fff', marginBottom: '24px', lineHeight: '1.2', letterSpacing: '-0.025em' }}>
+          <h2 style={{ fontSize: '2.5rem', fontWeight: '800', color: 'var(--text-white)', marginBottom: '24px', lineHeight: '1.2', letterSpacing: '-0.025em' }}>
             Ready to stop managing another tool and start running your business?
           </h2>
           <p style={{ fontSize: '1.1rem', color: 'var(--text-gray)', marginBottom: '40px', lineHeight: '1.6' }}>
@@ -662,7 +662,7 @@ export default function Home({ setActivePage }) {
         /* ── 48-Hour Trial Section ──────────────── */
         .trial-offer-section {
           padding: 80px 0;
-          background: #000;
+          background: var(--bg-pure);
           position: relative;
           z-index: 5;
         }
@@ -670,7 +670,7 @@ export default function Home({ setActivePage }) {
         .trial-offer-card {
           padding: 60px 40px;
           border: 1px solid rgba(199, 255, 61, 0.15);
-          background: rgba(10, 10, 13, 0.6);
+          background: var(--bg-glass);
           backdrop-filter: blur(12px);
           border-radius: 24px;
           position: relative;
@@ -699,7 +699,7 @@ export default function Home({ setActivePage }) {
         .trial-offer-title {
           font-weight: 800;
           font-size: 2.2rem;
-          color: #fff;
+          color: var(--text-white);
           margin-top: 12px;
           margin-bottom: 16px;
         }
@@ -720,7 +720,7 @@ export default function Home({ setActivePage }) {
         .panel-title {
           font-weight: 700;
           font-size: 1.3rem;
-          color: #fff;
+          color: var(--text-white);
           margin-bottom: 24px;
         }
 
@@ -747,7 +747,7 @@ export default function Home({ setActivePage }) {
         }
 
         .panel-list strong {
-          color: #fff;
+          color: var(--text-white);
           font-size: 0.95rem;
           display: block;
           margin-bottom: 4px;
@@ -781,7 +781,7 @@ export default function Home({ setActivePage }) {
         }
 
         .trial-dashboard-preview {
-          background: rgba(0, 0, 0, 0.35);
+          background: var(--bg-glass);
           border: 1px solid var(--border-light);
           border-radius: 16px;
           padding: 24px;
@@ -829,7 +829,7 @@ export default function Home({ setActivePage }) {
         }
 
         .preview-metric-card {
-          background: rgba(255, 255, 255, 0.015);
+          background: var(--bg-preview-card);
           border: 1px solid var(--border-light);
           border-radius: 10px;
           padding: 14px 8px;
@@ -854,7 +854,7 @@ export default function Home({ setActivePage }) {
 
         .metric-name {
           font-size: 0.75rem;
-          color: #fff;
+          color: var(--text-white);
           font-weight: 600;
         }
 
@@ -867,7 +867,7 @@ export default function Home({ setActivePage }) {
         }
 
         .preview-footer-note strong {
-          color: #fff;
+          color: var(--text-white);
           display: block;
           margin-bottom: 4px;
         }
@@ -1005,7 +1005,7 @@ export default function Home({ setActivePage }) {
           position: relative;
           padding: 90px 0 35px 0; /* 90px top padding = 88px nav height + 2px gap */
           overflow: hidden;
-          background: radial-gradient(circle at 50% 35%, rgba(199,255,61,0.05) 0%, rgba(7,7,8,1) 75%);
+          background: radial-gradient(circle at 50% 35%, var(--accent-neon-glow) 0%, var(--bg-pure) 75%);
           min-height: auto;
           display: flex;
           align-items: center;
@@ -1082,7 +1082,7 @@ export default function Home({ setActivePage }) {
         }
         
         .text-neon-gradient {
-          background: linear-gradient(135deg, var(--accent-neon) 0%, #FFFFFF 100%);
+          background: linear-gradient(135deg, var(--accent-neon) 0%, var(--text-white) 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
         }
@@ -1193,7 +1193,7 @@ export default function Home({ setActivePage }) {
         
         .floating-node {
           position: absolute;
-          background: rgba(18, 18, 21, 0.95);
+          background: var(--bg-charcoal);
           border: 1px solid var(--border-light);
           padding: 8px 16px;
           border-radius: 100px;
@@ -1228,7 +1228,7 @@ export default function Home({ setActivePage }) {
         .service-icon-wrapper {
           width: 52px;
           height: 52px;
-          background: rgba(199, 255, 61, 0.08);
+          background: var(--accent-neon-glow);
           border: 1px solid var(--accent-neon-border);
           border-radius: 12px;
           display: flex;
@@ -1264,7 +1264,7 @@ export default function Home({ setActivePage }) {
         
         .service-card-footer {
           margin-top: auto;
-          border-top: 1px solid rgba(255, 255, 255, 0.04);
+          border-top: 1px solid var(--border-light);
           padding-top: 16px;
         }
         
@@ -1514,7 +1514,7 @@ export default function Home({ setActivePage }) {
         .nrx-tagline-sticky-parent {
           position: relative;
           height: 200vh; /* scrollable distance for locking */
-          background: linear-gradient(180deg, var(--bg-dark) 0%, #000 100%);
+          background: linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-pure) 100%);
           border-top: 1px solid var(--border-light);
         }
         .nrx-tagline-sticky-wrapper {
@@ -1582,7 +1582,7 @@ export default function Home({ setActivePage }) {
           text-shadow: 0 0 40px rgba(255, 255, 255, 0.2);
         }
         .nrx-kinetic-accent {
-          background: linear-gradient(135deg, var(--accent-neon) 0%, #fff 60%);
+          background: linear-gradient(135deg, var(--accent-neon) 0%, var(--text-white) 60%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
@@ -1628,7 +1628,7 @@ export default function Home({ setActivePage }) {
         @media (max-width: 768px) {
           .nrx-tagline-sticky-parent {
             height: 200vh !important;
-            background: linear-gradient(180deg, var(--bg-dark) 0%, #000 100%);
+            background: linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-pure) 100%);
           }
           .nrx-tagline-sticky-wrapper {
             position: sticky !important;
@@ -1679,7 +1679,7 @@ export default function Home({ setActivePage }) {
           flex-wrap: wrap;
         }
         .tech-badge-item {
-          background: rgba(255, 255, 255, 0.03);
+          background: var(--bg-preview-card);
           border: 1px solid var(--border-light);
           padding: 8px 18px;
           border-radius: 100px;

@@ -110,7 +110,7 @@ export default function About() {
       <style>{`
         .about-hero {
           padding: 140px 0 40px 0;
-          background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(7,7,8,1) 100%);
+          background: linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-pure) 100%);
         }
         
         .about-title {
@@ -259,7 +259,7 @@ export default function About() {
 
         .skill-tag {
           font-size: 0.75rem;
-          background: rgba(255, 255, 255, 0.03);
+          background: var(--bg-preview-card);
           border: 1px solid var(--border-light);
           padding: 6px 12px;
           border-radius: 6px;
