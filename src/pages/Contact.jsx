@@ -40,6 +40,7 @@ export default function Contact({ addToast, initialTab = 'trial' }) {
   const [meetingSuccess, setMeetingSuccess] = useState(false);
   const [trialSuccess, setTrialSuccess] = useState(false);
 
+
   useEffect(() => {
     if (initialTab) {
       setActiveTab(initialTab);

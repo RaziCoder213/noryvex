@@ -64,6 +64,16 @@ export default function Footer({ setActivePage, addToast }) {
               </button>
             </form>
           </div>
+          
+          <div style={{ marginTop: '28px', opacity: 0.85 }} className="footer-badge-wrap">
+            <a href="https://www.goodfirms.co/company/noryvex" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block' }}>
+              <img 
+                src="https://www.goodfirms.co/img/badges/recognized-on-goodfirms.png" 
+                alt="Recognized on Goodfirms" 
+                style={{ width: '135px', height: 'auto', display: 'block', borderRadius: '4px', border: '1px solid rgba(255, 255, 255, 0.04)' }} 
+              />
+            </a>
+          </div>
         </div>
 
         <div className="footer-links-grid">

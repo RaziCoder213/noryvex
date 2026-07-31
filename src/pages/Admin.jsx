@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, Lock, Mail, Calendar, LogOut, Check, Trash2, Eye, Plus, Star, Link, Image, Activity, Award } from 'lucide-react';
+import { Shield, Lock, Mail, Calendar, LogOut, Check, Trash2, Eye, Plus, Star, Link, Image, Activity, Award, Settings } from 'lucide-react';
 import { 
   dbGetContacts, 
   dbGetMeetings, 
@@ -15,7 +15,9 @@ import {
   dbSavePartner,
   dbDeletePartner,
   dbGetTrials,
-  dbUpdateTrialStatus
+  dbUpdateTrialStatus,
+  dbGetUnderConstruction,
+  dbSetUnderConstruction
 } from '../utils/dbHelper';
 
 export default function Admin({ addToast, setActivePage }) {
@@ -30,6 +32,12 @@ export default function Admin({ addToast, setActivePage }) {
   const [xanoBaseUrl, setXanoBaseUrl] = useState(localStorage.getItem('noryvex_xano_base_url') || '');
   const [xanoToken, setXanoToken] = useState(localStorage.getItem('noryvex_xano_token') || '');
   const [testingConnection, setTestingConnection] = useState(false);
+  
+  // Under Construction settings states
+  const [underConstruction, setUnderConstruction] = useState(false);
+  const [updatingConstruction, setUpdatingConstruction] = useState(false);
+  
+
   
   // Data lists
   const [contacts, setContacts] = useState([]);
@@ -53,12 +61,14 @@ export default function Admin({ addToast, setActivePage }) {
       const clientsData = await dbGetClients();
       const partnersData = await dbGetPartners();
       const trialsData = await dbGetTrials(authToken);
+      const ucStatus = await dbGetUnderConstruction();
       
       setContacts(contactsData);
       setMeetings(meetingsData);
       setClients(clientsData);
       setPartners(partnersData);
       setTrials(trialsData);
+      setUnderConstruction(ucStatus);
     } catch (err) {
       console.error(err);
       addToast('Error fetching dashboard records.', 'error');
@@ -113,39 +123,31 @@ export default function Admin({ addToast, setActivePage }) {
     }
   };
 
-  const handleSaveDbSettings = (e) => {
-    e.preventDefault();
-    localStorage.setItem('noryvex_db_provider', dbProvider);
-    localStorage.setItem('noryvex_xano_base_url', xanoBaseUrl.trim());
-    localStorage.setItem('noryvex_xano_token', xanoToken.trim());
-    addToast('Database settings saved successfully!', 'success');
-    fetchData(token);
+  const handleToggleUnderConstruction = async () => {
+    setUpdatingConstruction(true);
+    try {
+      const nextVal = !underConstruction;
+      const res = await dbSetUnderConstruction(nextVal);
+      if (res.success) {
+        setUnderConstruction(nextVal);
+        addToast(
+          nextVal 
+            ? 'Under Construction Mode activated. Marketing site is now OFF.' 
+            : 'Under Construction Mode deactivated. Marketing site is now LIVE.', 
+          'success'
+        );
+      } else {
+        addToast('Failed to update Under Construction status.', 'error');
+      }
+    } catch (e) {
+      console.error(e);
+      addToast('Error toggling Under Construction status.', 'error');
+    } finally {
+      setUpdatingConstruction(false);
+    }
   };
 
-  const handleTestConnection = async () => {
-    if (!xanoBaseUrl.trim()) {
-      addToast('Please enter a Xano API Base URL to test.', 'error');
-      return;
-    }
-    setTestingConnection(true);
-    try {
-      const baseUrlClean = xanoBaseUrl.trim().replace(/\/$/, '');
-      const testUrl = `${baseUrlClean}/contacts`;
-      const res = await fetch(testUrl, {
-        headers: xanoToken.trim() ? { 'Authorization': `Bearer ${xanoToken.trim()}` } : {}
-      });
-      if (res.ok) {
-        addToast('Connection successful! Validated contacts endpoint.', 'success');
-      } else {
-        addToast(`Endpoint returned status ${res.status}. Make sure the contacts table is set up in Xano.`, 'warning');
-      }
-    } catch (err) {
-      console.error(err);
-      addToast('Connection failed. Verify your Base URL and internet connection.', 'error');
-    } finally {
-      setTestingConnection(false);
-    }
-  };
+
 
   // Contact actions
   const handleMarkContactRead = async (id) => {
@@ -461,9 +463,9 @@ export default function Admin({ addToast, setActivePage }) {
             onClick={() => setActiveTab('db-settings')} 
             className={`nav-item ${activeTab === 'db-settings' ? 'active' : ''}`}
           >
-            <Link size={18} />
-            <span>Xano Database</span>
-            <span className={`status-dot ${dbProvider === 'xano' ? 'green' : 'gray'}`}></span>
+            <Settings size={18} />
+            <span>System Settings</span>
+            <span className={`status-dot ${underConstruction ? 'red' : 'green'}`}></span>
           </button>
         </nav>
 
@@ -491,18 +493,7 @@ export default function Admin({ addToast, setActivePage }) {
             </span>
           </div>
           
-          <div className="header-status">
-            <span className="status-label">Database Provider:</span>
-            {dbProvider === 'xano' ? (
-              <span className="status-tag xano">
-                <span className="glowing-dot green"></span> Xano Cloud
-              </span>
-            ) : (
-              <span className="status-tag local">
-                <span className="glowing-dot yellow"></span> Local browser
-              </span>
-            )}
-          </div>
+
         </header>
 
         <div className="pane-body">
@@ -978,147 +969,54 @@ export default function Admin({ addToast, setActivePage }) {
                 </div>
               )}
 
-              {/* Tab 6: Database Connection Settings */}
+              {/* Tab 6: System & Database Settings */}
               {activeTab === 'db-settings' && (
-                <div className="cms-layout">
+                <div className="cms-layout" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                  {/* Under Construction Card */}
                   <div className="cms-form-card">
                     <h3 style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <Link size={20} className="icon-neon" />
-                      Configure Xano Database
+                      <Settings size={20} className="icon-neon" />
+                      Marketing Website Status
                     </h3>
                     <p style={{ fontSize: '0.85rem', color: 'var(--text-gray)', marginBottom: '24px', lineHeight: '1.5' }}>
-                      Connect your Noryvex admin panel to a cloud database hosted on Xano.
+                      Control the visibility of the public Noryvex marketing website. When "Under Construction" mode is active, 
+                      all traffic to the website is shown a maintenance screen, while the Admin panel remains fully operational.
                     </p>
 
-                    <form onSubmit={handleSaveDbSettings}>
-                      <div className="form-group" style={{ marginBottom: '16px' }}>
-                        <label className="form-label" style={{ display: 'block', marginBottom: '8px' }}>Database Provider</label>
-                        <select 
-                          className="form-control" 
-                          value={dbProvider}
-                          onChange={(e) => setDbProvider(e.target.value)}
-                          style={{ width: '100%', background: '#0a0a0d', color: '#fff', border: '1px solid var(--border-light)', borderRadius: '8px', padding: '10px' }}
+                    <div style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-light)', borderRadius: '12px', padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
+                        <div>
+                          <span style={{ fontSize: '0.9rem', fontWeight: '700', display: 'block', color: 'var(--text-white)' }}>
+                            Under Construction Mode
+                          </span>
+                          <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                            Toggle maintenance screen overlay for non-admin pages
+                          </span>
+                        </div>
+                        <button
+                          onClick={handleToggleUnderConstruction}
+                          disabled={updatingConstruction}
+                          className={`btn ${underConstruction ? 'btn-outline-neon' : 'btn-primary'}`}
+                          style={{ minWidth: '180px', textTransform: 'uppercase', fontSize: '0.8rem', fontWeight: '800' }}
                         >
-                          <option value="local">Local Storage (Browser-only Fallback)</option>
-                          <option value="xano">Xano Cloud Database</option>
-                        </select>
-                      </div>
-
-                      {dbProvider === 'xano' && (
-                        <>
-                          <div className="form-group" style={{ marginBottom: '16px' }}>
-                            <label className="form-label" style={{ display: 'block', marginBottom: '8px' }}>Xano API Base Group URL</label>
-                            <input 
-                              type="text" 
-                              required 
-                              placeholder="https://x8ki-letl-twmt.n7.xano.io/api:Tl7OK6wd" 
-                              className="form-control"
-                              value={xanoBaseUrl}
-                              onChange={(e) => setXanoBaseUrl(e.target.value)}
-                            />
-                          </div>
-
-                          <div className="form-group" style={{ marginBottom: '16px' }}>
-                            <label className="form-label" style={{ display: 'block', marginBottom: '8px' }}>Developer Token (API Key / Auth)</label>
-                            <input 
-                              type="password" 
-                              placeholder="Paste developer access token..." 
-                              className="form-control"
-                              value={xanoToken}
-                              onChange={(e) => setXanoToken(e.target.value)}
-                            />
-                          </div>
-                        </>
-                      )}
-
-                      <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
-                        <button type="submit" className="btn btn-primary" style={{ flex: 1 }}>
-                          Save Settings
+                          {updatingConstruction 
+                            ? 'Updating...' 
+                            : underConstruction 
+                              ? '🔴 ACTIVE (OFFLINE)' 
+                              : '🟢 INACTIVE (ONLINE)'}
                         </button>
-                        
-                        {dbProvider === 'xano' && (
-                          <button 
-                            type="button" 
-                            onClick={handleTestConnection}
-                            disabled={testingConnection}
-                            className="btn btn-secondary" 
-                            style={{ flex: 1 }}
-                          >
-                            {testingConnection ? 'Testing...' : 'Test Connection'}
-                          </button>
-                        )}
                       </div>
-                    </form>
-                  </div>
 
-                  <div className="glass-card" style={{ padding: '32px 24px', border: '1px solid var(--border-light)', borderRadius: '16px', background: 'rgba(255,255,255,0.015)' }}>
-                    <h3 style={{ marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <Activity size={20} className="icon-neon" />
-                      Schema Setup Guide (JSON Import)
-                    </h3>
-                    <p style={{ fontSize: '0.85rem', color: 'var(--text-gray)', marginBottom: '16px', lineHeight: '1.5' }}>
-                      Create your database tables instantly in Xano (ID: <code>166176-0</code>):
-                    </p>
-                    <ol style={{ fontSize: '0.85rem', color: 'var(--text-gray)', paddingLeft: '20px', marginBottom: '20px', lineHeight: '1.6' }}>
-                      <li>Click the links below to download the schema templates.</li>
-                      <li>In your Xano Workspace, click <strong>Add Table</strong> (top right of the Database view).</li>
-                      <li>Select <strong>Import File</strong> &gt; <strong>JSON</strong> and upload the matching file.</li>
-                      <li>Xano will automatically set up the table and create all columns with the correct data types!</li>
-                    </ol>
-
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '24px' }}>
-                      <a href="/data/xano_schemas/contacts.json" download="contacts.json" className="btn btn-secondary" style={{ fontSize: '0.75rem', padding: '6px 12px', textDecoration: 'none' }}>
-                        ↓ contacts.json
-                      </a>
-                      <a href="/data/xano_schemas/meetings.json" download="meetings.json" className="btn btn-secondary" style={{ fontSize: '0.75rem', padding: '6px 12px', textDecoration: 'none' }}>
-                        ↓ meetings.json
-                      </a>
-                      <a href="/data/xano_schemas/trials.json" download="trials.json" className="btn btn-secondary" style={{ fontSize: '0.75rem', padding: '6px 12px', textDecoration: 'none' }}>
-                        ↓ trials.json
-                      </a>
-                      <a href="/data/xano_schemas/clients.json" download="clients.json" className="btn btn-secondary" style={{ fontSize: '0.75rem', padding: '6px 12px', textDecoration: 'none' }}>
-                        ↓ clients.json
-                      </a>
-                      <a href="/data/xano_schemas/partners.json" download="partners.json" className="btn btn-secondary" style={{ fontSize: '0.75rem', padding: '6px 12px', textDecoration: 'none' }}>
-                        ↓ partners.json
-                      </a>
-                    </div>
-
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '0.85rem' }}>
-                      <div style={{ padding: '12px', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border-light)', borderRadius: '8px' }}>
-                        <strong>contacts</strong> (Inquiries)
-                        <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: '4px' }}>
-                          Fields: <code>name</code>, <code>company</code>, <code>email</code>, <code>phone</code>, <code>service</code>, <code>message</code>, <code>status</code>, <code>created_at</code>
-                        </div>
-                      </div>
-                      <div style={{ padding: '12px', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border-light)', borderRadius: '8px' }}>
-                        <strong>meetings</strong> (Appointments)
-                        <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: '4px' }}>
-                          Fields: <code>name</code>, <code>email</code>, <code>company</code>, <code>phone</code>, <code>date</code>, <code>time</code>, <code>notes</code>, <code>status</code>, <code>created_at</code>
-                        </div>
-                      </div>
-                      <div style={{ padding: '12px', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border-light)', borderRadius: '8px' }}>
-                        <strong>trials</strong> (Active Demos)
-                        <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: '4px' }}>
-                          Fields: <code>business_name</code>, <code>contact_name</code>, <code>email</code>, <code>phone</code>, <code>business_type</code>, <code>ai_handling</code>, <code>trial_status</code>, <code>call_duration_seconds</code>, <code>limit_duration_seconds</code>, <code>created_at</code>
-                        </div>
-                      </div>
-                      <div style={{ padding: '12px', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border-light)', borderRadius: '8px' }}>
-                        <strong>clients</strong> (Testimonials CMS)
-                        <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: '4px' }}>
-                          Fields: <code>name</code>, <code>company</code>, <code>rating</code>, <code>quote</code>
-                        </div>
-                      </div>
-                      <div style={{ padding: '12px', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--border-light)', borderRadius: '8px' }}>
-                        <strong>partners</strong> (Trust Badges CMS)
-                        <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: '4px' }}>
-                          Fields: <code>name</code>, <code>link</code>, <code>image</code>
-                        </div>
-                      </div>
+                      <div style={{ fontSize: '0.8rem', color: underConstruction ? '#ef4444' : 'var(--accent-neon)', display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 14px', background: underConstruction ? 'rgba(239, 68, 68, 0.05)' : 'rgba(199, 255, 61, 0.05)', borderRadius: '8px', border: `1px solid ${underConstruction ? 'rgba(239, 68, 68, 0.1)' : 'rgba(199, 255, 61, 0.1)'}` }}>
+                        <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: underConstruction ? '#ef4444' : '#C7FF3D', boxShadow: `0 0 8px ${underConstruction ? '#ef4444' : '#C7FF3D'}` }}></span>
+                        {underConstruction 
+                          ? 'Marketing website is currently covered by the under construction overlay.' 
+                          : 'Marketing website is live, public, and operational.'}
                     </div>
                   </div>
                 </div>
-              )}
+              </div>
+            )}
 
             </>
           )}

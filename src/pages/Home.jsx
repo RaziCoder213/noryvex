@@ -238,7 +238,18 @@ export default function Home({ setActivePage }) {
             <div className="hero-featured-badges nrx-reveal" style={{ transitionDelay: '0.15s' }}>
               {partners.map((p) => (
                 <a key={p.id} href={p.link} target="_blank" rel="noopener noreferrer" title={p.name}>
-                  <img src={p.image} alt={p.name} className="featured-badge-img" style={{ height: '32px', width: 'auto', objectFit: 'contain' }} />
+                  <img 
+                    src={p.image} 
+                    alt={p.name} 
+                    className="featured-badge-img" 
+                    style={{ 
+                      height: p.name === 'GoodFirms' ? '40px' : '30px', 
+                      width: 'auto', 
+                      objectFit: 'contain',
+                      opacity: 0.7,
+                      transition: 'opacity 0.2s'
+                    }} 
+                  />
                 </a>
               ))}
             </div>

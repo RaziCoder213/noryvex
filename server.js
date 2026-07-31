@@ -6,7 +6,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import nodemailer from 'nodemailer';
 import { 
-  initDb, 
+  ensureDbConnected, 
   saveContact, 
   getContacts, 
   markContactRead, 
@@ -18,7 +18,15 @@ import {
   saveTrial,
   getTrials,
   updateTrialStatus,
-  updateTrialDuration
+  updateTrialDuration,
+  getClients,
+  saveClient,
+  deleteClient,
+  getPartners,
+  savePartner,
+  deletePartner,
+  getSetting,
+  setSetting
 } from './database.js';
 
 dotenv.config();
@@ -33,9 +41,20 @@ const JWT_SECRET = process.env.JWT_SECRET || 'noryvex-jwt-fallback-secret-2026';
 app.use(cors());
 app.use(express.json());
 
-// Initialize Database
-initDb().catch(err => {
-  console.error('Failed to initialize database:', err);
+// Initialize Database (non-blocking background init on start)
+ensureDbConnected().catch(err => {
+  console.error('Failed to initialize database on startup:', err);
+});
+
+// Middleware to ensure DB is initialized before any API request
+app.use('/api', async (req, res, next) => {
+  try {
+    await ensureDbConnected();
+    next();
+  } catch (err) {
+    console.error('Database initialization failed for request:', err);
+    res.status(500).json({ error: 'Database connection failed. Please try again.' });
+  }
 });
 
 // Middleware to authenticate JWT token
@@ -257,6 +276,39 @@ app.post('/api/vapi/webhook', async (req, res) => {
   }
 });
 
+// Public CMS Endpoints
+app.get('/api/clients', async (req, res) => {
+  try {
+    const clients = await getClients();
+    res.json(clients);
+  } catch (error) {
+    console.error('Error fetching clients:', error);
+    res.status(500).json({ error: 'Failed to fetch clients.' });
+  }
+});
+
+app.get('/api/partners', async (req, res) => {
+  try {
+    const partners = await getPartners();
+    res.json(partners);
+  } catch (error) {
+    console.error('Error fetching partners:', error);
+    res.status(500).json({ error: 'Failed to fetch partners.' });
+  }
+});
+
+app.get('/api/settings/under-construction', async (req, res) => {
+  try {
+    const val = await getSetting('under_construction');
+    res.json({ underConstruction: val === 'true' });
+  } catch (error) {
+    console.error('Error fetching under construction setting:', error);
+    res.status(500).json({ error: 'Failed to fetch settings.' });
+  }
+});
+
+
+
 // Admin Authentication Login
 app.post('/api/admin/login', (req, res) => {
   const { email, password } = req.body;
@@ -363,6 +415,67 @@ app.patch('/api/admin/trials/:id', authenticateToken, async (req, res) => {
   }
 });
 
+// CMS Testimonials (Clients) Admin Operations
+app.post('/api/admin/clients', authenticateToken, async (req, res) => {
+  try {
+    const { id, name, company, rating, quote } = req.body;
+    const result = await saveClient(id, name, company, rating, quote);
+    res.status(200).json(result);
+  } catch (error) {
+    console.error('Error saving client:', error);
+    res.status(500).json({ error: 'Failed to save client.' });
+  }
+});
+
+app.delete('/api/admin/clients/:id', authenticateToken, async (req, res) => {
+  try {
+    await deleteClient(req.params.id);
+    res.json({ message: 'Client testimonial deleted.' });
+  } catch (error) {
+    console.error('Error deleting client:', error);
+    res.status(500).json({ error: 'Failed to delete client.' });
+  }
+});
+
+// CMS Partners Admin Operations
+app.post('/api/admin/partners', authenticateToken, async (req, res) => {
+  try {
+    const { id, name, link, image } = req.body;
+    const result = await savePartner(id, name, link, image);
+    res.status(200).json(result);
+  } catch (error) {
+    console.error('Error saving partner:', error);
+    res.status(500).json({ error: 'Failed to save partner.' });
+  }
+});
+
+app.delete('/api/admin/partners/:id', authenticateToken, async (req, res) => {
+  try {
+    await deletePartner(req.params.id);
+    res.json({ message: 'Partner brand deleted.' });
+  } catch (error) {
+    console.error('Error deleting partner:', error);
+    res.status(500).json({ error: 'Failed to delete partner.' });
+  }
+});
+
+// System Settings Operations
+app.post('/api/admin/settings/under-construction', authenticateToken, async (req, res) => {
+  try {
+    const { underConstruction } = req.body;
+    if (typeof underConstruction !== 'boolean') {
+      return res.status(400).json({ error: 'underConstruction status must be a boolean.' });
+    }
+    await setSetting('under_construction', underConstruction ? 'true' : 'false');
+    res.json({ message: 'Settings updated successfully.' });
+  } catch (error) {
+    console.error('Error saving setting:', error);
+    res.status(500).json({ error: 'Failed to save settings.' });
+  }
+});
+
+
+
 // Serve frontend assets in production
 const distPath = path.resolve(__dirname, 'dist');
 app.use(express.static(distPath));
@@ -374,6 +487,10 @@ app.use((req, res, next) => {
   res.sendFile(path.join(distPath, 'index.html'));
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+}
+
+export default app;
