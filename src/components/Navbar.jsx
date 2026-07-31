@@ -217,7 +217,7 @@ export default function Navbar({ activePage, setActivePage }) {
         .nav-menu {
           display: flex;
           gap: 32px;
-          background: rgba(18, 18, 22, 0.95);
+          background: var(--bg-glass);
           border: 1px solid var(--border-light);
           padding: 6px 24px;
           border-radius: 100px;
@@ -261,7 +261,7 @@ export default function Navbar({ activePage, setActivePage }) {
         }
 
         .theme-toggle-btn {
-          background: rgba(255, 255, 255, 0.03);
+          background: var(--bg-preview-card);
           border: 1px solid var(--border-light);
           color: var(--text-light);
           padding: 6px 12px;
@@ -280,7 +280,7 @@ export default function Navbar({ activePage, setActivePage }) {
 
         .theme-toggle-btn:hover {
           border-color: var(--accent-neon);
-          background: rgba(255, 255, 255, 0.06);
+          background: var(--bg-glass);
           color: var(--text-white);
         }
 

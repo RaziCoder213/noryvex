@@ -1550,8 +1550,8 @@ export default function Home({ setActivePage }) {
           font-weight: 900;
           line-height: 1.15;
           letter-spacing: -0.02em;
-          color: rgba(255, 255, 255, 0.1);
-          -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.25);
+          color: var(--text-stroke-inactive);
+          -webkit-text-stroke: 1.5px var(--text-stroke-color);
           text-transform: uppercase;
           user-select: none;
           transition: opacity 0.15s ease-out, transform 0.15s ease-out, text-shadow 0.3s ease;
@@ -1577,9 +1577,9 @@ export default function Home({ setActivePage }) {
           }
         }
         .nrx-kinetic-line.active {
-          color: rgba(255, 255, 255, 0.95);
+          color: var(--text-white);
           -webkit-text-stroke: 0px transparent;
-          text-shadow: 0 0 40px rgba(255, 255, 255, 0.2);
+          text-shadow: 0 0 40px var(--text-shadow-active);
         }
         .nrx-kinetic-accent {
           background: linear-gradient(135deg, var(--accent-neon) 0%, var(--text-white) 60%);

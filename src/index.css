@@ -79,6 +79,10 @@
   --text-gray:  #A1A1AA;
   --text-muted: #71717A;
 
+  --text-stroke-inactive: rgba(255, 255, 255, 0.1);
+  --text-stroke-color:    rgba(255, 255, 255, 0.25);
+  --text-shadow-active:   rgba(255, 255, 255, 0.2);
+
   --border-light: rgba(255, 255, 255, 0.07);
   --border-hover: rgba(199, 255, 61, 0.35);
 
@@ -106,6 +110,10 @@
   --text-light: #2D3748;
   --text-gray:  #4A5568;
   --text-muted: #718096;
+
+  --text-stroke-inactive: rgba(0, 0, 0, 0.1);
+  --text-stroke-color:    rgba(0, 0, 0, 0.25);
+  --text-shadow-active:   rgba(0, 0, 0, 0.15);
 
   --border-light: rgba(0, 0, 0, 0.08);
   --border-hover: rgba(13, 106, 2, 0.35);
