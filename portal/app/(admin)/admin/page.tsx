@@ -3,59 +3,48 @@ import Link from 'next/link';
 import { getServerSession } from '@/lib/session';
 import { db } from '@/lib/db';
 import * as schema from '@/lib/db/schema';
-import { isNull, count, gte, eq, desc } from 'drizzle-orm';
+import { isNull, count, eq, desc } from 'drizzle-orm';
+
+async function safeCount(query: () => Promise<{ count: number | string }[]>): Promise<number> {
+  try {
+    const result = await query();
+    return Number(result[0]?.count ?? 0);
+  } catch {
+    return 0;
+  }
+}
 
 export default async function AdminDashboardPage() {
   const session = await getServerSession();
   if (!session || session.role !== 'super_admin') redirect('/login');
 
-  const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+  const [
+    totalWorkspaces,
+    totalCalls,
+    totalPatients,
+    totalAppointments,
+    failedWebhooks,
+  ] = await Promise.allSettled([
+    safeCount(() => db.select({ count: count() }).from(schema.workspaces).where(isNull(schema.workspaces.deletedAt))),
+    safeCount(() => db.select({ count: count() }).from(schema.calls).where(isNull(schema.calls.deletedAt))),
+    safeCount(() => db.select({ count: count() }).from(schema.patients).where(isNull(schema.patients.deletedAt))),
+    safeCount(() => db.select({ count: count() }).from(schema.appointments).where(isNull(schema.appointments.deletedAt))),
+    safeCount(() => db.select({ count: count() }).from(schema.webhookEvents).where(eq(schema.webhookEvents.status, 'failed'))),
+  ]);
 
-  let workspaceCount = [{ count: 0 }];
-  let callCount = [{ count: 0 }];
-  let patientCount = [{ count: 0 }];
-  let appointmentCount = [{ count: 0 }];
-  let pendingWebhooks = [{ count: 0 }];
-  let recentContacts = [{ count: 0 }];
-  let recentMeetings = [{ count: 0 }];
-  let recentTrials = [{ count: 0 }];
   let recentEvents: typeof schema.webhookEvents.$inferSelect[] = [];
-
   try {
-    [
-      workspaceCount,
-      callCount,
-      patientCount,
-      appointmentCount,
-      pendingWebhooks,
-      recentContacts,
-      recentMeetings,
-      recentTrials,
-      recentEvents,
-    ] = await Promise.all([
-      db.select({ count: count() }).from(schema.workspaces).where(isNull(schema.workspaces.deletedAt)),
-      db.select({ count: count() }).from(schema.calls).where(isNull(schema.calls.deletedAt)),
-      db.select({ count: count() }).from(schema.patients).where(isNull(schema.patients.deletedAt)),
-      db.select({ count: count() }).from(schema.appointments).where(isNull(schema.appointments.deletedAt)),
-      db.select({ count: count() }).from(schema.webhookEvents).where(eq(schema.webhookEvents.status, 'failed')),
-      db.select({ count: count() }).from(schema.contactInquiries).where(gte(schema.contactInquiries.createdAt!, sevenDaysAgo)),
-      db.select({ count: count() }).from(schema.meetingBookings).where(gte(schema.meetingBookings.createdAt!, sevenDaysAgo)),
-      db.select({ count: count() }).from(schema.trialRequests).where(gte(schema.trialRequests.createdAt!, sevenDaysAgo)),
-      db.select().from(schema.webhookEvents).orderBy(desc(schema.webhookEvents.createdAt)).limit(10),
-    ]) as any;
-  } catch (e) {
-    console.error('Admin dashboard DB error:', e);
-  }
+    recentEvents = await db.select().from(schema.webhookEvents).orderBy(desc(schema.webhookEvents.createdAt)).limit(10);
+  } catch { /* empty */ }
 
-  const newSubmissions = (recentContacts[0]?.count ?? 0) + (recentMeetings[0]?.count ?? 0) + (recentTrials[0]?.count ?? 0);
+  const getValue = (r: PromiseSettledResult<number>) => r.status === 'fulfilled' ? r.value : 0;
 
   const stats = [
-    { label: 'Total Workspaces', value: workspaceCount[0]?.count ?? 0, href: '/admin/workspaces', color: '#6366f1' },
-    { label: 'Total Calls', value: callCount[0]?.count ?? 0, href: '/admin/webhooks', color: '#22c55e' },
-    { label: 'Total Patients', value: patientCount[0]?.count ?? 0, href: '#', color: '#f59e0b' },
-    { label: 'Total Appointments', value: appointmentCount[0]?.count ?? 0, href: '#', color: '#06b6d4' },
-    { label: 'Failed Webhooks', value: pendingWebhooks[0]?.count ?? 0, href: '/admin/webhooks', color: '#ef4444' },
-    { label: 'New Submissions (7d)', value: newSubmissions, href: '/admin/submissions', color: '#8b5cf6' },
+    { label: 'Total Workspaces', value: getValue(totalWorkspaces), href: '/admin/workspaces', color: '#6366f1' },
+    { label: 'Total Calls', value: getValue(totalCalls), href: '/admin/webhooks', color: '#22c55e' },
+    { label: 'Total Patients', value: getValue(totalPatients), href: '#', color: '#f59e0b' },
+    { label: 'Total Appointments', value: getValue(totalAppointments), href: '#', color: '#06b6d4' },
+    { label: 'Failed Webhooks', value: getValue(failedWebhooks), href: '/admin/webhooks', color: '#ef4444' },
   ];
 
   const statusColor: Record<string, string> = {
@@ -80,7 +69,7 @@ export default async function AdminDashboardPage() {
             className="block bg-[#111111] border border-[#222222] rounded-xl p-6 hover:border-[#333333] transition-colors"
           >
             <div className="text-[#a1a1aa] text-sm">{stat.label}</div>
-            <div className="text-3xl font-bold text-white mt-2" style={{ color: stat.color }}>
+            <div className="text-3xl font-bold mt-2" style={{ color: stat.color }}>
               {stat.value.toLocaleString()}
             </div>
           </Link>
@@ -132,18 +121,23 @@ export default async function AdminDashboardPage() {
                 recentEvents.map((event) => (
                   <tr key={event.id} className="border-t border-[#1a1a1a] hover:bg-[#1a1a1a] transition-colors">
                     <td className="px-4 py-3 text-white font-mono text-xs">{event.eventType}</td>
-                    <td className="px-4 py-3 text-[#a1a1aa] font-mono text-xs">{event.vapiCallId?.slice(0, 12) ?? '-'}...</td>
+                    <td className="px-4 py-3 text-[#a1a1aa] font-mono text-xs">
+                      {event.vapiCallId ? event.vapiCallId.slice(0, 12) + '...' : '-'}
+                    </td>
                     <td className="px-4 py-3">
                       <span
-                        className="px-2 py-0.5 rounded-full text-xs font-medium text-white"
-                        style={{ backgroundColor: statusColor[event.status ?? 'pending'] + '33', color: statusColor[event.status ?? 'pending'] }}
+                        className="px-2 py-0.5 rounded-full text-xs font-medium"
+                        style={{
+                          backgroundColor: (statusColor[event.status ?? 'pending'] ?? '#f59e0b') + '33',
+                          color: statusColor[event.status ?? 'pending'] ?? '#f59e0b',
+                        }}
                       >
                         {event.status}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-[#a1a1aa]">{event.attempts}</td>
                     <td className="px-4 py-3 text-[#71717a] text-xs">
-                      {event.createdAt ? new Date(event.createdAt ?? Date.now()).toLocaleString() : '-'}
+                      {event.createdAt ? new Date(event.createdAt).toLocaleString() : '-'}
                     </td>
                   </tr>
                 ))
