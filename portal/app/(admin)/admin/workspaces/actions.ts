@@ -1,17 +1,67 @@
 "use server";
 
 import { revalidatePath } from 'next/cache';
+import { db } from '@/lib/db';
+import * as schema from '@/lib/db/schema';
+import { eq } from 'drizzle-orm';
+import { getServerSession } from '@/lib/session';
+import { redirect } from 'next/navigation';
 
 export async function createWorkspace(formData: FormData) {
-  revalidatePath('/admin/workspaces');
-  return { success: true };
+  const session = await getServerSession();
+  if (!session || session.role !== 'super_admin') redirect('/login');
+
+  const name = formData.get('name') as string;
+  const subdomain = formData.get('subdomain') as string;
+  const industry = formData.get('industry') as string;
+  const timezone = (formData.get('timezone') as string) || 'UTC';
+
+  if (!name || !subdomain || !industry) {
+    return { success: false, error: 'Name, subdomain, and industry are required.' };
+  }
+
+  // Sanitize subdomain: lowercase, alphanumeric + hyphens only
+  const cleanSubdomain = subdomain.toLowerCase().replace(/[^a-z0-9-]/g, '-');
+
+  try {
+    await db.insert(schema.workspaces).values({
+      name,
+      subdomain: cleanSubdomain,
+      industry,
+      timezone,
+      status: 'active',
+    });
+
+    revalidatePath('/admin/workspaces');
+    return { success: true, subdomain: cleanSubdomain };
+  } catch (err: any) {
+    if (err.message?.includes('unique') || err.message?.includes('duplicate')) {
+      return { success: false, error: 'That subdomain is already taken. Choose another.' };
+    }
+    return { success: false, error: err.message || 'Failed to create workspace.' };
+  }
 }
 
 export async function updateWorkspaceStatus(id: string, status: string) {
+  const session = await getServerSession();
+  if (!session || session.role !== 'super_admin') redirect('/login');
+
+  await db
+    .update(schema.workspaces)
+    .set({ status: status as schema.WorkspaceStatus })
+    .where(eq(schema.workspaces.id, id));
+
   revalidatePath('/admin/workspaces');
 }
 
 export async function deleteWorkspace(id: string) {
+  const session = await getServerSession();
+  if (!session || session.role !== 'super_admin') redirect('/login');
+
+  await db
+    .update(schema.workspaces)
+    .set({ deletedAt: new Date() })
+    .where(eq(schema.workspaces.id, id));
+
   revalidatePath('/admin/workspaces');
 }
-

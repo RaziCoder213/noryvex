@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { getServerSession } from '@/lib/session';
 import { db } from '@/lib/db';
 import * as schema from '@/lib/db/schema';
-import { isNull, count, and, gte, sql } from 'drizzle-orm';
+import { isNull, count, gte, eq, desc } from 'drizzle-orm';
 
 export default async function AdminDashboardPage() {
   const session = await getServerSession();
@@ -11,27 +11,41 @@ export default async function AdminDashboardPage() {
 
   const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
 
-  const [
-    workspaceCount,
-    callCount,
-    patientCount,
-    appointmentCount,
-    pendingWebhooks,
-    recentContacts,
-    recentMeetings,
-    recentTrials,
-    recentEvents,
-  ] = await Promise.all([
-    db.select({ count: count() }).from(schema.workspaces).where(isNull(schema.workspaces.deletedAt)),
-    db.select({ count: count() }).from(schema.calls).where(isNull(schema.calls.deletedAt)),
-    db.select({ count: count() }).from(schema.patients).where(isNull(schema.patients.deletedAt)),
-    db.select({ count: count() }).from(schema.appointments).where(isNull(schema.appointments.deletedAt)),
-    db.select({ count: count() }).from(schema.webhookEvents).where(sql`${schema.webhookEvents.status} = 'failed'`),
-    db.select({ count: count() }).from(schema.contactInquiries).where(gte(schema.contactInquiries.createdAt, sevenDaysAgo)),
-    db.select({ count: count() }).from(schema.meetingBookings).where(gte(schema.meetingBookings.createdAt, sevenDaysAgo)),
-    db.select({ count: count() }).from(schema.trialRequests).where(gte(schema.trialRequests.createdAt, sevenDaysAgo)),
-    db.select().from(schema.webhookEvents).orderBy(sql`${schema.webhookEvents.createdAt} desc`).limit(10),
-  ]);
+  let workspaceCount = [{ count: 0 }];
+  let callCount = [{ count: 0 }];
+  let patientCount = [{ count: 0 }];
+  let appointmentCount = [{ count: 0 }];
+  let pendingWebhooks = [{ count: 0 }];
+  let recentContacts = [{ count: 0 }];
+  let recentMeetings = [{ count: 0 }];
+  let recentTrials = [{ count: 0 }];
+  let recentEvents: typeof schema.webhookEvents.$inferSelect[] = [];
+
+  try {
+    [
+      workspaceCount,
+      callCount,
+      patientCount,
+      appointmentCount,
+      pendingWebhooks,
+      recentContacts,
+      recentMeetings,
+      recentTrials,
+      recentEvents,
+    ] = await Promise.all([
+      db.select({ count: count() }).from(schema.workspaces).where(isNull(schema.workspaces.deletedAt)),
+      db.select({ count: count() }).from(schema.calls).where(isNull(schema.calls.deletedAt)),
+      db.select({ count: count() }).from(schema.patients).where(isNull(schema.patients.deletedAt)),
+      db.select({ count: count() }).from(schema.appointments).where(isNull(schema.appointments.deletedAt)),
+      db.select({ count: count() }).from(schema.webhookEvents).where(eq(schema.webhookEvents.status, 'failed')),
+      db.select({ count: count() }).from(schema.contactInquiries).where(gte(schema.contactInquiries.createdAt!, sevenDaysAgo)),
+      db.select({ count: count() }).from(schema.meetingBookings).where(gte(schema.meetingBookings.createdAt!, sevenDaysAgo)),
+      db.select({ count: count() }).from(schema.trialRequests).where(gte(schema.trialRequests.createdAt!, sevenDaysAgo)),
+      db.select().from(schema.webhookEvents).orderBy(desc(schema.webhookEvents.createdAt)).limit(10),
+    ]) as any;
+  } catch (e) {
+    console.error('Admin dashboard DB error:', e);
+  }
 
   const newSubmissions = (recentContacts[0]?.count ?? 0) + (recentMeetings[0]?.count ?? 0) + (recentTrials[0]?.count ?? 0);
 
