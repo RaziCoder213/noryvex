@@ -1,10 +1,10 @@
 import React from 'react';
-import { Phone, Cpu, Zap, Shield, CheckCircle2, Terminal, Code, Database } from 'lucide-react';
+import { Phone, Cpu, Zap, Shield, CheckCircle2, Terminal, Code, Database, Globe } from 'lucide-react';
 
 export default function Solutions({ setActivePage }) {
   const categories = [
     {
-      title: "Voice Receptionist Solutions",
+      title: "AI Voice Agents & Receptionists",
       icon: <Phone size={32} className="sol-icon" />,
       highlight: "800ms Latency Response",
       description: "Our high-performance conversational speech engines bypass normal voice response delays, making Noryvex voice receptionists indistinguishable from humans.",
@@ -17,7 +17,7 @@ export default function Solutions({ setActivePage }) {
       ]
     },
     {
-      title: "Workflow & Business Automation",
+      title: "Business Automation",
       icon: <Zap size={32} className="sol-icon" />,
       highlight: "Save up to 40 Hours/Week",
       description: "We orchestrate multi-step pipelines across your application layers, replacing manual entries with autonomous data synchronizations.",
@@ -30,16 +30,27 @@ export default function Solutions({ setActivePage }) {
       ]
     },
     {
-      title: "Intelligent Software & SaaS",
-      icon: <Cpu size={32} className="sol-icon" />,
-      highlight: "Production Ready Code",
-      description: "We construct robust React/Next.js/Node web and mobile platforms with pre-configured database layers, ready to handle thousands of concurrent users.",
+      title: "Websites & Web Applications",
+      icon: <Globe size={32} className="sol-icon" />,
+      highlight: "100% Fully Managed",
+      description: "We design and build fast, modern websites and web applications — marketing sites, booking portals, internal dashboards, and client-facing tools. Built on modern frameworks, maintained by us, not handed off as a DIY template.",
       features: [
-        "Custom administrative panels and metrics trackers",
-        "Embedded context-aware AI chatbots inside your apps",
-        "Scaleable SQLite/Postgres/MongoDB integrations",
-        "Responsive, mobile-optimized UI layouts with high-fidelity styling",
-        "Highly secure authentication protocols and JWT handling"
+        "Marketing & business websites",
+        "Booking and scheduling portals",
+        "Client dashboards and internal tools",
+        "E-commerce and ordering systems"
+      ]
+    },
+    {
+      title: "Custom Software & Apps",
+      icon: <Cpu size={32} className="sol-icon" />,
+      highlight: "Tailored to Your Operations",
+      description: "Full product builds — mobile apps, SaaS platforms, and custom internal software — built from architecture to launch around your specific business, not a generic off-the-shelf tool.",
+      features: [
+        "iOS & Android apps",
+        "Custom SaaS products",
+        "Internal business tools",
+        "API and third-party integrations"
       ]
     }
   ];
@@ -68,10 +79,10 @@ export default function Solutions({ setActivePage }) {
                 <h2 className="sol-row-title">{cat.title}</h2>
                 <p className="sol-row-desc">{cat.description}</p>
                 <button 
-                  onClick={() => setActivePage('contact', cat.title.toLowerCase().includes('voice') ? 'trial' : 'call')} 
+                  onClick={() => setActivePage('contact', 'call')} 
                   className="btn btn-outline-neon"
                 >
-                  {cat.title.toLowerCase().includes('voice') ? 'Checking Warranty' : 'Book a Call'}
+                  Book a Free Strategy Call
                 </button>
               </div>
 

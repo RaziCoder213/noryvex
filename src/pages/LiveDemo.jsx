@@ -434,8 +434,8 @@ export default function LiveDemo({ setActivePage }) {
                             <Phone size={16}/> Call Again
                           </button>
                           {setActivePage && (
-                            <button className="ld-book-btn" onClick={() => setActivePage('contact')}>
-                              Book a Real Call <ArrowRight size={14} />
+                            <button className="ld-book-btn" onClick={() => setActivePage('contact', 'call')}>
+                              Book a Free Strategy Call <ArrowRight size={14} />
                             </button>
                           )}
                         </div>
@@ -459,12 +459,12 @@ export default function LiveDemo({ setActivePage }) {
               <h3 style={{ fontSize: '1.25rem', marginBottom: '4px', color: 'var(--text-white)' }}>Want this running for your business?</h3>
               <p style={{ fontSize: '0.95rem', color: 'var(--text-gray)', margin: 0 }}>Covered under our 7-day checking warranty — no upfront cost, no obligation.</p>
             </div>
-            <button 
+             <button 
               className="btn btn-primary btn-lg" 
-              onClick={() => setActivePage('contact', 'trial')}
+              onClick={() => setActivePage('contact', 'call')}
               style={{ flexShrink: 0 }}
             >
-              Start Checking Warranty <ArrowRight size={16} />
+              Book a Free Strategy Call <ArrowRight size={16} />
             </button>
           </div>
 
@@ -508,14 +508,11 @@ export default function LiveDemo({ setActivePage }) {
           <h2 className="ld-cta-title">Build your own Chloe in&nbsp;days</h2>
           <p className="ld-cta-sub">Custom-trained on your business. Integrated with your CRM. Live in under 2 weeks.</p>
           <div className="ld-cta-btns">
-            {setActivePage && (<>
-              <button className="btn btn-primary btn-lg" onClick={() => setActivePage('contact', 'trial')}>
-                Start 7-Day Checking Warranty <ArrowRight size={18} />
+            {setActivePage && (
+              <button className="btn btn-primary btn-lg" onClick={() => setActivePage('contact', 'call')}>
+                Book a Free Strategy Call <ArrowRight size={18} />
               </button>
-              <button className="btn btn-secondary btn-lg" onClick={() => setActivePage('contact', 'call')}>
-                Book a Strategy Call
-              </button>
-            </>)}
+            )}
           </div>
           <div className="ld-cta-checks">
             {['No commitment required', 'Free strategy call', 'Live in under 2 weeks', '24/7 support'].map((c,i) => (

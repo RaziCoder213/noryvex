@@ -43,54 +43,24 @@ export default function Home({ setActivePage }) {
 
   const services = [
     {
-      title: "AI Voice Agents",
-      desc: "Futuristic human-sounding voice agents capable of conducting outbound campaigns and inbound support with realistic emotional cues.",
+      title: "AI Voice Agents & Receptionists",
+      desc: "Answers every call, books appointments, handles FAQs — 24/7, without adding headcount.",
       icon: <Phone className="svc-icon" />
     },
     {
-      title: "AI Receptionists",
-      desc: "Fully autonomous 24/7 receptionists answering calls, qualifying leads, and scheduling appointments directly inside your CRM.",
-      icon: <Cpu className="svc-icon" />
-    },
-    {
       title: "Business Automation",
-      desc: "Save hundreds of hours by automating repetitive administrative processes, reporting, and operational tasks.",
+      desc: "We remove the manual, repetitive work slowing your team down — workflows, CRM, follow-up, all automated.",
       icon: <Zap className="svc-icon" />
     },
     {
-      title: "Workflow Automation",
-      desc: "Connect your entire software stack and orchestrate multi-step data flows that trigger automatically with zero human effort.",
-      icon: <Layers className="svc-icon" />
-    },
-    {
-      title: "AI Chatbots",
-      desc: "Conversational agents that understand context, resolve customer concerns, and convert web traffic into booked sales calls.",
-      icon: <MessageSquare className="svc-icon" />
-    },
-    {
-      title: "Web Applications",
-      desc: "Bespoke web applications built from scratch with modern technology, optimized for lightning performance and security.",
+      title: "Websites & Web Apps",
+      desc: "Fast, modern, professional sites and web applications — built and maintained for you, not a drag-and-drop template you manage.",
       icon: <Globe className="svc-icon" />
     },
     {
-      title: "Mobile Apps",
-      desc: "Premium iOS and Android mobile experiences engineered with native fluid feeling, integrated with AI features.",
-      icon: <Smartphone className="svc-icon" />
-    },
-    {
-      title: "SaaS Development",
-      desc: "End-to-end design and coding of Software-as-a-Service platforms ready for scale, subscription logic, and user onboarding.",
+      title: "Custom Software & Apps",
+      desc: "Mobile apps, internal tools, full SaaS products — built from scratch around what your business actually needs.",
       icon: <Layers className="svc-icon" />
-    },
-    {
-      title: "API Integrations",
-      desc: "Harmonize data layers by designing custom API webhooks, linking legacy databases, and enabling real-time communications.",
-      icon: <Link2 className="svc-icon" />
-    },
-    {
-      title: "CRM Automation",
-      desc: "Synchronize customer leads automatically into platforms like HubSpot, Salesforce, or GoHighLevel with deep custom triggers.",
-      icon: <Database className="svc-icon" />
     }
   ];
 
@@ -213,29 +183,50 @@ export default function Home({ setActivePage }) {
           >
             <div className="hero-badge txt-slide">
               <span className="badge-glow"></span>
-              <span className="badge-text">FIRST CHECK, THEN PAY — NORYVEX POLICY</span>
+              <span className="badge-text">AI Automation Agency — Voice, Web, Software</span>
             </div>
             <h1 className="hero-title txt-reveal">
-              AI Receptionist Live In 48 Hours. <br />
-              <span className="text-neon-gradient txt-gradient-animate">7-Day Checking Warranty.</span>
+              Your Business, <br />
+              <span className="text-neon-gradient txt-gradient-animate">Fully Automated.</span>
             </h1>
             <p className="hero-subtitle txt-blur-in">
-              Noryvex is a premier AI service agency. We design, train, and deploy your custom AI receptionist in 48 hours, protected by our 7-day checking warranty. No software to learn. No technical setup. No complicated dashboards. Book a meeting and we handle the rest.
+              We build AI voice agents, business automation, websites, and custom software — designed, built, and supported end-to-end. We build it, deploy it, and support it — you don't configure anything yourself. No self-serve tools. No complexity on your end.
             </p>
             <div className="hero-policy-strip txt-blur-in">
-              <span className="policy-item">✓ No software to learn</span>
-              <span className="policy-item">✓ No technical setup</span>
-              <span className="policy-item">✓ No complicated dashboards</span>
+              <span className="policy-item">✓ We build, deploy, & support it</span>
+              <span className="policy-item">✓ You don't configure anything</span>
+              <span className="policy-item">✓ No self-serve software</span>
             </div>
             <div className="hero-ctas">
-              <button onClick={() => setActivePage('contact', 'trial')} className="btn btn-primary btn-lg">
-                Start 7-Day Checking Warranty <ArrowRight size={18} />
+              <button onClick={() => setActivePage('contact', 'call')} className="btn btn-primary btn-lg">
+                Book a Free Strategy Call <ArrowRight size={18} />
               </button>
-              <button onClick={() => setActivePage('contact', 'call')} className="btn btn-secondary btn-lg">
-                Book a Strategy Call
+              <button onClick={() => setActivePage('live-demo')} className="btn btn-secondary btn-lg">
+                Try Live Demo
               </button>
             </div>
-            <div className="hero-featured-badges nrx-reveal" style={{ transitionDelay: '0.15s' }}>
+            <div className="trust-strip nrx-reveal" style={{ transitionDelay: '0.12s', marginTop: '32px' }}>
+              <p className="trust-tagline" style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '12px', fontWeight: '500' }}>
+                Built for businesses that don't have time to configure another tool.
+              </p>
+              <div className="niche-tags" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', justifyContent: 'flex-start' }}>
+                {['Dental', 'Restaurants', 'Home Services', 'Real Estate', 'Startups'].map((tag) => (
+                  <span key={tag} className="niche-tag" style={{
+                    fontSize: '0.75rem',
+                    fontWeight: '700',
+                    padding: '6px 12px',
+                    background: 'rgba(255, 255, 255, 0.03)',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    borderRadius: '100px',
+                    color: 'var(--text-gray)',
+                    letterSpacing: '0.05em'
+                  }}>
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div className="hero-featured-badges nrx-reveal" style={{ transitionDelay: '0.2s', marginTop: '24px' }}>
               {partners.map((p) => (
                 <a key={p.id} href={p.link} target="_blank" rel="noopener noreferrer" title={p.name}>
                   <img 
@@ -297,44 +288,35 @@ export default function Home({ setActivePage }) {
         </div>
       </div>
 
-      {/* ── Services STICKY SCROLL SECTION ── */}
-      <section className="services-sticky-parent" ref={servicesSectionRef}>
-        <div className="services-sticky-wrapper">
-          <div className="container">
-            <div className="section-header">
-              <span className="section-tag txt-slide">Capabilities</span>
-              <h2 className="section-title txt-reveal-2">Futuristic Automated Services</h2>
-              <p className="section-subtitle txt-blur-in">We design and integrate bespoke AI layers custom-tailored to solve manual workflow friction.</p>
-            </div>
+      {/* ── Services Section (4 Pillars, Equal Weight) ── */}
+      <section className="services-grid-section" style={{ padding: '100px 0', background: '#000' }}>
+        <div className="container">
+          <div className="section-header">
+            <span className="section-tag txt-slide">Capabilities</span>
+            <h2 className="section-title txt-reveal-2">Our Core Automation Pillars</h2>
+            <p className="section-subtitle txt-blur-in">We build it, deploy it, and support it — you don't configure anything yourself.</p>
+          </div>
 
-            {/* Slider viewport */}
-            <div className="svc-slider-wrap">
-              {/* Track - translated horizontally on page scroll */}
+          <div className="services-grid">
+            {services.map((svc, i) => (
               <div
-                className="svc-slider-track"
-                ref={sliderRef}
-                style={{ transform: `translateX(-${translateX}px)` }}
+                key={i}
+                className="glass-card service-card nrx-reveal"
+                style={{ transitionDelay: `${i * 0.1}s`, opacity: 1 }}
               >
-                {services.map((svc, i) => (
-                  <div
-                    key={i}
-                    className="glass-card service-card svc-slide-card in-view"
-                  >
-                    <div className="service-icon-wrapper">
-                      {svc.icon}
-                      <div className="icon-glow"></div>
-                    </div>
-                    <h3 className="service-card-title">{svc.title}</h3>
-                    <p className="service-card-desc">{svc.desc}</p>
-                    <div className="service-card-footer">
-                      <span className="learn-more" onClick={() => setActivePage('solutions')}>
-                        Explore Solution <ChevronRight size={16} />
-                      </span>
-                    </div>
-                  </div>
-                ))}
+                <div className="service-icon-wrapper">
+                  {svc.icon}
+                  <div className="icon-glow"></div>
+                </div>
+                <h3 className="service-card-title">{svc.title}</h3>
+                <p className="service-card-desc">{svc.desc}</p>
+                <div className="service-card-footer">
+                  <span className="learn-more" onClick={() => setActivePage('solutions')}>
+                    Explore Solution <ChevronRight size={16} />
+                  </span>
+                </div>
               </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -616,15 +598,67 @@ export default function Home({ setActivePage }) {
           >
             <button
               className="btn btn-primary btn-lg"
-              onClick={() => setActivePage('contact', 'trial')}
+              onClick={() => setActivePage('contact', 'call')}
             >
-              Start Checking Warranty
+              Book a Free Strategy Call
             </button>
           </div>
         </div>
       </section>
 
+      {/* ── Closing CTA Band ── */}
+      <section className="closing-cta-section" style={{ padding: '100px 0', background: '#000', borderTop: '1px solid var(--border-light)' }}>
+        <div className="container" style={{ textAlign: 'center', maxWidth: '800px' }}>
+          <h2 style={{ fontSize: '2.5rem', fontWeight: '800', color: '#fff', marginBottom: '24px', lineHeight: '1.2', letterSpacing: '-0.025em' }}>
+            Ready to stop managing another tool and start running your business?
+          </h2>
+          <p style={{ fontSize: '1.1rem', color: 'var(--text-gray)', marginBottom: '40px', lineHeight: '1.6' }}>
+            We build it, deploy it, and support it — you don't configure anything yourself. No self-serve signups, no pricing tiers, 100% custom agency delivery.
+          </p>
+          <button 
+            onClick={() => setActivePage('contact', 'call')} 
+            className="btn btn-primary btn-lg"
+            style={{ padding: '18px 40px', fontSize: '1.05rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}
+          >
+            Book a Free Strategy Call
+          </button>
+        </div>
+      </section>
+
       <style>{`
+        /* ── Services Grid Section ──────────────── */
+        .services-grid-section {
+          position: relative;
+          z-index: 5;
+        }
+        .services-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 28px;
+          margin-top: 48px;
+        }
+        .services-grid .service-card {
+          width: 100% !important;
+          opacity: 0.85;
+          transform: scale(0.98);
+          transition: opacity 0.3s, transform 0.3s, border-color 0.25s;
+        }
+        .services-grid .service-card:hover {
+          opacity: 1;
+          border-color: rgba(199,255,61,0.35) !important;
+          transform: scale(1.02) translateY(-4px) !important;
+        }
+        @media (max-width: 1024px) {
+          .services-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+        @media (max-width: 640px) {
+          .services-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+
         /* ── 48-Hour Trial Section ──────────────── */
         .trial-offer-section {
           padding: 80px 0;

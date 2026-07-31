@@ -80,8 +80,8 @@ export default function Footer({ setActivePage, addToast }) {
           <div className="footer-link-group">
             <span className="group-title">Company</span>
             <button onClick={() => handleNavClick('about')} className="footer-btn-link">About Us</button>
+            <button onClick={() => handleNavClick('contact', 'call')} className="footer-btn-link">Book a Free Strategy Call</button>
             <button onClick={() => handleNavClick('contact', 'trial')} className="footer-btn-link">Checking Warranty</button>
-            <button onClick={() => handleNavClick('contact', 'call')} className="footer-btn-link">Book Meeting</button>
             <button onClick={() => handleNavClick('admin')} className="footer-btn-link admin-trigger">Admin Panel</button>
           </div>
 

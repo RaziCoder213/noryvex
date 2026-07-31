@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, ArrowUpRight } from 'lucide-react';
+import { Menu, X, ArrowUpRight, Sun, Moon, Monitor } from 'lucide-react';
 
 export default function Navbar({ activePage, setActivePage }) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [theme, setTheme] = useState(localStorage.getItem('noryvex_theme') || 'auto');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -16,6 +17,44 @@ export default function Navbar({ activePage, setActivePage }) {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Theme application and preference listeners
+  useEffect(() => {
+    const applyTheme = () => {
+      const root = document.documentElement;
+      if (theme === 'dark') {
+        root.removeAttribute('data-theme');
+      } else if (theme === 'light') {
+        root.setAttribute('data-theme', 'light');
+      } else {
+        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (systemDark) {
+          root.removeAttribute('data-theme');
+        } else {
+          root.setAttribute('data-theme', 'light');
+        }
+      }
+    };
+    applyTheme();
+    localStorage.setItem('noryvex_theme', theme);
+
+    if (theme === 'auto') {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      const handleChange = () => applyTheme();
+      mediaQuery.addEventListener('change', handleChange);
+      return () => mediaQuery.removeEventListener('change', handleChange);
+    }
+  }, [theme]);
+
+  const toggleTheme = () => {
+    if (theme === 'auto') {
+      setTheme('light');
+    } else if (theme === 'light') {
+      setTheme('dark');
+    } else {
+      setTheme('auto');
+    }
+  };
 
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
@@ -65,11 +104,24 @@ export default function Navbar({ activePage, setActivePage }) {
         </nav>
 
         <div className="nav-actions">
+          {/* Theme Toggle Button */}
           <button 
-            onClick={() => handleNavClick('contact', 'trial')} 
+            onClick={toggleTheme} 
+            className="theme-toggle-btn"
+            title={`Current theme: ${theme} (Click to change)`}
+            aria-label="Toggle color theme"
+          >
+            {theme === 'auto' && <Monitor size={18} />}
+            {theme === 'light' && <Sun size={18} />}
+            {theme === 'dark' && <Moon size={18} />}
+            <span className="theme-label">{theme}</span>
+          </button>
+
+          <button 
+            onClick={() => handleNavClick('contact', 'call')} 
             className="btn btn-outline-neon btn-sm nav-cta"
           >
-            Checking Warranty <ArrowUpRight size={16} />
+            Book a Free Strategy Call <ArrowUpRight size={16} />
           </button>
           
           {/* Mobile Menu Toggle */}
@@ -92,18 +144,21 @@ export default function Navbar({ activePage, setActivePage }) {
             </button>
           ))}
           <button
-            onClick={() => handleNavClick('contact', 'trial')}
+            onClick={() => handleNavClick('contact', 'call')}
             className="btn btn-primary mobile-cta"
             style={{ width: '100%', marginBottom: '12px' }}
           >
-            Checking Warranty <ArrowUpRight size={16} />
+            Book a Free Strategy Call <ArrowUpRight size={16} />
           </button>
           <button
-            onClick={() => handleNavClick('contact', 'call')}
-            className="btn btn-secondary mobile-cta-secondary"
-            style={{ width: '100%', background: 'transparent', border: '1px solid var(--border-light)', color: 'var(--text-white)', padding: '12px', borderRadius: '100px', fontSize: '0.9rem', fontWeight: '700', cursor: 'pointer' }}
+            onClick={toggleTheme}
+            className="btn btn-secondary mobile-cta-secondary theme-toggle-btn-mobile"
+            style={{ width: '100%', background: 'transparent', border: '1px solid var(--border-light)', color: 'var(--text-white)', padding: '12px', borderRadius: '100px', fontSize: '0.9rem', fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
           >
-            Book Strategy Call
+            {theme === 'auto' && <Monitor size={18} />}
+            {theme === 'light' && <Sun size={18} />}
+            {theme === 'dark' && <Moon size={18} />}
+            Theme: {theme}
           </button>
         </div>
       </div>
@@ -203,6 +258,38 @@ export default function Navbar({ activePage, setActivePage }) {
           display: flex;
           align-items: center;
           gap: 16px;
+        }
+
+        .theme-toggle-btn {
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid var(--border-light);
+          color: var(--text-light);
+          padding: 6px 12px;
+          border-radius: 8px;
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          cursor: pointer;
+          font-family: var(--font-sans);
+          font-size: 0.75rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          transition: border-color 0.2s, background 0.2s, color 0.2s;
+        }
+
+        .theme-toggle-btn:hover {
+          border-color: var(--accent-neon);
+          background: rgba(255, 255, 255, 0.06);
+          color: var(--text-white);
+        }
+
+        .theme-toggle-btn svg {
+          color: var(--accent-neon);
+        }
+
+        .theme-label {
+          font-weight: 700;
         }
         
         .nav-cta {

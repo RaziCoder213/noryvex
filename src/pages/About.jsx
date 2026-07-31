@@ -35,7 +35,7 @@ export default function About() {
           <div className="section-header">
             <span className="section-tag">Our Story</span>
             <h1 className="about-title">Automating the Future</h1>
-            <p className="about-subtitle">At Noryvex, we believe companies should spend their resources on high-leverage growth, not manual workflows. We build the autonomous systems that make that possible.</p>
+            <p className="about-subtitle">Noryvex is an AI-first automation agency. We build voice agents, automation systems, websites, and custom software — everything a business needs to run smoother, without the business having to manage a stack of self-serve tools themselves.</p>
           </div>
         </div>
       </section>
