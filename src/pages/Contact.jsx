@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Mail, Phone, Calendar, Clock, Send, CheckCircle2, Sparkles, ShieldCheck } from 'lucide-react';
-import { dbSaveContact, dbSaveMeeting, dbSaveTrial } from '../utils/dbHelper';
+import { dbSaveContact, dbSaveMeeting, dbSaveTrial, dbGetBookingRedirectUrl } from '../utils/dbHelper';
 
 export default function Contact({ addToast, initialTab = 'trial' }) {
   const [activeTab, setActiveTab] = useState(initialTab);
@@ -39,6 +39,19 @@ export default function Contact({ addToast, initialTab = 'trial' }) {
   
   const [meetingSuccess, setMeetingSuccess] = useState(false);
   const [trialSuccess, setTrialSuccess] = useState(false);
+  const [bookingRedirectUrl, setBookingRedirectUrl] = useState('https://calendly.com/noryvex');
+
+  useEffect(() => {
+    const fetchUrl = async () => {
+      try {
+        const url = await dbGetBookingRedirectUrl();
+        setBookingRedirectUrl(url);
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    fetchUrl();
+  }, []);
 
   useEffect(() => {
     if (initialTab) {
@@ -97,6 +110,11 @@ export default function Contact({ addToast, initialTab = 'trial' }) {
         addToast('Meeting scheduled successfully!', 'success');
         setMeetingSuccess(true);
         setMeetingData({ name: '', email: '', company: '', phone: '', date: '', time: '', notes: '' });
+        
+        // Redirect to calendar scheduling page after 1.5 seconds so they see the success message
+        setTimeout(() => {
+          window.location.href = bookingRedirectUrl;
+        }, 1500);
       } else {
         addToast('Meeting scheduling failed.', 'error');
       }
@@ -129,6 +147,11 @@ export default function Contact({ addToast, initialTab = 'trial' }) {
           businessType: '',
           aiHandling: 'both'
         });
+        
+        // Redirect to calendar scheduling page after 1.5 seconds so they can book their call
+        setTimeout(() => {
+          window.location.href = bookingRedirectUrl;
+        }, 1500);
       } else {
         addToast('Request submission failed.', 'error');
       }

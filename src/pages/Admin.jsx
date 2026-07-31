@@ -37,6 +37,10 @@ export default function Admin({ addToast, setActivePage }) {
   const [underConstruction, setUnderConstruction] = useState(false);
   const [updatingConstruction, setUpdatingConstruction] = useState(false);
   
+  // Booking redirect settings states
+  const [bookingRedirectUrl, setBookingRedirectUrl] = useState('https://calendly.com/noryvex');
+  const [savingRedirect, setSavingRedirect] = useState(false);
+  
   // Data lists
   const [contacts, setContacts] = useState([]);
   const [meetings, setMeetings] = useState([]);
@@ -60,6 +64,7 @@ export default function Admin({ addToast, setActivePage }) {
       const partnersData = await dbGetPartners();
       const trialsData = await dbGetTrials(authToken);
       const ucStatus = await dbGetUnderConstruction();
+      const brUrl = await dbGetBookingRedirectUrl();
       
       setContacts(contactsData);
       setMeetings(meetingsData);
@@ -67,6 +72,7 @@ export default function Admin({ addToast, setActivePage }) {
       setPartners(partnersData);
       setTrials(trialsData);
       setUnderConstruction(ucStatus);
+      setBookingRedirectUrl(brUrl);
     } catch (err) {
       console.error(err);
       addToast('Error fetching dashboard records.', 'error');
@@ -145,37 +151,25 @@ export default function Admin({ addToast, setActivePage }) {
     }
   };
 
-  const handleSaveDbSettings = (e) => {
+  const handleSaveRedirectUrl = async (e) => {
     e.preventDefault();
-    localStorage.setItem('noryvex_db_provider', dbProvider);
-    localStorage.setItem('noryvex_xano_base_url', xanoBaseUrl.trim());
-    localStorage.setItem('noryvex_xano_token', xanoToken.trim());
-    addToast('Database settings saved successfully!', 'success');
-    fetchData(token);
-  };
-
-  const handleTestConnection = async () => {
-    if (!xanoBaseUrl.trim()) {
-      addToast('Please enter a Xano API Base URL to test.', 'error');
+    if (!bookingRedirectUrl.trim()) {
+      addToast('Redirection URL cannot be empty.', 'error');
       return;
     }
-    setTestingConnection(true);
+    setSavingRedirect(true);
     try {
-      const baseUrlClean = xanoBaseUrl.trim().replace(/\/$/, '');
-      const testUrl = `${baseUrlClean}/contacts`;
-      const res = await fetch(testUrl, {
-        headers: xanoToken.trim() ? { 'Authorization': `Bearer ${xanoToken.trim()}` } : {}
-      });
-      if (res.ok) {
-        addToast('Connection successful! Validated contacts endpoint.', 'success');
+      const res = await dbSetBookingRedirectUrl(bookingRedirectUrl.trim());
+      if (res.success) {
+        addToast('Booking redirection URL saved successfully!', 'success');
       } else {
-        addToast(`Endpoint returned status ${res.status}. Make sure the contacts table is set up in Xano.`, 'warning');
+        addToast('Failed to save redirection URL.', 'error');
       }
     } catch (err) {
       console.error(err);
-      addToast('Connection failed. Verify your Base URL and internet connection.', 'error');
+      addToast('Failed to save redirection URL.', 'error');
     } finally {
-      setTestingConnection(false);
+      setSavingRedirect(false);
     }
   };
 
@@ -1055,6 +1049,40 @@ export default function Admin({ addToast, setActivePage }) {
                           : 'Marketing website is live, public, and operational.'}
                       </div>
                     </div>
+                  </div>
+
+                  {/* Booking Redirection Card */}
+                  <div className="cms-form-card">
+                    <h3 style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <Calendar size={20} className="icon-neon" />
+                      Booking Form Redirection
+                    </h3>
+                    <p style={{ fontSize: '0.85rem', color: 'var(--text-gray)', marginBottom: '24px', lineHeight: '1.5' }}>
+                      Specify the URL that visitors are redirected to when they schedule a strategy call or request onboarding. 
+                      This is ideal for routing leads directly to your Calendly, Cal.com, or booking page.
+                    </p>
+
+                    <form onSubmit={handleSaveRedirectUrl}>
+                      <div className="form-group" style={{ marginBottom: '16px' }}>
+                        <label className="form-label" style={{ display: 'block', marginBottom: '8px' }}>Redirection URL</label>
+                        <input
+                          type="url"
+                          required
+                          placeholder="https://calendly.com/your-username"
+                          className="form-control"
+                          value={bookingRedirectUrl}
+                          onChange={(e) => setBookingRedirectUrl(e.target.value)}
+                        />
+                      </div>
+                      <button
+                        type="submit"
+                        disabled={savingRedirect}
+                        className="btn btn-primary"
+                        style={{ width: '100%' }}
+                      >
+                        {savingRedirect ? 'Saving...' : 'Save Redirection URL'}
+                      </button>
+                    </form>
                   </div>
 
                   {/* Neon Database Status Card */}

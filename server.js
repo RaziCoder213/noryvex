@@ -296,6 +296,16 @@ app.get('/api/settings/under-construction', async (req, res) => {
   }
 });
 
+app.get('/api/settings/booking-redirect', async (req, res) => {
+  try {
+    const val = await getSetting('booking_redirect_url');
+    res.json({ bookingRedirectUrl: val || 'https://calendly.com/noryvex' });
+  } catch (error) {
+    console.error('Error fetching booking redirect setting:', error);
+    res.status(500).json({ error: 'Failed to fetch settings.' });
+  }
+});
+
 // Admin Authentication Login
 app.post('/api/admin/login', (req, res) => {
   const { email, password } = req.body;
@@ -454,6 +464,20 @@ app.post('/api/admin/settings/under-construction', authenticateToken, async (req
       return res.status(400).json({ error: 'underConstruction status must be a boolean.' });
     }
     await setSetting('under_construction', underConstruction ? 'true' : 'false');
+    res.json({ message: 'Settings updated successfully.' });
+  } catch (error) {
+    console.error('Error saving setting:', error);
+    res.status(500).json({ error: 'Failed to save settings.' });
+  }
+});
+
+app.post('/api/admin/settings/booking-redirect', authenticateToken, async (req, res) => {
+  try {
+    const { bookingRedirectUrl } = req.body;
+    if (typeof bookingRedirectUrl !== 'string') {
+      return res.status(400).json({ error: 'bookingRedirectUrl must be a string.' });
+    }
+    await setSetting('booking_redirect_url', bookingRedirectUrl.trim());
     res.json({ message: 'Settings updated successfully.' });
   } catch (error) {
     console.error('Error saving setting:', error);

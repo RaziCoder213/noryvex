@@ -121,6 +121,12 @@ export async function initDb() {
       await client.query("INSERT INTO settings (key, value) VALUES ('under_construction', 'false')");
     }
 
+    // Seed booking_redirect_url setting if empty
+    const redirectRes = await client.query("SELECT COUNT(*) FROM settings WHERE key = 'booking_redirect_url'");
+    if (parseInt(redirectRes.rows[0].count, 10) === 0) {
+      await client.query("INSERT INTO settings (key, value) VALUES ('booking_redirect_url', 'https://calendly.com/noryvex')");
+    }
+
     console.log('Neon Postgres Database initialized and seeded successfully.');
   } finally {
     client.release();

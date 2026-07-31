@@ -411,3 +411,31 @@ export const dbSetUnderConstruction = async (enabled) => {
     return { success: false };
   }
 };
+
+export const dbGetBookingRedirectUrl = async () => {
+  try {
+    const data = await fetchNoCacheJSON('/api/settings/booking-redirect');
+    return data.bookingRedirectUrl;
+  } catch (e) {
+    console.error('Failed to get booking redirect URL:', e);
+    return 'https://calendly.com/noryvex';
+  }
+};
+
+export const dbSetBookingRedirectUrl = async (url) => {
+  const token = getAdminToken();
+  try {
+    const res = await fetch('/api/admin/settings/booking-redirect', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ bookingRedirectUrl: url })
+    });
+    return { success: res.ok };
+  } catch (e) {
+    console.error('Failed to set booking redirect URL:', e);
+    return { success: false };
+  }
+};
