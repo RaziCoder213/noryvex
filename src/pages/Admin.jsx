@@ -37,9 +37,7 @@ export default function Admin({ addToast, setActivePage }) {
   const [underConstruction, setUnderConstruction] = useState(false);
   const [updatingConstruction, setUpdatingConstruction] = useState(false);
   
-  // Booking redirect settings states
-  const [bookingRedirectUrl, setBookingRedirectUrl] = useState('https://calendly.com/noryvex');
-  const [savingRedirect, setSavingRedirect] = useState(false);
+
   
   // Data lists
   const [contacts, setContacts] = useState([]);
@@ -64,7 +62,6 @@ export default function Admin({ addToast, setActivePage }) {
       const partnersData = await dbGetPartners();
       const trialsData = await dbGetTrials(authToken);
       const ucStatus = await dbGetUnderConstruction();
-      const brUrl = await dbGetBookingRedirectUrl();
       
       setContacts(contactsData);
       setMeetings(meetingsData);
@@ -72,7 +69,6 @@ export default function Admin({ addToast, setActivePage }) {
       setPartners(partnersData);
       setTrials(trialsData);
       setUnderConstruction(ucStatus);
-      setBookingRedirectUrl(brUrl);
     } catch (err) {
       console.error(err);
       addToast('Error fetching dashboard records.', 'error');
@@ -151,27 +147,7 @@ export default function Admin({ addToast, setActivePage }) {
     }
   };
 
-  const handleSaveRedirectUrl = async (e) => {
-    e.preventDefault();
-    if (!bookingRedirectUrl.trim()) {
-      addToast('Redirection URL cannot be empty.', 'error');
-      return;
-    }
-    setSavingRedirect(true);
-    try {
-      const res = await dbSetBookingRedirectUrl(bookingRedirectUrl.trim());
-      if (res.success) {
-        addToast('Booking redirection URL saved successfully!', 'success');
-      } else {
-        addToast('Failed to save redirection URL.', 'error');
-      }
-    } catch (err) {
-      console.error(err);
-      addToast('Failed to save redirection URL.', 'error');
-    } finally {
-      setSavingRedirect(false);
-    }
-  };
+
 
   // Contact actions
   const handleMarkContactRead = async (id) => {
@@ -517,12 +493,7 @@ export default function Admin({ addToast, setActivePage }) {
             </span>
           </div>
           
-          <div className="header-status">
-            <span className="status-label">Database Status:</span>
-            <span className="status-tag postgres" style={{ background: 'rgba(199, 255, 61, 0.08)', color: 'var(--accent-neon)', border: '1px solid rgba(199, 255, 61, 0.15)' }}>
-              <span className="glowing-dot green" style={{ background: 'var(--accent-neon)', boxShadow: '0 0 8px var(--accent-neon)' }}></span> Neon Postgres (Active)
-            </span>
-          </div>
+
         </header>
 
         <div className="pane-body">
@@ -1041,71 +1012,11 @@ export default function Admin({ addToast, setActivePage }) {
                         {underConstruction 
                           ? 'Marketing website is currently covered by the under construction overlay.' 
                           : 'Marketing website is live, public, and operational.'}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Booking Redirection Card */}
-                  <div className="cms-form-card">
-                    <h3 style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <Calendar size={20} className="icon-neon" />
-                      Booking Form Redirection
-                    </h3>
-                    <p style={{ fontSize: '0.85rem', color: 'var(--text-gray)', marginBottom: '24px', lineHeight: '1.5' }}>
-                      Specify the URL that visitors are redirected to when they schedule a strategy call or request onboarding. 
-                      This is ideal for routing leads directly to your Calendly, Cal.com, or booking page.
-                    </p>
-
-                    <form onSubmit={handleSaveRedirectUrl}>
-                      <div className="form-group" style={{ marginBottom: '16px' }}>
-                        <label className="form-label" style={{ display: 'block', marginBottom: '8px' }}>Redirection URL</label>
-                        <input
-                          type="url"
-                          required
-                          placeholder="https://calendly.com/your-username"
-                          className="form-control"
-                          value={bookingRedirectUrl}
-                          onChange={(e) => setBookingRedirectUrl(e.target.value)}
-                        />
-                      </div>
-                      <button
-                        type="submit"
-                        disabled={savingRedirect}
-                        className="btn btn-primary"
-                        style={{ width: '100%' }}
-                      >
-                        {savingRedirect ? 'Saving...' : 'Save Redirection URL'}
-                      </button>
-                    </form>
-                  </div>
-
-                  {/* Neon Database Status Card */}
-                  <div className="cms-form-card">
-                    <h3 style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <Activity size={20} className="icon-neon" />
-                      Neon Postgres Database Status
-                    </h3>
-                    <p style={{ fontSize: '0.85rem', color: 'var(--text-gray)', marginBottom: '20px', lineHeight: '1.5' }}>
-                      Connected to serverless Neon PostgreSQL cluster for secure, real-time cloud data storage.
-                    </p>
-
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 14px', background: 'rgba(255, 255, 255, 0.02)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.04)' }}>
-                        <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Connection Provider</span>
-                        <span style={{ fontSize: '0.85rem', color: 'var(--text-white)', fontWeight: '700' }}>Neon Cloud AWS Postgres</span>
-                      </div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 14px', background: 'rgba(255, 255, 255, 0.02)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.04)' }}>
-                        <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>SSL Status</span>
-                        <span style={{ fontSize: '0.85rem', color: 'var(--accent-neon)', fontWeight: '700' }}>Enabled (SSLMode Require)</span>
-                      </div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 14px', background: 'rgba(255, 255, 255, 0.02)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.04)' }}>
-                        <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Tables Synchronized</span>
-                        <span style={{ fontSize: '0.85rem', color: 'var(--text-white)', fontWeight: '700' }}>contacts, meetings, trials, clients, partners, settings</span>
-                      </div>
                     </div>
                   </div>
                 </div>
-              )}
+              </div>
+            )}
 
             </>
           )}
