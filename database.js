@@ -85,9 +85,9 @@ export async function initDb() {
       )
     `);
 
-    // 6. Create settings table
+    // 6. Create noryvex_settings table
     await client.query(`
-      CREATE TABLE IF NOT EXISTS settings (
+      CREATE TABLE IF NOT EXISTS noryvex_settings (
         key VARCHAR(255) PRIMARY KEY,
         value TEXT NOT NULL
       )
@@ -116,15 +116,15 @@ export async function initDb() {
     }
 
     // Seed under_construction setting if empty
-    const settingsRes = await client.query("SELECT COUNT(*) FROM settings WHERE key = 'under_construction'");
+    const settingsRes = await client.query("SELECT COUNT(*) FROM noryvex_settings WHERE key = 'under_construction'");
     if (parseInt(settingsRes.rows[0].count, 10) === 0) {
-      await client.query("INSERT INTO settings (key, value) VALUES ('under_construction', 'false')");
+      await client.query("INSERT INTO noryvex_settings (key, value) VALUES ('under_construction', 'false')");
     }
 
     // Seed booking_redirect_url setting if empty
-    const redirectRes = await client.query("SELECT COUNT(*) FROM settings WHERE key = 'booking_redirect_url'");
+    const redirectRes = await client.query("SELECT COUNT(*) FROM noryvex_settings WHERE key = 'booking_redirect_url'");
     if (parseInt(redirectRes.rows[0].count, 10) === 0) {
-      await client.query("INSERT INTO settings (key, value) VALUES ('booking_redirect_url', 'https://calendly.com/noryvex')");
+      await client.query("INSERT INTO noryvex_settings (key, value) VALUES ('booking_redirect_url', 'https://calendly.com/noryvex')");
     }
 
     console.log('Neon Postgres Database initialized and seeded successfully.');
@@ -135,13 +135,13 @@ export async function initDb() {
 
 // Settings Operations
 export async function getSetting(key) {
-  const res = await pool.query('SELECT value FROM settings WHERE key = $1', [key]);
+  const res = await pool.query('SELECT value FROM noryvex_settings WHERE key = $1', [key]);
   return res.rows[0]?.value || null;
 }
 
 export async function setSetting(key, value) {
   await pool.query(
-    'INSERT INTO settings (key, value) VALUES ($1, $2) ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value',
+    'INSERT INTO noryvex_settings (key, value) VALUES ($1, $2) ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value',
     [key, value]
   );
   return { success: true };
