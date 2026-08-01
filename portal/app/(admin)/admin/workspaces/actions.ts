@@ -5,11 +5,12 @@ import { db } from '@/lib/db';
 import * as schema from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 import { getServerSession } from '@/lib/session';
-import { redirect } from 'next/navigation';
 
 export async function createWorkspace(formData: FormData) {
   const session = await getServerSession();
-  if (!session || session.role !== 'super_admin') redirect('/login');
+  if (!session || session.role !== 'super_admin') {
+    return { success: false, error: 'Session expired. Please log out and log back in.' };
+  }
 
   const name = formData.get('name') as string;
   const subdomain = formData.get('subdomain') as string;
@@ -20,7 +21,6 @@ export async function createWorkspace(formData: FormData) {
     return { success: false, error: 'Name, subdomain, and industry are required.' };
   }
 
-  // Sanitize subdomain: lowercase, alphanumeric + hyphens only
   const cleanSubdomain = subdomain.toLowerCase().replace(/[^a-z0-9-]/g, '-');
 
   try {
@@ -44,24 +44,38 @@ export async function createWorkspace(formData: FormData) {
 
 export async function updateWorkspaceStatus(id: string, status: string) {
   const session = await getServerSession();
-  if (!session || session.role !== 'super_admin') redirect('/login');
+  if (!session || session.role !== 'super_admin') {
+    return { success: false, error: 'Session expired.' };
+  }
 
-  await db
-    .update(schema.workspaces)
-    .set({ status: status as schema.WorkspaceStatus })
-    .where(eq(schema.workspaces.id, id));
+  try {
+    await db
+      .update(schema.workspaces)
+      .set({ status: status as schema.WorkspaceStatus })
+      .where(eq(schema.workspaces.id, id));
 
-  revalidatePath('/admin/workspaces');
+    revalidatePath('/admin/workspaces');
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message };
+  }
 }
 
 export async function deleteWorkspace(id: string) {
   const session = await getServerSession();
-  if (!session || session.role !== 'super_admin') redirect('/login');
+  if (!session || session.role !== 'super_admin') {
+    return { success: false, error: 'Session expired.' };
+  }
 
-  await db
-    .update(schema.workspaces)
-    .set({ deletedAt: new Date() })
-    .where(eq(schema.workspaces.id, id));
+  try {
+    await db
+      .update(schema.workspaces)
+      .set({ deletedAt: new Date() })
+      .where(eq(schema.workspaces.id, id));
 
-  revalidatePath('/admin/workspaces');
+    revalidatePath('/admin/workspaces');
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message };
+  }
 }
