@@ -35,10 +35,12 @@ export async function createWorkspace(formData: FormData) {
     revalidatePath('/admin/workspaces');
     return { success: true, subdomain: cleanSubdomain };
   } catch (err: any) {
-    if (err.message?.includes('unique') || err.message?.includes('duplicate')) {
+    const detail = err?.cause?.message ?? err?.cause ?? err?.message ?? String(err);
+    if (String(detail).includes('unique') || String(detail).includes('duplicate') || String(detail).includes('already exists')) {
       return { success: false, error: 'That subdomain is already taken. Choose another.' };
     }
-    return { success: false, error: err.message || 'Failed to create workspace.' };
+    console.error('[createWorkspace]', detail);
+    return { success: false, error: String(detail) };
   }
 }
 
