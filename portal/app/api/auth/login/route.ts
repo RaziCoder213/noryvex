@@ -33,7 +33,17 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
     }
 
-    const accessToken = await signAccessToken({ userId: user.id, role: user.role });
+    // Get workspaceId for client users
+    let workspaceId: string | undefined;
+    if (user.role === 'client_owner') {
+      const [membership] = await db
+        .select()
+        .from(schema.workspaceMembers)
+        .where(eq(schema.workspaceMembers.userId, user.id));
+      workspaceId = membership?.workspaceId ?? undefined;
+    }
+
+    const accessToken = await signAccessToken({ userId: user.id, role: user.role, workspaceId });
     const refreshToken = await signRefreshToken({ userId: user.id });
 
     const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
@@ -60,18 +70,6 @@ export async function POST(request: Request) {
       maxAge: 30 * 24 * 60 * 60, // 30 days
     });
 
-    let workspaceId = null;
-    if (user.role === 'client_owner') {
-      const [membership] = await db
-        .select()
-        .from(schema.workspaceMembers)
-        .where(eq(schema.workspaceMembers.userId, user.id));
-      
-      if (membership) {
-        workspaceId = membership.workspaceId;
-      }
-    }
-
     return NextResponse.json({
       user: {
         id: user.id,
@@ -79,7 +77,7 @@ export async function POST(request: Request) {
         fullName: user.fullName,
         role: user.role,
       },
-      workspaceId,
+      workspaceId: workspaceId ?? null,
     });
   } catch (error) {
     console.error('Login error:', error);
