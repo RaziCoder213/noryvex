@@ -6,6 +6,13 @@ import { eq, and, isNull } from 'drizzle-orm';
 import { verifyRefreshToken } from '@/lib/auth';
 import bcrypt from 'bcryptjs';
 
+export async function GET() {
+  const cookieStore = await cookies();
+  cookieStore.set('access_token', '', { maxAge: 0 });
+  cookieStore.set('refresh_token', '', { maxAge: 0 });
+  return NextResponse.redirect(new URL('/login', 'https://portal.trynoryvex.com'));
+}
+
 export async function POST(request: Request) {
   try {
     const cookieStore = await cookies();

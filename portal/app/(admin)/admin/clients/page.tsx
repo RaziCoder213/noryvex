@@ -2,36 +2,56 @@ import { redirect } from 'next/navigation';
 import { getServerSession } from '@/lib/session';
 import { db } from '@/lib/db';
 import * as schema from '@/lib/db/schema';
-import { eq, isNull, sql } from 'drizzle-orm';
+import { eq, isNull, desc } from 'drizzle-orm';
 import ClientModal from './ClientModal';
 
 export default async function AdminClientsPage() {
   const session = await getServerSession();
   if (!session || session.role !== 'super_admin') redirect('/login');
 
-  // Fetch all client_owner users with their workspace names
-  const clients = await db
-    .select({
-      id: schema.users.id,
-      fullName: schema.users.fullName,
-      email: schema.users.email,
-      createdAt: schema.users.createdAt,
-      workspaceId: schema.workspaceMembers.workspaceId,
-      workspaceName: schema.workspaces.name,
-      workspaceStatus: schema.workspaces.status,
-    })
-    .from(schema.users)
-    .leftJoin(schema.workspaceMembers, eq(schema.workspaceMembers.userId, schema.users.id))
-    .leftJoin(schema.workspaces, eq(schema.workspaces.id, schema.workspaceMembers.workspaceId))
-    .where(eq(schema.users.role, 'client_owner'))
-    .orderBy(sql`${schema.users.createdAt} desc`);
+  let clients: {
+    id: string;
+    fullName: string;
+    email: string;
+    createdAt: Date | null;
+    workspaceId: string | null;
+    workspaceName: string | null;
+    workspaceSubdomain: string | null;
+    workspaceStatus: string | null;
+  }[] = [];
 
-  // Fetch available workspaces for the create form
-  const availableWorkspaces = await db
-    .select({ id: schema.workspaces.id, name: schema.workspaces.name, subdomain: schema.workspaces.subdomain })
-    .from(schema.workspaces)
-    .where(isNull(schema.workspaces.deletedAt))
-    .orderBy(schema.workspaces.name);
+  let availableWorkspaces: { id: string; name: string; subdomain: string }[] = [];
+
+  try {
+    clients = await db
+      .select({
+        id: schema.users.id,
+        fullName: schema.users.fullName,
+        email: schema.users.email,
+        createdAt: schema.users.createdAt,
+        workspaceId: schema.workspaceMembers.workspaceId,
+        workspaceName: schema.workspaces.name,
+        workspaceSubdomain: schema.workspaces.subdomain,
+        workspaceStatus: schema.workspaces.status,
+      })
+      .from(schema.users)
+      .leftJoin(schema.workspaceMembers, eq(schema.workspaceMembers.userId, schema.users.id))
+      .leftJoin(schema.workspaces, eq(schema.workspaces.id, schema.workspaceMembers.workspaceId))
+      .where(eq(schema.users.role, 'client_owner'))
+      .orderBy(desc(schema.users.createdAt));
+  } catch (e) {
+    console.error('Clients fetch error:', e);
+  }
+
+  try {
+    availableWorkspaces = await db
+      .select({ id: schema.workspaces.id, name: schema.workspaces.name, subdomain: schema.workspaces.subdomain })
+      .from(schema.workspaces)
+      .where(isNull(schema.workspaces.deletedAt))
+      .orderBy(schema.workspaces.name);
+  } catch (e) {
+    console.error('Workspaces fetch error:', e);
+  }
 
   const statusColor: Record<string, string> = {
     active: '#22c55e',
@@ -56,6 +76,7 @@ export default async function AdminClientsPage() {
               <th className="text-left px-4 py-3 text-[#71717a] font-medium">Name</th>
               <th className="text-left px-4 py-3 text-[#71717a] font-medium">Email</th>
               <th className="text-left px-4 py-3 text-[#71717a] font-medium">Workspace</th>
+              <th className="text-left px-4 py-3 text-[#71717a] font-medium">Portal URL</th>
               <th className="text-left px-4 py-3 text-[#71717a] font-medium">Status</th>
               <th className="text-left px-4 py-3 text-[#71717a] font-medium">Created</th>
             </tr>
@@ -63,8 +84,8 @@ export default async function AdminClientsPage() {
           <tbody>
             {clients.length === 0 ? (
               <tr>
-                <td colSpan={5} className="text-center py-12 text-[#71717a]">
-                  No clients yet. Create your first client.
+                <td colSpan={6} className="text-center py-12 text-[#71717a]">
+                  No clients yet. First create a Workspace, then add a Client linked to it.
                 </td>
               </tr>
             ) : (
@@ -73,8 +94,20 @@ export default async function AdminClientsPage() {
                   <td className="px-4 py-3 text-white font-medium">{client.fullName}</td>
                   <td className="px-4 py-3 text-[#a1a1aa]">{client.email}</td>
                   <td className="px-4 py-3 text-[#a1a1aa]">
-                    {client.workspaceName ?? (
-                      <span className="text-[#71717a] italic">No workspace</span>
+                    {client.workspaceName ?? <span className="text-[#71717a] italic">No workspace</span>}
+                  </td>
+                  <td className="px-4 py-3 text-xs font-mono">
+                    {client.workspaceSubdomain ? (
+                      <a
+                        href={`https://${client.workspaceSubdomain}.trynoryvex.com`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[#6366f1] hover:underline"
+                      >
+                        {client.workspaceSubdomain}.trynoryvex.com
+                      </a>
+                    ) : (
+                      <span className="text-[#71717a]">—</span>
                     )}
                   </td>
                   <td className="px-4 py-3">
@@ -93,7 +126,7 @@ export default async function AdminClientsPage() {
                     )}
                   </td>
                   <td className="px-4 py-3 text-[#71717a] text-xs">
-                    {client.createdAt ? new Date(client.createdAt ?? Date.now()).toLocaleDateString() : '—'}
+                    {client.createdAt ? new Date(client.createdAt).toLocaleDateString() : '—'}
                   </td>
                 </tr>
               ))
