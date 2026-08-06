@@ -106,8 +106,8 @@ export default function Home({ setActivePage }) {
       desc: "Track everything in one place: call history, voice recordings, conversation transcripts, new leads, and booked appointments."
     },
     {
-      title: "Free 7-day trial",
-      desc: "Test the custom receptionist under our 7-day checking warranty before paying a single dollar. Risk-free."
+      title: "Pay only when you launch",
+      desc: "We build your custom clinic demo for free. You only pay when you decide to launch the full integrated system."
     }
   ];
 
@@ -210,16 +210,16 @@ export default function Home({ setActivePage }) {
               <span className="text-neon-gradient txt-gradient-animate">dental patient call.</span>
             </h1>
             <p className="hero-subtitle txt-blur-in">
-              Noryvex builds and runs a custom AI receptionist for your dental clinic — answering calls, qualifying patients, and booking appointments 24/7. Live in 48 hours. Try it free for 7 days.
+              We build a short AI receptionist demo for your dental clinic using your real services, hours, and FAQs. If you like it, we launch the full system and connect it to your workflow.
             </p>
             <div className="hero-policy-strip txt-blur-in">
-              <span className="policy-item">✓ Answer patient calls 24/7</span>
-              <span className="policy-item">✓ Bookings &amp; FAQs handled</span>
-              <span className="policy-item">✓ Live in 48 hours</span>
+              <span className="policy-item">✓ No software to learn</span>
+              <span className="policy-item">✓ No dashboard to configure</span>
+              <span className="policy-item">✓ Pay only when you launch</span>
             </div>
             <div className="hero-ctas">
               <button onClick={() => setActivePage('contact', 'trial')} className="btn btn-primary btn-lg">
-                Start Free Trial <ArrowRight size={18} />
+                Get your free clinic demo <ArrowRight size={18} />
               </button>
               <button onClick={() => setActivePage('live-demo')} className="btn btn-secondary btn-lg">
                 See How It Works

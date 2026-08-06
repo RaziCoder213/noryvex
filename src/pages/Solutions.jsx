@@ -61,7 +61,7 @@ export default function Solutions({ setActivePage }) {
                     onClick={() => setActivePage('contact', 'trial')} 
                     className="btn btn-primary"
                   >
-                    Start Free Trial
+                    Get Free Clinic Demo
                   </button>
                   <button 
                     onClick={() => setActivePage('contact', 'call')} 

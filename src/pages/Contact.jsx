@@ -147,7 +147,7 @@ export default function Contact({ addToast, initialTab = 'trial' }) {
           <div className="section-header">
             <span className="section-tag">Get in Touch</span>
             <h1 className="contact-title">Start Automating Today</h1>
-            <p className="contact-subtitle">Get a custom AI voice calling receptionist running under a 7-day checking warranty or sync directly for an operational audit.</p>
+            <p className="contact-subtitle">Get a custom AI receptionist demo built specifically for your clinic. Play only when you decide to launch the full system.</p>
           </div>
         </div>
       </section>
@@ -160,27 +160,23 @@ export default function Contact({ addToast, initialTab = 'trial' }) {
             <div className="glass-card contact-info-card">
               <div className="card-header-icon-title">
                 <Sparkles className="title-icon icon-neon" />
-                <h2>7-Day Checking Warranty</h2>
+                <h2>Get Your Free Clinic Demo</h2>
               </div>
               <p className="card-desc" style={{ marginBottom: '24px' }}>
-                Experience the power of Chloe, our advanced human-sounding AI Voice Receptionist, custom-configured for your business workflow.
+                We build a short AI receptionist demo for your dental clinic using your real services, hours, and FAQs. If you like it, we launch the full system and connect it to your workflow.
               </p>
 
               {/* Trial terms list */}
               <div className="trial-terms-box" style={{ background: 'rgba(199, 255, 61, 0.04)', border: '1px dashed rgba(199, 255, 61, 0.2)', padding: '20px', borderRadius: '12px', marginBottom: '28px' }}>
-                <h3 style={{ fontSize: '0.9rem', color: 'var(--text-white)', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: '800' }}>Warranty Parameters:</h3>
+                <h3 style={{ fontSize: '0.9rem', color: 'var(--text-white)', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: '800' }}>Demo Process:</h3>
                 <ul className="trial-terms-list" style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   <li style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.88rem', color: 'var(--text-gray)' }}>
                     <CheckCircle2 size={16} color="#C7FF3D" style={{ flexShrink: 0 }} />
-                    <span>7 days or 30 minutes of call time, whichever comes first</span>
+                    <span>No software to learn. No dashboard to configure. We build and manage everything.</span>
                   </li>
                   <li style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.88rem', color: 'var(--text-gray)' }}>
                     <CheckCircle2 size={16} color="#C7FF3D" style={{ flexShrink: 0 }} />
-                    <span>No credit card required</span>
-                  </li>
-                  <li style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.88rem', color: 'var(--text-gray)' }}>
-                    <CheckCircle2 size={16} color="#C7FF3D" style={{ flexShrink: 0 }} />
-                    <span>No obligation to continue</span>
+                    <span>You only pay when you decide to launch the full system.</span>
                   </li>
                 </ul>
               </div>
@@ -196,8 +192,8 @@ export default function Contact({ addToast, initialTab = 'trial' }) {
                 <div className="contact-detail-item" style={{ display: 'flex', gap: '14px' }}>
                   <Clock size={22} className="icon-neon" style={{ flexShrink: 0 }} />
                   <div>
-                    <h4 style={{ color: 'var(--text-white)', fontSize: '0.95rem', marginBottom: '4px', fontWeight: '700' }}>Under 24-Hour Turnaround</h4>
-                    <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', lineHeight: '1.45' }}>After submitting, we'll build your prototype and reach out within 24 hours to guide you through the activation process.</p>
+                    <h4 style={{ color: 'var(--text-white)', fontSize: '0.95rem', marginBottom: '4px', fontWeight: '700' }}>Under 48-Hour Setup</h4>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', lineHeight: '1.45' }}>After submitting, we'll build your prototype and reach out within 48 hours to guide you through the demo activation.</p>
                   </div>
                 </div>
               </div>
@@ -214,7 +210,7 @@ export default function Contact({ addToast, initialTab = 'trial' }) {
                   className={`contact-tab-btn ${activeTab === 'trial' ? 'active' : ''}`}
                   onClick={() => { setActiveTab('trial'); setTrialSuccess(false); }}
                 >
-                  7-Day Checking Warranty
+                  Get Free Clinic Demo
                 </button>
                 <button 
                   className={`contact-tab-btn ${activeTab === 'call' ? 'active' : ''}`}
@@ -235,15 +231,15 @@ export default function Contact({ addToast, initialTab = 'trial' }) {
                 trialSuccess ? (
                   <div className="success-screen-box">
                     <CheckCircle2 size={48} className="success-check" />
-                    <h3>Request Submitted!</h3>
-                    <p>We'll set up your custom agent and reach out within 24 hours to activate your checking phase.</p>
+                    <h3>Demo Request Submitted!</h3>
+                    <p>We'll build your custom receptionist demo and reach out within 48 hours to let you test it.</p>
                     <button onClick={() => setTrialSuccess(false)} className="btn btn-outline-neon">
-                      Request Another Setup
+                      Request Another Demo
                     </button>
                   </div>
                 ) : (
                   <form onSubmit={handleTrialSubmit}>
-                    <p className="card-desc" style={{ marginBottom: '20px' }}>Request your custom AI voice receptionist setup under a 7-day checking warranty. No technical setup or credit cards needed.</p>
+                    <p className="card-desc" style={{ marginBottom: '20px' }}>Request your custom AI voice receptionist demo. No credit card or software setup required.</p>
                     <div className="form-row">
                       <div className="form-group">
                         <label className="form-label">Business Name</label>
@@ -321,7 +317,7 @@ export default function Contact({ addToast, initialTab = 'trial' }) {
                     </div>
 
                     <button type="submit" disabled={submittingTrial} className="btn btn-primary w-full">
-                      {submittingTrial ? 'Submitting request...' : 'Activate 7-Day Checking Warranty'}
+                      {submittingTrial ? 'Submitting request...' : 'Get Your Free Clinic Demo'}
                     </button>
                   </form>
                 )
@@ -340,7 +336,7 @@ export default function Contact({ addToast, initialTab = 'trial' }) {
                   </div>
                 ) : (
                   <form onSubmit={handleMeetingSubmit}>
-                    <p className="card-desc" style={{ marginBottom: '20px' }}>Select a date and time slot to sync with our calendar for a 30-minute operational audit.</p>
+                    <p className="card-desc" style={{ marginBottom: '20px' }}>The first step is not payment. First, we build a small custom demo for your clinic so you can hear exactly how your AI receptionist answers calls. The demo uses your clinic name, services, hours, and patient questions. If you like the demo, we launch the full system and connect your workflow.</p>
                     <div className="form-row">
                       <div className="form-group">
                         <label className="form-label">Full Name</label>
