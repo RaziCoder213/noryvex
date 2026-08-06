@@ -180,7 +180,7 @@ export async function getTrials() {
 }
 
 export async function updateTrialStatus(id, status) {
-  await pool.query('UPDATE trials SET trial_status = $1 WHERE id = $2', [status, id]);
+  await pool.query('UPDATE trials SET trial_status = $1 WHERE id = $2', [status, Number(id)]);
   return { success: true };
 }
 
@@ -220,12 +220,12 @@ export async function getContacts() {
 }
 
 export async function markContactRead(id) {
-  await pool.query("UPDATE contacts SET status = 'read' WHERE id = $1", [id]);
+  await pool.query("UPDATE contacts SET status = 'read' WHERE id = $1", [Number(id)]);
   return { success: true };
 }
 
 export async function deleteContact(id) {
-  await pool.query('DELETE FROM contacts WHERE id = $1', [id]);
+  await pool.query('DELETE FROM contacts WHERE id = $1', [Number(id)]);
   return { success: true };
 }
 
@@ -244,12 +244,12 @@ export async function getMeetings() {
 }
 
 export async function markMeetingCompleted(id) {
-  await pool.query("UPDATE meetings SET status = 'completed' WHERE id = $1", [id]);
+  await pool.query("UPDATE meetings SET status = 'completed' WHERE id = $1", [Number(id)]);
   return { success: true };
 }
 
 export async function deleteMeeting(id) {
-  await pool.query('DELETE FROM meetings WHERE id = $1', [id]);
+  await pool.query('DELETE FROM meetings WHERE id = $1', [Number(id)]);
   return { success: true };
 }
 
@@ -263,7 +263,7 @@ export async function saveClient(id, name, company, rating, quote) {
   if (id) {
     await pool.query(
       'UPDATE clients SET name = $1, company = $2, rating = $3, quote = $4 WHERE id = $5',
-      [name, company, Number(rating), quote, id]
+      [name, company, Number(rating), quote, Number(id)]
     );
     return { success: true, lastID: id };
   } else {
@@ -276,7 +276,7 @@ export async function saveClient(id, name, company, rating, quote) {
 }
 
 export async function deleteClient(id) {
-  await pool.query('DELETE FROM clients WHERE id = $1', [id]);
+  await pool.query('DELETE FROM clients WHERE id = $1', [Number(id)]);
   return { success: true };
 }
 
@@ -290,7 +290,7 @@ export async function savePartner(id, name, link, image) {
   if (id) {
     await pool.query(
       'UPDATE partners SET name = $1, link = $2, image = $3 WHERE id = $4',
-      [name, link, image, id]
+      [name, link, image, Number(id)]
     );
     return { success: true, lastID: id };
   } else {
@@ -303,6 +303,6 @@ export async function savePartner(id, name, link, image) {
 }
 
 export async function deletePartner(id) {
-  await pool.query('DELETE FROM partners WHERE id = $1', [id]);
+  await pool.query('DELETE FROM partners WHERE id = $1', [Number(id)]);
   return { success: true };
 }

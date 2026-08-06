@@ -232,19 +232,37 @@ export default function Admin({ addToast, setActivePage }) {
       addToast('Name and testimonial quote are required.', 'error');
       return;
     }
-    await dbSaveClient(newClient);
-    const updated = await dbGetClients();
-    setClients(updated);
-    setNewClient({ name: '', company: '', rating: 5, quote: '' });
-    addToast('Client testimonial saved successfully!', 'success');
+    try {
+      const result = await dbSaveClient(newClient);
+      if (result.success) {
+        const updated = await dbGetClients();
+        setClients(updated);
+        setNewClient({ name: '', company: '', rating: 5, quote: '' });
+        addToast('Client testimonial saved successfully!', 'success');
+      } else {
+        addToast('Failed to save testimonial. Session may have expired.', 'error');
+      }
+    } catch (err) {
+      console.error(err);
+      addToast('Failed to save testimonial.', 'error');
+    }
   };
 
   const handleDeleteClient = async (id) => {
     if (!window.confirm('Delete this client testimonial?')) return;
-    await dbDeleteClient(id);
-    const updated = await dbGetClients();
-    setClients(updated);
-    addToast('Testimonial removed.', 'success');
+    try {
+      const result = await dbDeleteClient(id);
+      if (result.success) {
+        const updated = await dbGetClients();
+        setClients(updated);
+        addToast('Testimonial removed.', 'success');
+      } else {
+        addToast('Failed to remove testimonial. Session may have expired.', 'error');
+      }
+    } catch (err) {
+      console.error(err);
+      addToast('Failed to remove testimonial.', 'error');
+    }
   };
 
   // CMS: Trusted Partners / Badges
@@ -254,19 +272,37 @@ export default function Admin({ addToast, setActivePage }) {
       addToast('Partner name and badge image URL are required.', 'error');
       return;
     }
-    await dbSavePartner(newPartner);
-    const updated = await dbGetPartners();
-    setPartners(updated);
-    setNewPartner({ name: '', link: '', image: '' });
-    addToast('Trusted partner badge saved!', 'success');
+    try {
+      const result = await dbSavePartner(newPartner);
+      if (result.success) {
+        const updated = await dbGetPartners();
+        setPartners(updated);
+        setNewPartner({ name: '', link: '', image: '' });
+        addToast('Trusted partner badge saved!', 'success');
+      } else {
+        addToast('Failed to save partner badge. Session may have expired.', 'error');
+      }
+    } catch (err) {
+      console.error(err);
+      addToast('Failed to save partner badge.', 'error');
+    }
   };
 
   const handleDeletePartner = async (id) => {
     if (!window.confirm('Delete this partner badge?')) return;
-    await dbDeletePartner(id);
-    const updated = await dbGetPartners();
-    setPartners(updated);
-    addToast('Partner badge removed.', 'success');
+    try {
+      const result = await dbDeletePartner(id);
+      if (result.success) {
+        const updated = await dbGetPartners();
+        setPartners(updated);
+        addToast('Partner badge removed.', 'success');
+      } else {
+        addToast('Failed to remove partner badge. Session may have expired.', 'error');
+      }
+    } catch (err) {
+      console.error(err);
+      addToast('Failed to remove partner badge.', 'error');
+    }
   };
 
   // Stats calculation
