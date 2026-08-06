@@ -83,6 +83,18 @@ export default function Admin({ addToast, setActivePage }) {
     }
   }, [token]);
 
+  useEffect(() => {
+    const handleSessionExpired = () => {
+      setToken('');
+      addToast('Session expired. Please log in again.', 'error');
+    };
+    
+    window.addEventListener('admin-session-expired', handleSessionExpired);
+    return () => {
+      window.removeEventListener('admin-session-expired', handleSessionExpired);
+    };
+  }, [addToast]);
+
   const handleLogin = async (e) => {
     e.preventDefault();
     const allowedEmails = ['razi@trynoryvex.com', 'razi@noryvex.com', 'codingwithrazi@gmail.com'];

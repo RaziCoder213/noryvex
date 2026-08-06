@@ -14,6 +14,7 @@ export const fetchNoCacheJSON = async (url, options = {}) => {
       ...(options.headers || {})
     }
   });
+  checkAuthStatus(response);
   if (!response.ok) {
     throw new Error(`Failed to fetch JSON from ${url}: ${response.statusText}`);
   }
@@ -32,6 +33,16 @@ export const exportToJsonFile = (data, filename = 'export.json') => {
   link.click();
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
+};
+
+const checkAuthStatus = (response) => {
+  if (response.status === 401 || response.status === 403) {
+    localStorage.removeItem('noryvex_admin_token');
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('admin-session-expired'));
+    }
+  }
+  return response;
 };
 
 // Return fixed DB configuration (exclusively Postgres Neon Backend)
@@ -99,6 +110,7 @@ export const dbMarkContactRead = async (id, authToken) => {
         'Authorization': `Bearer ${token}`
       }
     });
+    checkAuthStatus(res);
     return { success: res.ok };
   } catch (e) {
     console.error('Failed to mark contact as read:', e);
@@ -109,12 +121,13 @@ export const dbMarkContactRead = async (id, authToken) => {
 export const dbDeleteContact = async (id, authToken) => {
   const token = authToken || getAdminToken();
   try {
-    const res = await fetch(`/api/admin/contacts/${id}?t=${Date.now()}`, {
+    const res = await fetch(`/api/admin/contacts/${Number(id)}?t=${Date.now()}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${token}`
       }
     });
+    checkAuthStatus(res);
     return { success: res.ok };
   } catch (e) {
     console.error('Failed to delete contact:', e);
@@ -175,6 +188,7 @@ export const dbMarkMeetingCompleted = async (id, authToken) => {
         'Authorization': `Bearer ${token}`
       }
     });
+    checkAuthStatus(res);
     return { success: res.ok };
   } catch (e) {
     console.error('Failed to mark meeting as completed:', e);
@@ -185,12 +199,13 @@ export const dbMarkMeetingCompleted = async (id, authToken) => {
 export const dbDeleteMeeting = async (id, authToken) => {
   const token = authToken || getAdminToken();
   try {
-    const res = await fetch(`/api/admin/meetings/${id}?t=${Date.now()}`, {
+    const res = await fetch(`/api/admin/meetings/${Number(id)}?t=${Date.now()}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${token}`
       }
     });
+    checkAuthStatus(res);
     return { success: res.ok };
   } catch (e) {
     console.error('Failed to delete meeting:', e);
@@ -243,7 +258,7 @@ export const dbGetTrials = async (authToken) => {
 export const dbUpdateTrialStatus = async (id, status, authToken) => {
   const token = authToken || getAdminToken();
   try {
-    const res = await fetch(`/api/admin/trials/${id}?t=${Date.now()}`, {
+    const res = await fetch(`/api/admin/trials/${Number(id)}?t=${Date.now()}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -251,6 +266,7 @@ export const dbUpdateTrialStatus = async (id, status, authToken) => {
       },
       body: JSON.stringify({ trial_status: status })
     });
+    checkAuthStatus(res);
     return { success: res.ok };
   } catch (e) {
     console.error('Failed to update trial status:', e);
@@ -293,7 +309,7 @@ export const dbGetClients = async () => {
 export const dbSaveClient = async (client) => {
   const token = getAdminToken();
   const newClient = {
-    id: client.id || null,
+    id: client.id ? Number(client.id) : null,
     name: client.name,
     company: client.company,
     rating: Number(client.rating || 5),
@@ -309,6 +325,7 @@ export const dbSaveClient = async (client) => {
       },
       body: JSON.stringify(newClient)
     });
+    checkAuthStatus(res);
     return { success: res.ok };
   } catch (e) {
     console.error('Failed to save client:', e);
@@ -319,12 +336,13 @@ export const dbSaveClient = async (client) => {
 export const dbDeleteClient = async (id) => {
   const token = getAdminToken();
   try {
-    const res = await fetch(`/api/admin/clients/${id}`, {
+    const res = await fetch(`/api/admin/clients/${Number(id)}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${token}`
       }
     });
+    checkAuthStatus(res);
     return { success: res.ok };
   } catch (e) {
     console.error('Failed to delete client:', e);
@@ -346,7 +364,7 @@ export const dbGetPartners = async () => {
 export const dbSavePartner = async (partner) => {
   const token = getAdminToken();
   const newPartner = {
-    id: partner.id || null,
+    id: partner.id ? Number(partner.id) : null,
     name: partner.name,
     link: partner.link,
     image: partner.image
@@ -361,6 +379,7 @@ export const dbSavePartner = async (partner) => {
       },
       body: JSON.stringify(newPartner)
     });
+    checkAuthStatus(res);
     return { success: res.ok };
   } catch (e) {
     console.error('Failed to save partner:', e);
@@ -371,12 +390,13 @@ export const dbSavePartner = async (partner) => {
 export const dbDeletePartner = async (id) => {
   const token = getAdminToken();
   try {
-    const res = await fetch(`/api/admin/partners/${id}`, {
+    const res = await fetch(`/api/admin/partners/${Number(id)}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${token}`
       }
     });
+    checkAuthStatus(res);
     return { success: res.ok };
   } catch (e) {
     console.error('Failed to delete partner:', e);
@@ -405,6 +425,7 @@ export const dbSetUnderConstruction = async (enabled) => {
       },
       body: JSON.stringify({ underConstruction: enabled })
     });
+    checkAuthStatus(res);
     return { success: res.ok };
   } catch (e) {
     console.error('Failed to set under construction setting:', e);
@@ -433,6 +454,7 @@ export const dbSetBookingRedirectUrl = async (url) => {
       },
       body: JSON.stringify({ bookingRedirectUrl: url })
     });
+    checkAuthStatus(res);
     return { success: res.ok };
   } catch (e) {
     console.error('Failed to set booking redirect URL:', e);
