@@ -44,66 +44,29 @@ export default function Footer({ setActivePage, addToast }) {
             <img src="/logo.png" alt="Noryvex Logo" className="footer-logo" />
             <span className="footer-title">NORYVE<span className="footer-title-x">X</span></span>
           </div>
-          <p className="footer-tagline">Never miss another call.</p>
-          <p className="footer-desc">Building custom AI receptionists for dental practices to stop losing patients from missed calls, qualify leads, and book appointments 24/7.</p>
-
-          <div className="footer-newsletter">
-            <span className="newsletter-label">Stay Automated</span>
-            <form onSubmit={handleSubscribe} className="newsletter-form">
-              <input 
-                type="email" 
-                placeholder="Enter email for updates" 
-                required 
-                className="newsletter-input" 
-                value={emailInput}
-                onChange={(e) => setEmailInput(e.target.value)}
-                disabled={subscribing}
-              />
-              <button type="submit" className="btn btn-primary btn-sm newsletter-btn" disabled={subscribing}>
-                {subscribing ? '...' : 'Join'}
-              </button>
-            </form>
-          </div>
-          
-          <div style={{ marginTop: '28px', opacity: 0.85 }} className="footer-badge-wrap">
-            <a href="https://www.goodfirms.co/company/noryvex" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block' }}>
-              <img 
-                src="https://www.goodfirms.co/img/badges/recognized-on-goodfirms.png" 
-                alt="Recognized on Goodfirms" 
-                style={{ width: '135px', height: 'auto', display: 'block', borderRadius: '4px', border: '1px solid rgba(255, 255, 255, 0.04)' }} 
-              />
-            </a>
-          </div>
+          <p className="footer-tagline">Never miss another dental patient call.</p>
+          <p className="footer-desc">Building custom AI receptionists for dental clinics to answer missed calls, collect patient details, and send appointment requests.</p>
         </div>
 
         <div className="footer-links-grid">
           <div className="footer-link-group">
             <span className="group-title">Company</span>
+            <button onClick={() => handleNavClick('home')} className="footer-btn-link">Home</button>
+            <button onClick={() => handleNavClick('solutions')} className="footer-btn-link">Solutions</button>
             <button onClick={() => handleNavClick('about')} className="footer-btn-link">About Us</button>
             <button onClick={() => handleNavClick('contact', 'trial')} className="footer-btn-link">Get Free Clinic Demo</button>
-            <button onClick={() => handleNavClick('contact', 'call')} className="footer-btn-link">Book Free Strategy Call</button>
-            <button onClick={() => handleNavClick('admin')} className="footer-btn-link admin-trigger">Admin Panel</button>
           </div>
 
           <div className="footer-link-group">
-            <span className="group-title">Solutions</span>
-            <button onClick={() => handleNavClick('solutions')} className="footer-btn-link">Voice Receptionists</button>
-            <button onClick={() => handleNavClick('solutions')} className="footer-btn-link">FAQ Answering</button>
-            <button onClick={() => handleNavClick('solutions')} className="footer-btn-link">Practice Dashboard</button>
-          </div>
-
-          <div className="footer-link-group">
-            <span className="group-title">Contact & Socials</span>
+            <span className="group-title">Contact</span>
             <a href="mailto:hello@trynoryvex.com" className="footer-link">
               Email <ArrowUpRight size={14} />
-            </a>
-            <a href="https://www.linkedin.com/company/noryvex" target="_blank" rel="noopener noreferrer" className="footer-link">
-              Company LinkedIn <ArrowUpRight size={14} />
             </a>
             <a href="https://www.linkedin.com/in/mrazi-dev/" target="_blank" rel="noopener noreferrer" className="footer-link">
               Founder LinkedIn <ArrowUpRight size={14} />
             </a>
           </div>
+
           <div className="footer-link-group">
             <span className="group-title">Legal</span>
             <button onClick={() => handleNavClick('privacy')} className="footer-btn-link">Privacy Policy</button>

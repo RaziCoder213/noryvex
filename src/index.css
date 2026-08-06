@@ -90,6 +90,21 @@
   --font-display: 'Plus Jakarta Sans', sans-serif;
 
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Spacing & Layout Tokens */
+  --section-padding-desktop: 92px;
+  --section-padding-mobile: 60px;
+  --hero-padding-top-desktop: 120px;
+  --hero-padding-bottom-desktop: 84px;
+  --hero-padding-top-mobile: 88px;
+  --hero-padding-bottom-mobile: 56px;
+  --footer-padding-top: 72px;
+  --footer-padding-bottom: 32px;
+  
+  --card-padding-desktop: 28px;
+  --card-padding-mobile: 22px;
+  --card-gap-desktop: 24px;
+  --card-gap-mobile: 16px;
 }
 
 [data-theme='light'] {
@@ -159,9 +174,14 @@ body {
 /* ─── Container ─────────────────────────────────────────── */
 .container {
   width: 100%;
-  max-width: 1280px;
+  max-width: 1180px;
   margin: 0 auto;
   padding: 0 24px;
+}
+@media (max-width: 768px) {
+  .container {
+    padding: 0 18px;
+  }
 }
 
 /* ─── Typography ─────────────────────────────────────────── */
@@ -291,12 +311,17 @@ p {
 .glass-card {
   background: var(--bg-glass);
   border: 1px solid var(--border-light);
-  border-radius: 16px;
-  padding: 32px;
+  border-radius: 12px;
+  padding: var(--card-padding-desktop);
   position: relative;
   overflow: hidden;
   /* Only transition GPU-composited properties */
   transition: border-color 0.25s ease, transform 0.25s var(--ease-out), box-shadow 0.25s ease;
+}
+@media (max-width: 768px) {
+  .glass-card {
+    padding: var(--card-padding-mobile);
+  }
 }
 .glass-card::before {
   content: '';

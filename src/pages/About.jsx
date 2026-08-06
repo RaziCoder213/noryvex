@@ -22,48 +22,48 @@ const Linkedin = (props) => (
 
 export default function About() {
   const skills = [
-    { name: "Full-Stack Development", icon: <Code size={18} /> },
-    { name: "AI Voice Architectures", icon: <Award size={18} /> },
-    { name: "Database Systems", icon: <Server size={18} /> },
-    { name: "Workflow Automations", icon: <Shield size={18} /> }
+    { name: "Voice Prompts Review", icon: <Code size={18} /> },
+    { name: "Dental FAQ Training", icon: <Award size={18} /> },
+    { name: "Calendar Synchronization", icon: <Server size={18} /> },
+    { name: "Emergency Escalation", icon: <Shield size={18} /> }
   ];
 
   return (
     <div className="about-page page-enter">
-      <section className="about-hero">
-        <div className="container">
-          <div className="section-header">
-            <span className="section-tag">Our Story</span>
-            <h1 className="about-title">Automating the Future</h1>
-            <p className="about-subtitle">Noryvex is an AI-first automation agency. We build voice agents, automation systems, websites, and custom software — everything a business needs to run smoother, without the business having to manage a stack of self-serve tools themselves.</p>
-          </div>
+      <section className="about-hero" style={{ padding: 'var(--hero-padding-top-desktop) 0 var(--hero-padding-bottom-desktop) 0', background: 'linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-pure) 100%)', borderBottom: '1px solid var(--border-light)' }}>
+        <div className="container" style={{ textAlign: 'center' }}>
+          <span className="section-tag txt-slide" style={{ margin: '0 auto 16px auto' }}>OUR STORY</span>
+          <h1 className="about-title txt-reveal" style={{ fontSize: '3rem', fontWeight: '800', marginBottom: '16px' }}>Stop losing patients to missed calls</h1>
+          <p className="about-subtitle txt-blur-in" style={{ maxWidth: '700px', margin: '0 auto', fontSize: '1.1rem', color: 'var(--text-gray)', lineHeight: '1.6' }}>
+            Noryvex is a managed AI receptionist agency. We build, train, test, and monitor custom voice agents for dental clinics so your front desk never has to worry about missed calls again.
+          </p>
         </div>
       </section>
 
-      <section className="about-content-section">
+      <section className="about-content-section" style={{ padding: 'var(--section-padding-desktop) 0', background: 'var(--bg-pure)' }}>
         <div className="container about-grid">
           
           {/* Text Story */}
           <div className="story-text-container">
-            <h2 className="story-heading">Bespoke Autonomous Systems</h2>
-            <p className="story-paragraph">
-              Noryvex was born out of a simple observation: modern businesses are weighed down by thousands of repetitive conversations and disconnected APIs. While standard SaaS templates exist, they fail to adapt to complex, custom enterprise databases.
+            <h2 className="story-heading" style={{ fontSize: '2rem', fontWeight: '800', marginBottom: '24px', color: 'var(--text-white)' }}>Our Founder's Review Process</h2>
+            <p className="story-paragraph" style={{ fontSize: '1.05rem', color: 'var(--text-gray)', lineHeight: '1.7', marginBottom: '20px' }}>
+              Every AI receptionist built by Noryvex undergoes a 4-step manual quality control review by our founder, Muhammad Razi, before deployment. We test for pronunciation clarity, FAQ accuracy, calendar sync reliability, and emergency escalation routing so you can launch with 100% confidence.
             </p>
-            <p className="story-paragraph">
-              We design and construct high-performance AI layers from scratch. From voice receptionists that integrate directly with scheduling tools and qualify leads, to end-to-end database synchronizations that run completely unattended.
+            <p className="story-paragraph" style={{ fontSize: '1.05rem', color: 'var(--text-gray)', lineHeight: '1.7', marginBottom: '24px' }}>
+              Our agency handles the entire lifecycle: initial design, voice prompt training, software integration, active sandbox testing, and monthly operational support. You don't have to learn new software, write AI instructions, or build dashboards.
             </p>
             <div className="stats-strip">
               <div className="stat-item">
-                <span className="stat-num">800ms</span>
-                <span className="stat-label">Voice Latency</span>
-              </div>
-              <div className="stat-item">
-                <span className="stat-num">24/7</span>
-                <span className="stat-label">Autonomous Operations</span>
-              </div>
-              <div className="stat-item">
                 <span className="stat-num">100%</span>
-                <span className="stat-label">Bespoke Integration</span>
+                <span className="stat-label">Built For You</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-num">0</span>
+                <span className="stat-label">Software to Learn</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-num">48h</span>
+                <span className="stat-label">Live Deployment</span>
               </div>
             </div>
           </div>
@@ -78,11 +78,11 @@ export default function About() {
                 </svg>
                 <div className="avatar-glow"></div>
               </div>
-              <span className="founder-label" itemProp="jobTitle">Founder &amp; Lead AI Architect</span>
+              <span className="founder-label" itemProp="jobTitle">Founder &amp; Agency Lead</span>
               <h3 className="founder-name" itemProp="name">Muhammad Razi</h3>
               <p className="founder-title">Founder &amp; Full-Stack AI Developer at <span itemProp="worksFor">Noryvex</span></p>
               <p className="founder-bio" itemProp="description">
-                Muhammad Razi is the founder of Noryvex, a specialized AI technology agency. Razi is a full-stack AI developer and automation architect who engineers custom voice agents, CRM data pipelines, and intelligent software to eliminate business operational overhead.
+                Muhammad Razi is the founder of Noryvex. Razi personally reviews, configures, and tests every clinic's receptionist configuration to ensure patient conversations feel natural, clinic scheduling works seamlessly, and FAQs are answered accurately.
               </p>
               
               <div className="founder-skills">
@@ -108,28 +108,6 @@ export default function About() {
       </section>
 
       <style>{`
-        .about-hero {
-          padding: 140px 0 40px 0;
-          background: linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-pure) 100%);
-        }
-        
-        .about-title {
-          font-size: 3.5rem;
-          margin-bottom: 16px;
-        }
-        
-        .about-subtitle {
-          font-size: 1.2rem;
-          color: var(--text-gray);
-          max-width: 650px;
-          margin: 0 auto;
-        }
-
-        .about-content-section {
-          padding: 60px 0 120px 0;
-          background-color: var(--bg-dark);
-        }
-
         .about-grid {
           display: grid;
           grid-template-columns: 1.2fr 1fr;
@@ -139,18 +117,6 @@ export default function About() {
 
         .story-text-container {
           text-align: left;
-        }
-
-        .story-heading {
-          font-size: 2.2rem;
-          margin-bottom: 24px;
-        }
-
-        .story-paragraph {
-          font-size: 1.05rem;
-          color: var(--text-gray);
-          line-height: 1.7;
-          margin-bottom: 24px;
         }
 
         .stats-strip {
@@ -293,10 +259,11 @@ export default function About() {
 
         @media (max-width: 768px) {
           .about-hero {
-            padding: 100px 0 30px 0;
+            padding-top: var(--hero-padding-top-mobile) !important;
+            padding-bottom: var(--hero-padding-bottom-mobile) !important;
           }
           .about-title {
-            font-size: clamp(2rem, 8vw, 2.6rem);
+            font-size: clamp(2rem, 8vw, 2.6rem) !important;
           }
           .about-subtitle {
             font-size: 1.05rem;

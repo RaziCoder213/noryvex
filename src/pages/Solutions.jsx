@@ -1,326 +1,122 @@
 import React from 'react';
-import { Phone, Cpu, Zap, Shield, CheckCircle2, Terminal, Code, Database, Globe } from 'lucide-react';
+import { Phone, HelpCircle, Calendar, FileText, Link2, Cpu, CheckCircle2, ShieldAlert, ArrowRight } from 'lucide-react';
 
 export default function Solutions({ setActivePage }) {
-  const categories = [
+  const solutionsList = [
     {
-      title: "Dental AI Receptionist Features",
-      icon: <Phone size={32} className="sol-icon" />,
-      highlight: "800ms Latency Response",
-      description: "Our high-performance conversational speech engines bypass normal voice response delays, making Noryvex voice receptionists indistinguishable from humans.",
-      features: [
-        "Answers new patient calls 24/7",
-        "Books appointments directly into your practice calendar",
-        "Answers treatment, pricing, insurance, and directions FAQs",
-        "Collects and profiles patient details before bookings",
-        "Intelligently routes emergency dental inquiries to human staff"
-      ]
-    }
-  ];
-
-  const secondaryCapabilities = [
-    {
-      title: "Workflow & CRM Automation",
-      desc: "Connect your voice receptionists to custom HubSpot, Salesforce, GoHighLevel, or custom REST APIs to auto-log call data and lead notes."
+      title: "1. Voice receptionist for dental clinics",
+      desc: "Your AI receptionist answers calls in a natural voice, asks the right questions, and captures the details your team needs.",
+      icon: <Phone size={24} />
     },
     {
-      title: "Websites & Web Apps",
-      desc: "High-performance marketing websites and interactive booking portals built from scratch and fully maintained by Noryvex."
+      title: "2. FAQ answering",
+      desc: "The AI can answer common questions about hours, location, services, insurance basics, pricing guidance, and appointment process.",
+      icon: <HelpCircle size={24} />
     },
     {
-      title: "Custom Software Development",
-      desc: "Full product engineering — tailored internal business apps, mobile applications, and cloud-native databases built specifically around your operations."
+      title: "3. Appointment request workflow",
+      desc: "The AI collects preferred time, reason for visit, caller details, and urgency. Your staff can confirm the appointment safely.",
+      icon: <Calendar size={24} />
+    },
+    {
+      title: "4. Dashboard and handoff",
+      desc: "Every call can be sent to email, Google Sheets, Airtable, calendar, CRM, or a simple dashboard depending on your workflow.",
+      icon: <FileText size={24} />
+    },
+    {
+      title: "5. CRM and calendar integrations",
+      desc: "We can connect to your existing tools when possible. If direct integration is not available, we start with email notifications and a simple dashboard.",
+      icon: <Link2 size={24} />,
+      disclaimer: "Direct CRM or calendar integration depends on the tools your clinic uses. If direct integration is not available, we start with email notifications and a simple dashboard."
+    },
+    {
+      title: "6. Monthly management",
+      desc: "We review calls, update FAQs, improve prompts, and keep the receptionist aligned with your clinic.",
+      icon: <Cpu size={24} />
     }
   ];
 
   return (
     <div className="solutions-page page-enter">
-      <section className="solutions-hero">
-        <div className="container">
-          <div className="section-header">
-            <span className="section-tag">Solutions</span>
-            <h1 className="solutions-title">Dental AI Receptionist Solutions</h1>
-            <p className="solutions-subtitle">Autonomous clinical communication engines custom-built to qualify leads, handle FAQs, and book patient appointments 24/7.</p>
-          </div>
-        </div>
-      </section>
-
-      <section className="solutions-details">
-        <div className="container sol-container">
-          {categories.map((cat, i) => (
-            <div key={i} className="solution-row glass-card">
-              <div className="sol-info-block">
-                <div className="sol-icon-header">
-                  <div className="sol-icon-bg">{cat.icon}</div>
-                  <span className="sol-highlight-tag">{cat.highlight}</span>
-                </div>
-                <h2 className="sol-row-title">{cat.title}</h2>
-                <p className="sol-row-desc">{cat.description}</p>
-                <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                  <button 
-                    onClick={() => setActivePage('contact', 'trial')} 
-                    className="btn btn-primary"
-                  >
-                    Get Free Clinic Demo
-                  </button>
-                  <button 
-                    onClick={() => setActivePage('contact', 'call')} 
-                    className="btn btn-outline-neon"
-                  >
-                    Book Free Strategy Call
-                  </button>
-                </div>
-              </div>
-
-              <div className="sol-features-block">
-                <h3 className="features-title">Technical Capabilities</h3>
-                <ul className="features-list">
-                  {cat.features.map((feat, index) => (
-                    <li key={index} className="feature-item">
-                      <CheckCircle2 size={18} className="feat-check" />
-                      <span className="feat-text">{feat}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="solutions-secondary" style={{ padding: '80px 0', borderTop: '1px solid var(--border-light)', background: 'var(--bg-pure)' }}>
-        <div className="container" style={{ maxWidth: '800px', textAlign: 'center' }}>
-          <span className="section-tag" style={{ margin: '0 auto 16px auto' }}>Expanding Roadmap</span>
-          <h2 className="section-title" style={{ fontSize: '1.8rem', marginBottom: '16px' }}>Additional Custom Automation Capabilities</h2>
-          <p style={{ color: 'var(--text-gray)', fontSize: '1.05rem', lineHeight: '1.6', marginBottom: '40px' }}>
-            We focus primarily on dental AI receptionists to ensure absolute reliability. However, we also design and support secondary automation infrastructure on demand.
+      {/* Solutions Hero */}
+      <section className="solutions-hero" style={{ padding: 'var(--hero-padding-top-desktop) 0 var(--hero-padding-bottom-desktop) 0', background: 'linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-pure) 100%)', borderBottom: '1px solid var(--border-light)' }}>
+        <div className="container" style={{ textAlign: 'center' }}>
+          <span className="section-tag txt-slide" style={{ margin: '0 auto 16px auto' }}>SOLUTIONS</span>
+          <h1 className="solutions-title txt-reveal" style={{ fontSize: '3rem', fontWeight: '800', marginBottom: '16px' }}>Dental AI Receptionist Solutions</h1>
+          <p className="solutions-subtitle txt-blur-in" style={{ maxWidth: '700px', margin: '0 auto', fontSize: '1.1rem', color: 'var(--text-gray)', lineHeight: '1.6' }}>
+            Done-for-you AI call handling for dental clinics. We help answer missed calls, capture patient details, handle FAQs, and send appointment requests to your team.
           </p>
+        </div>
+      </section>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '20px', textAlign: 'left' }}>
-            {secondaryCapabilities.map((cap, index) => (
-              <div key={index} className="glass-card" style={{ padding: '24px 32px', border: '1px solid var(--border-light)', borderRadius: '16px', background: 'var(--bg-glass)' }}>
-                <h3 style={{ fontSize: '1.2rem', fontWeight: '700', color: 'var(--text-white)', marginBottom: '8px' }}>{cap.title}</h3>
-                <p style={{ color: 'var(--text-gray)', fontSize: '0.95rem', lineHeight: '1.5', margin: 0 }}>{cap.desc}</p>
+      {/* Solutions Details Grid */}
+      <section className="solutions-details" style={{ padding: 'var(--section-padding-desktop) 0', background: 'var(--bg-pure)' }}>
+        <div className="container">
+          <div className="sol-grid">
+            {solutionsList.map((sol, index) => (
+              <div key={index} className="glass-card sol-card" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                <div className="sol-icon-bg" style={{ width: '48px', height: '48px', background: 'rgba(199, 255, 61, 0.08)', border: '1px solid var(--accent-neon-border)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent-neon)', marginBottom: '20px' }}>
+                  {sol.icon}
+                </div>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: '800', color: 'var(--text-white)', marginBottom: '12px' }}>{sol.title}</h3>
+                <p style={{ color: 'var(--text-gray)', fontSize: '0.95rem', lineHeight: '1.5', flexGrow: 1, margin: 0 }}>{sol.desc}</p>
+                
+                {sol.disclaimer && (
+                  <div style={{ marginTop: '16px', padding: '10px 12px', background: 'rgba(255, 255, 255, 0.03)', borderRadius: '6px', borderLeft: '3px solid var(--accent-neon)' }}>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', lineHeight: '1.4', margin: 0 }}>
+                      <strong>Disclaimer:</strong> {sol.disclaimer}
+                    </p>
+                  </div>
+                )}
               </div>
             ))}
           </div>
-        </div>
-      </section>
 
-      {/* Tech Stack section */}
-      <section className="tech-stack-section">
-        <div className="container">
-          <div className="section-header">
-            <span className="section-tag">Our Engine</span>
-            <h2 className="section-title">The Noryvex Core Stack</h2>
-            <p className="section-subtitle">We employ state-of-the-art framework technologies to build fast, robust, and reliable automations.</p>
+          {/* AI / Medical Safety Disclaimer Box */}
+          <div className="safety-disclaimer-box glass-card" style={{ marginTop: '48px', background: 'rgba(199, 255, 61, 0.02)', border: '1px solid rgba(199, 255, 61, 0.15)', display: 'flex', gap: '16px', alignItems: 'start' }}>
+            <ShieldAlert size={24} style={{ color: 'var(--accent-neon)', flexShrink: 0, marginTop: '2px' }} />
+            <div>
+              <h4 style={{ fontSize: '0.95rem', fontWeight: '700', color: 'var(--text-white)', marginBottom: '4px' }}>AI Medical Safety Disclaimer</h4>
+              <p style={{ color: 'var(--text-gray)', fontSize: '0.85rem', lineHeight: '1.45', margin: 0 }}>
+                The AI does not give medical advice. It collects details, answers approved clinic FAQs, and routes urgent cases according to your clinic’s instructions.
+              </p>
+            </div>
           </div>
 
-          <div className="tech-grid">
-            <div className="tech-card glass-card">
-              <Code size={28} className="tech-icon" />
-              <h3>Languages & Frameworks</h3>
-              <p>Node.js, Express, React, Vite, Python, WebSockets, Next.js</p>
-            </div>
-            <div className="tech-card glass-card">
-              <Database size={28} className="tech-icon" />
-              <h3>Database & Storage</h3>
-              <p>SQLite, PostgreSQL, MongoDB, Redis, Pinecone Vector Databases</p>
-            </div>
-            <div className="tech-card glass-card">
-              <Terminal size={28} className="tech-icon" />
-              <h3>AI & LLM Services</h3>
-              <p>OpenAI GPT-4o, Anthropic Claude 3.5 Sonnet, Vapi, Retell AI, ElevenLabs</p>
-            </div>
+          {/* CTA Box */}
+          <div style={{ textAlign: 'center', marginTop: '64px' }}>
+            <button 
+              onClick={() => setActivePage('contact', 'trial')} 
+              className="btn btn-primary btn-lg"
+            >
+              Get Free Clinic Demo <ArrowRight size={18} />
+            </button>
           </div>
         </div>
       </section>
 
       <style>{`
-        .solutions-hero {
-          padding: 140px 0 40px 0;
-          background: linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-pure) 100%);
-        }
-        
-        .solutions-title {
-          font-size: 3.5rem;
-          margin-bottom: 16px;
-        }
-        
-        .solutions-subtitle {
-          font-size: 1.2rem;
-          color: var(--text-gray);
-          max-width: 600px;
-          margin: 0 auto;
-        }
-
-        .solutions-details {
-          padding: 60px 0;
-          background-color: var(--bg-dark);
-        }
-
-        .sol-container {
-          display: flex;
-          flex-direction: column;
-          gap: 40px;
-        }
-
-        .solution-row {
-          display: grid;
-          grid-template-columns: 1.1fr 1fr;
-          gap: 48px;
-          align-items: center;
-          padding: 48px;
-          text-align: left;
-        }
-
-        .sol-icon-header {
-          display: flex;
-          align-items: center;
-          gap: 16px;
-          margin-bottom: 24px;
-        }
-
-        .sol-icon-bg {
-          width: 64px;
-          height: 64px;
-          background: rgba(199, 255, 61, 0.08);
-          border: 1px solid var(--accent-neon-border);
-          border-radius: 16px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: var(--accent-neon);
-        }
-
-        .sol-highlight-tag {
-          background: rgba(199, 255, 61, 0.05);
-          border: 1px solid var(--accent-neon-border);
-          padding: 6px 14px;
-          border-radius: 100px;
-          font-size: 0.8rem;
-          font-weight: 700;
-          color: var(--accent-neon);
-          text-transform: uppercase;
-        }
-
-        .sol-row-title {
-          font-size: 1.8rem;
-          margin-bottom: 16px;
-        }
-
-        .sol-row-desc {
-          font-size: 1rem;
-          color: var(--text-gray);
-          margin-bottom: 32px;
-          line-height: 1.6;
-        }
-
-        .sol-features-block {
-          background: var(--bg-glass);
-          border: 1px solid var(--border-light);
-          padding: 32px;
-          border-radius: 12px;
-          height: 100%;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-        }
-
-        .features-title {
-          font-size: 1.1rem;
-          font-weight: 600;
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
-          color: var(--text-white);
-          margin-bottom: 24px;
-        }
-
-        .features-list {
-          list-style: none;
-          display: flex;
-          flex-direction: column;
-          gap: 16px;
-        }
-
-        .feature-item {
-          display: flex;
-          align-items: flex-start;
-          gap: 12px;
-        }
-
-        .feat-check {
-          color: var(--accent-neon);
-          flex-shrink: 0;
-          margin-top: 2px;
-        }
-
-        .feat-text {
-          font-size: 0.95rem;
-          color: var(--text-light);
-        }
-
-        /* Tech Stack Grid */
-        .tech-stack-section {
-          padding: 100px 0;
-          background-color: var(--bg-pure);
-        }
-
-        .tech-grid {
+        .sol-grid {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
-          gap: 24px;
+          gap: var(--card-gap-desktop);
         }
-
-        .tech-card {
-          text-align: left;
-          padding: 32px;
-        }
-
-        .tech-icon {
-          color: var(--accent-neon);
-          margin-bottom: 20px;
-        }
-
-        .tech-card h3 {
-          font-size: 1.25rem;
-          margin-bottom: 12px;
-        }
-
-        .tech-card p {
-          font-size: 0.95rem;
-          color: var(--text-gray);
-        }
-
-        @media (max-width: 1024px) {
-          .solution-row {
-            grid-template-columns: 1fr;
-            gap: 32px;
-            padding: 32px;
-          }
-          .tech-grid {
-            grid-template-columns: 1fr;
+        @media (max-width: 992px) {
+          .sol-grid {
+            grid-template-columns: repeat(2, 1fr);
           }
         }
-
         @media (max-width: 768px) {
+          .sol-grid {
+            grid-template-columns: 1fr;
+            gap: var(--card-gap-mobile);
+          }
           .solutions-hero {
-            padding: 100px 0 30px 0;
+            padding-top: var(--hero-padding-top-mobile) !important;
+            padding-bottom: var(--hero-padding-bottom-mobile) !important;
           }
           .solutions-title {
-            font-size: clamp(2rem, 8vw, 2.6rem);
-          }
-          .solutions-subtitle {
-            font-size: 1.05rem;
-          }
-          .solution-row {
-            padding: 24px;
-          }
-          .sol-row-title {
-            font-size: 1.5rem;
-          }
-          .sol-features-block {
-            padding: 20px;
+            font-size: clamp(2rem, 8vw, 2.6rem) !important;
           }
         }
       `}</style>

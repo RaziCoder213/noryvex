@@ -1,17 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { Mail, Phone, Calendar, Clock, Send, CheckCircle2, Sparkles, ShieldCheck } from 'lucide-react';
-import { dbSaveContact, dbSaveMeeting, dbSaveTrial } from '../utils/dbHelper';
+import { dbSaveContact, dbSaveMeeting } from '../utils/dbHelper';
 
 export default function Contact({ addToast, initialTab = 'trial' }) {
-  const [activeTab, setActiveTab] = useState(initialTab);
+  const [mode, setMode] = useState('demo'); // 'demo' or 'call'
 
-  const [contactData, setContactData] = useState({
-    name: '',
-    company: '',
-    email: '',
-    phone: '',
-    service: 'AI Voice Agents',
-    message: ''
+  const [demoData, setDemoData] = useState({
+    clinicName: '',
+    clinicWebsite: '',
+    clinicLocation: '',
+    mainServices: '',
+    handling: {
+      newPatient: false,
+      faqAnswering: false,
+      afterHours: false,
+      emergencyRouting: false
+    },
+    integrations: {
+      googleCalendar: false,
+      calendly: false,
+      dentrix: false,
+      openDental: false,
+      otherCrm: false,
+      emailOnly: false
+    },
+    contactName: '',
+    contactEmail: '',
+    contactPhone: ''
   });
 
   const [meetingData, setMeetingData] = useState({
@@ -24,55 +39,80 @@ export default function Contact({ addToast, initialTab = 'trial' }) {
     notes: ''
   });
 
-  const [trialData, setTrialData] = useState({
-    businessName: '',
-    contactName: '',
-    email: '',
-    phone: '',
-    businessType: '',
-    aiHandling: 'both' // both, bookings, faqs
-  });
-
-  const [submittingContact, setSubmittingContact] = useState(false);
+  const [submittingDemo, setSubmittingDemo] = useState(false);
   const [submittingMeeting, setSubmittingMeeting] = useState(false);
-  const [submittingTrial, setSubmittingTrial] = useState(false);
   
+  const [demoSuccess, setDemoSuccess] = useState(false);
   const [meetingSuccess, setMeetingSuccess] = useState(false);
-  const [trialSuccess, setTrialSuccess] = useState(false);
-
 
   useEffect(() => {
-    if (initialTab) {
-      setActiveTab(initialTab);
+    if (initialTab === 'call') {
+      setMode('call');
+    } else {
+      setMode('demo');
     }
   }, [initialTab]);
 
-  const services = [
-    "AI Voice Agents",
-    "AI Receptionists",
-    "Business Automation",
-    "Workflow Automation",
-    "AI Chatbots",
-    "Web Applications",
-    "Mobile Apps",
-    "SaaS Development",
-    "API Integrations",
-    "CRM Automation"
-  ];
-
-  const handleContactSubmit = async (e) => {
+  const handleDemoSubmit = async (e) => {
     e.preventDefault();
-    if (!contactData.name || !contactData.email) {
-      addToast('Name and Email are required.', 'error');
+    if (!demoData.clinicName || !demoData.contactName || !demoData.contactEmail) {
+      addToast('Clinic Name, Contact Name, and Contact Email are required.', 'error');
       return;
     }
-    setSubmittingContact(true);
+    setSubmittingDemo(true);
+
+    const handlingList = [];
+    if (demoData.handling.newPatient) handlingList.push("New Patient Intake");
+    if (demoData.handling.faqAnswering) handlingList.push("FAQ Answering");
+    if (demoData.handling.afterHours) handlingList.push("After-Hours Calls");
+    if (demoData.handling.emergencyRouting) handlingList.push("Emergency Routing");
+
+    const integrationList = [];
+    if (demoData.integrations.googleCalendar) integrationList.push("Google Calendar");
+    if (demoData.integrations.calendly) integrationList.push("Calendly");
+    if (demoData.integrations.dentrix) integrationList.push("Dentrix");
+    if (demoData.integrations.openDental) integrationList.push("Open Dental");
+    if (demoData.integrations.otherCrm) integrationList.push("Other CRM");
+    if (demoData.integrations.emailOnly) integrationList.push("Email Summaries Only");
+
+    const formattedMessage = `
+Clinic Website: ${demoData.clinicWebsite || '—'}
+Clinic Location: ${demoData.clinicLocation || '—'}
+Main Dental Services: ${demoData.mainServices || '—'}
+
+What the AI should handle:
+${handlingList.length > 0 ? handlingList.join(', ') : 'None selected'}
+
+Tools to integrate:
+${integrationList.length > 0 ? integrationList.join(', ') : 'None selected'}
+    `.trim();
+
+    // Map to contacts endpoint payload to bypass the trials unique constraint on emails
+    const payload = {
+      name: demoData.contactName,
+      company: demoData.clinicName,
+      email: demoData.contactEmail,
+      phone: demoData.contactPhone,
+      service: 'AI Receptionist Free Demo Request',
+      message: formattedMessage
+    };
 
     try {
-      const result = await dbSaveContact(contactData);
+      const result = await dbSaveContact(payload);
       if (result.success) {
-        addToast('Contact inquiry submitted successfully!', 'success');
-        setContactData({ name: '', company: '', email: '', phone: '', service: 'AI Voice Agents', message: '' });
+        addToast('Free clinic demo requested successfully!', 'success');
+        setDemoSuccess(true);
+        setDemoData({
+          clinicName: '',
+          clinicWebsite: '',
+          clinicLocation: '',
+          mainServices: '',
+          handling: { newPatient: false, faqAnswering: false, afterHours: false, emergencyRouting: false },
+          integrations: { googleCalendar: false, calendly: false, dentrix: false, openDental: false, otherCrm: false, emailOnly: false },
+          contactName: '',
+          contactEmail: '',
+          contactPhone: ''
+        });
       } else {
         addToast('Submission failed.', 'error');
       }
@@ -80,7 +120,7 @@ export default function Contact({ addToast, initialTab = 'trial' }) {
       console.error(err);
       addToast('Submission failed.', 'error');
     } finally {
-      setSubmittingContact(false);
+      setSubmittingDemo(false);
     }
   };
 
@@ -109,50 +149,19 @@ export default function Contact({ addToast, initialTab = 'trial' }) {
     }
   };
 
-  const handleTrialSubmit = async (e) => {
-    e.preventDefault();
-    if (!trialData.contactName || !trialData.email || !trialData.businessName) {
-      addToast('Business Name, Contact Name, and Email are required.', 'error');
-      return;
-    }
-    setSubmittingTrial(true);
-
-    try {
-      const result = await dbSaveTrial(trialData);
-      if (result) {
-        addToast('Checking warranty request submitted successfully!', 'success');
-        setTrialSuccess(true);
-        setTrialData({
-          businessName: '',
-          contactName: '',
-          email: '',
-          phone: '',
-          businessType: '',
-          aiHandling: 'both'
-        });
-      } else {
-        addToast('Request submission failed.', 'error');
-      }
-    } catch (err) {
-      addToast('Request submission failed.', 'error');
-    } finally {
-      setSubmittingTrial(false);
-    }
-  };
-
   return (
     <div className="contact-page page-enter">
-      <section className="contact-hero">
-        <div className="container">
-          <div className="section-header">
-            <span className="section-tag">Get in Touch</span>
-            <h1 className="contact-title">Start Automating Today</h1>
-            <p className="contact-subtitle">Get a custom AI receptionist demo built specifically for your clinic. Play only when you decide to launch the full system.</p>
-          </div>
+      <section className="contact-hero" style={{ padding: 'var(--hero-padding-top-desktop) 0 var(--hero-padding-bottom-desktop) 0', background: 'linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-pure) 100%)', borderBottom: '1px solid var(--border-light)' }}>
+        <div className="container" style={{ textAlign: 'center' }}>
+          <span className="section-tag txt-slide" style={{ margin: '0 auto 16px auto' }}>GET IN TOUCH</span>
+          <h1 className="contact-title txt-reveal" style={{ fontSize: '3rem', fontWeight: '800', marginBottom: '16px' }}>Start Automating Today</h1>
+          <p className="contact-subtitle txt-blur-in" style={{ maxWidth: '700px', margin: '0 auto', fontSize: '1.1rem', color: 'var(--text-gray)', lineHeight: '1.6' }}>
+            Get a custom AI receptionist demo built specifically for your clinic. Pay only when you decide to launch the full system.
+          </p>
         </div>
       </section>
 
-      <section className="contact-forms-section">
+      <section className="contact-forms-section" style={{ padding: 'var(--section-padding-desktop) 0', background: 'var(--bg-pure)' }}>
         <div className="container forms-container">
           
           {/* Column 1: Info & Trial Terms */}
@@ -172,7 +181,7 @@ export default function Contact({ addToast, initialTab = 'trial' }) {
                 <ul className="trial-terms-list" style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   <li style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.88rem', color: 'var(--text-gray)' }}>
                     <CheckCircle2 size={16} color="#C7FF3D" style={{ flexShrink: 0 }} />
-                    <span>No software to learn. No dashboard to configure. We build and manage everything.</span>
+                    <span>No software to learn. No dashboard to configure. We build and manage everything for you.</span>
                   </li>
                   <li style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.88rem', color: 'var(--text-gray)' }}>
                     <CheckCircle2 size={16} color="#C7FF3D" style={{ flexShrink: 0 }} />
@@ -193,138 +202,216 @@ export default function Contact({ addToast, initialTab = 'trial' }) {
                   <Clock size={22} className="icon-neon" style={{ flexShrink: 0 }} />
                   <div>
                     <h4 style={{ color: 'var(--text-white)', fontSize: '0.95rem', marginBottom: '4px', fontWeight: '700' }}>Under 48-Hour Setup</h4>
-                    <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', lineHeight: '1.45' }}>After submitting, we'll build your prototype and reach out within 48 hours to guide you through the demo activation.</p>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', lineHeight: '1.45' }}>After submitting, we'll build your prototype and reach out within 48 hours to let you test it.</p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Column 2: Tab Switcher & Dynamic Form */}
+          {/* Column 2: Dynamic Form */}
           <div className="form-column">
             <div className="glass-card form-card border-neon-glow">
               
-              {/* Tab Selector */}
-              <div className="contact-tabs">
-                <button 
-                  className={`contact-tab-btn ${activeTab === 'trial' ? 'active' : ''}`}
-                  onClick={() => { setActiveTab('trial'); setTrialSuccess(false); }}
-                >
-                  Get Free Clinic Demo
-                </button>
-                <button 
-                  className={`contact-tab-btn ${activeTab === 'call' ? 'active' : ''}`}
-                  onClick={() => { setActiveTab('call'); setMeetingSuccess(false); }}
-                >
-                  Book a Call
-                </button>
-                <button 
-                  className={`contact-tab-btn ${activeTab === 'inquiry' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('inquiry')}
-                >
-                  General Inquiry
-                </button>
-              </div>
-
-              {/* TAB 1: 7-DAY FREE TRIAL */}
-              {activeTab === 'trial' && (
-                trialSuccess ? (
+              {/* MODE 1: FREE DEMO */}
+              {mode === 'demo' && (
+                demoSuccess ? (
                   <div className="success-screen-box">
                     <CheckCircle2 size={48} className="success-check" />
                     <h3>Demo Request Submitted!</h3>
                     <p>We'll build your custom receptionist demo and reach out within 48 hours to let you test it.</p>
-                    <button onClick={() => setTrialSuccess(false)} className="btn btn-outline-neon">
+                    <button onClick={() => setDemoSuccess(false)} className="btn btn-outline-neon">
                       Request Another Demo
                     </button>
                   </div>
                 ) : (
-                  <form onSubmit={handleTrialSubmit}>
-                    <p className="card-desc" style={{ marginBottom: '20px' }}>Request your custom AI voice receptionist demo. No credit card or software setup required.</p>
+                  <form onSubmit={handleDemoSubmit}>
+                    <p className="card-desc" style={{ marginBottom: '20px' }}>Request your custom AI voice receptionist demo. No credit card required.</p>
+                    
                     <div className="form-row">
                       <div className="form-group">
-                        <label className="form-label">Business Name</label>
+                        <label className="form-label">Clinic Name *</label>
                         <input 
                           type="text" 
                           required
-                          placeholder="e.g. Dental Clinic, Auto Shop"
+                          placeholder="e.g. Bright Dental"
                           className="form-control" 
-                          value={trialData.businessName} 
-                          onChange={(e) => setTrialData({...trialData, businessName: e.target.value})}
+                          value={demoData.clinicName} 
+                          onChange={(e) => setDemoData({...demoData, clinicName: e.target.value})}
                         />
                       </div>
                       <div className="form-group">
-                        <label className="form-label">Contact Name</label>
+                        <label className="form-label">Clinic Website</label>
                         <input 
-                          type="text" 
-                          required
-                          placeholder="e.g. Jane Smith"
+                          type="url" 
+                          placeholder="e.g. https://brightdental.com"
                           className="form-control" 
-                          value={trialData.contactName} 
-                          onChange={(e) => setTrialData({...trialData, contactName: e.target.value})}
+                          value={demoData.clinicWebsite} 
+                          onChange={(e) => setDemoData({...demoData, clinicWebsite: e.target.value})}
                         />
                       </div>
                     </div>
 
                     <div className="form-row">
                       <div className="form-group">
-                        <label className="form-label">Email Address</label>
+                        <label className="form-label">Clinic Location</label>
+                        <input 
+                          type="text" 
+                          placeholder="e.g. Dallas, TX"
+                          className="form-control" 
+                          value={demoData.clinicLocation} 
+                          onChange={(e) => setDemoData({...demoData, clinicLocation: e.target.value})}
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label className="form-label">Main Dental Services</label>
+                        <input 
+                          type="text" 
+                          placeholder="e.g. Cleanings, Crowns, Implants"
+                          className="form-control" 
+                          value={demoData.mainServices} 
+                          onChange={(e) => setDemoData({...demoData, mainServices: e.target.value})}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="form-group" style={{ marginBottom: '20px' }}>
+                      <label className="form-label" style={{ display: 'block', marginBottom: '8px' }}>What should the AI handle?</label>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-light)', fontSize: '0.85rem', cursor: 'pointer' }}>
+                          <input 
+                            type="checkbox" 
+                            checked={demoData.handling.newPatient} 
+                            onChange={(e) => setDemoData({...demoData, handling: {...demoData.handling, newPatient: e.target.checked}})}
+                          />
+                          New Patient Intake
+                        </label>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-light)', fontSize: '0.85rem', cursor: 'pointer' }}>
+                          <input 
+                            type="checkbox" 
+                            checked={demoData.handling.faqAnswering} 
+                            onChange={(e) => setDemoData({...demoData, handling: {...demoData.handling, faqAnswering: e.target.checked}})}
+                          />
+                          FAQ Answering
+                        </label>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-light)', fontSize: '0.85rem', cursor: 'pointer' }}>
+                          <input 
+                            type="checkbox" 
+                            checked={demoData.handling.afterHours} 
+                            onChange={(e) => setDemoData({...demoData, handling: {...demoData.handling, afterHours: e.target.checked}})}
+                          />
+                          After-Hours Calls
+                        </label>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-light)', fontSize: '0.85rem', cursor: 'pointer' }}>
+                          <input 
+                            type="checkbox" 
+                            checked={demoData.handling.emergencyRouting} 
+                            onChange={(e) => setDemoData({...demoData, handling: {...demoData.handling, emergencyRouting: e.target.checked}})}
+                          />
+                          Emergency Routing
+                        </label>
+                      </div>
+                    </div>
+
+                    <div className="form-group" style={{ marginBottom: '20px' }}>
+                      <label className="form-label" style={{ display: 'block', marginBottom: '8px' }}>Tools to integrate</label>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-light)', fontSize: '0.85rem', cursor: 'pointer' }}>
+                          <input 
+                            type="checkbox" 
+                            checked={demoData.integrations.googleCalendar} 
+                            onChange={(e) => setDemoData({...demoData, integrations: {...demoData.integrations, googleCalendar: e.target.checked}})}
+                          />
+                          Google Calendar
+                        </label>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-light)', fontSize: '0.85rem', cursor: 'pointer' }}>
+                          <input 
+                            type="checkbox" 
+                            checked={demoData.integrations.calendly} 
+                            onChange={(e) => setDemoData({...demoData, integrations: {...demoData.integrations, calendly: e.target.checked}})}
+                          />
+                          Calendly
+                        </label>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-light)', fontSize: '0.85rem', cursor: 'pointer' }}>
+                          <input 
+                            type="checkbox" 
+                            checked={demoData.integrations.dentrix} 
+                            onChange={(e) => setDemoData({...demoData, integrations: {...demoData.integrations, dentrix: e.target.checked}})}
+                          />
+                          Dentrix
+                        </label>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-light)', fontSize: '0.85rem', cursor: 'pointer' }}>
+                          <input 
+                            type="checkbox" 
+                            checked={demoData.integrations.openDental} 
+                            onChange={(e) => setDemoData({...demoData, integrations: {...demoData.integrations, openDental: e.target.checked}})}
+                          />
+                          Open Dental
+                        </label>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-light)', fontSize: '0.85rem', cursor: 'pointer' }}>
+                          <input 
+                            type="checkbox" 
+                            checked={demoData.integrations.otherCrm} 
+                            onChange={(e) => setDemoData({...demoData, integrations: {...demoData.integrations, otherCrm: e.target.checked}})}
+                          />
+                          Other CRM
+                        </label>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-light)', fontSize: '0.85rem', cursor: 'pointer' }}>
+                          <input 
+                            type="checkbox" 
+                            checked={demoData.integrations.emailOnly} 
+                            onChange={(e) => setDemoData({...demoData, integrations: {...demoData.integrations, emailOnly: e.target.checked}})}
+                          />
+                          Email Summaries Only
+                        </label>
+                      </div>
+                    </div>
+
+                    <div className="form-group">
+                      <label className="form-label">Contact Name *</label>
+                      <input 
+                        type="text" 
+                        required
+                        placeholder="e.g. Dr. Jane Smith"
+                        className="form-control" 
+                        value={demoData.contactName} 
+                        onChange={(e) => setDemoData({...demoData, contactName: e.target.value})}
+                      />
+                    </div>
+
+                    <div className="form-row">
+                      <div className="form-group">
+                        <label className="form-label">Contact Email *</label>
                         <input 
                           type="email" 
                           required
                           placeholder="jane@company.com"
                           className="form-control" 
-                          value={trialData.email} 
-                          onChange={(e) => setTrialData({...trialData, email: e.target.value})}
+                          value={demoData.contactEmail} 
+                          onChange={(e) => setDemoData({...demoData, contactEmail: e.target.value})}
                         />
                       </div>
                       <div className="form-group">
-                        <label className="form-label">Phone Number</label>
+                        <label className="form-label">Contact Phone</label>
                         <input 
                           type="tel" 
-                          required
                           placeholder="+1 (555) 000-0000"
                           className="form-control" 
-                          value={trialData.phone} 
-                          onChange={(e) => setTrialData({...trialData, phone: e.target.value})}
+                          value={demoData.contactPhone} 
+                          onChange={(e) => setDemoData({...demoData, contactPhone: e.target.value})}
                         />
                       </div>
                     </div>
 
-                    <div className="form-row">
-                      <div className="form-group">
-                        <label className="form-label">Business Niche / Industry</label>
-                        <input 
-                          type="text" 
-                          required
-                          placeholder="e.g. Dental, Real Estate, Law Firm"
-                          className="form-control" 
-                          value={trialData.businessType} 
-                          onChange={(e) => setTrialData({...trialData, businessType: e.target.value})}
-                        />
-                      </div>
-                      <div className="form-group">
-                        <label className="form-label">What should the AI handle?</label>
-                        <select 
-                          className="form-control select-control"
-                          value={trialData.aiHandling}
-                          onChange={(e) => setTrialData({...trialData, aiHandling: e.target.value})}
-                        >
-                          <option value="both">Both (FAQs & Bookings)</option>
-                          <option value="bookings">Bookings Only</option>
-                          <option value="faqs">FAQs / Information Only</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    <button type="submit" disabled={submittingTrial} className="btn btn-primary w-full">
-                      {submittingTrial ? 'Submitting request...' : 'Get Your Free Clinic Demo'}
+                    <button type="submit" disabled={submittingDemo} className="btn btn-primary w-full" style={{ marginTop: '12px' }}>
+                      {submittingDemo ? 'Submitting request...' : 'Get Free Clinic Demo'}
                     </button>
                   </form>
                 )
               )}
 
-              {/* TAB 2: BOOK A STRATEGY CALL */}
-              {activeTab === 'call' && (
+              {/* MODE 2: BOOK A STRATEGY CALL */}
+              {mode === 'call' && (
                 meetingSuccess ? (
                   <div className="success-screen-box">
                     <CheckCircle2 size={48} className="success-check" />
@@ -336,10 +423,12 @@ export default function Contact({ addToast, initialTab = 'trial' }) {
                   </div>
                 ) : (
                   <form onSubmit={handleMeetingSubmit}>
-                    <p className="card-desc" style={{ marginBottom: '20px' }}>The first step is not payment. First, we build a small custom demo for your clinic so you can hear exactly how your AI receptionist answers calls. The demo uses your clinic name, services, hours, and patient questions. If you like the demo, we launch the full system and connect your workflow.</p>
+                    <p className="card-desc" style={{ marginBottom: '20px' }}>
+                      First, we build a small custom demo for your clinic so you can hear exactly how your AI receptionist answers calls. If you decide to go live, we launch the full system.
+                    </p>
                     <div className="form-row">
                       <div className="form-group">
-                        <label className="form-label">Full Name</label>
+                        <label className="form-label">Full Name *</label>
                         <input 
                           type="text" 
                           required
@@ -349,7 +438,7 @@ export default function Contact({ addToast, initialTab = 'trial' }) {
                         />
                       </div>
                       <div className="form-group">
-                        <label className="form-label">Email</label>
+                        <label className="form-label">Email *</label>
                         <input 
                           type="email" 
                           required
@@ -362,7 +451,7 @@ export default function Contact({ addToast, initialTab = 'trial' }) {
 
                     <div className="form-row">
                       <div className="form-group">
-                        <label className="form-label">Company Name</label>
+                        <label className="form-label">Clinic Name</label>
                         <input 
                           type="text" 
                           className="form-control" 
@@ -383,7 +472,7 @@ export default function Contact({ addToast, initialTab = 'trial' }) {
 
                     <div className="form-row">
                       <div className="form-group">
-                        <label className="form-label">Preferred Date</label>
+                        <label className="form-label">Preferred Date *</label>
                         <input 
                           type="date" 
                           required
@@ -393,7 +482,7 @@ export default function Contact({ addToast, initialTab = 'trial' }) {
                         />
                       </div>
                       <div className="form-group">
-                        <label className="form-label">Preferred Time</label>
+                        <label className="form-label">Preferred Time *</label>
                         <input 
                           type="time" 
                           required
@@ -421,82 +510,15 @@ export default function Contact({ addToast, initialTab = 'trial' }) {
                 )
               )}
 
-              {/* TAB 3: GENERAL INQUIRY */}
-              {activeTab === 'inquiry' && (
-                <form onSubmit={handleContactSubmit}>
-                  <p className="card-desc" style={{ marginBottom: '20px' }}>Have a general question or custom API integration challenge? Shoot us a message.</p>
-                  <div className="form-row">
-                    <div className="form-group">
-                      <label className="form-label">Name</label>
-                      <input 
-                        type="text" 
-                        required
-                        className="form-control" 
-                        value={contactData.name} 
-                        onChange={(e) => setContactData({...contactData, name: e.target.value})}
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label className="form-label">Company Name</label>
-                      <input 
-                        type="text" 
-                        className="form-control" 
-                        value={contactData.company} 
-                        onChange={(e) => setContactData({...contactData, company: e.target.value})}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="form-row">
-                    <div className="form-group">
-                      <label className="form-label">Email</label>
-                      <input 
-                        type="email" 
-                        required
-                        className="form-control" 
-                        value={contactData.email} 
-                        onChange={(e) => setContactData({...contactData, email: e.target.value})}
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label className="form-label">Phone</label>
-                      <input 
-                        type="tel" 
-                        className="form-control" 
-                        value={contactData.phone} 
-                        onChange={(e) => setContactData({...contactData, phone: e.target.value})}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="form-group">
-                    <label className="form-label">Service Interested In</label>
-                    <select 
-                      className="form-control select-control"
-                      value={contactData.service}
-                      onChange={(e) => setContactData({...contactData, service: e.target.value})}
-                    >
-                      {services.map((svc, i) => (
-                        <option key={i} value={svc}>{svc}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="form-group">
-                    <label className="form-label">Message Details</label>
-                    <textarea 
-                      placeholder="Describe your current operations and what you're hoping to automate..."
-                      required
-                      className="form-control" 
-                      value={contactData.message} 
-                      onChange={(e) => setContactData({...contactData, message: e.target.value})}
-                    />
-                  </div>
-
-                  <button type="submit" disabled={submittingContact} className="btn btn-secondary w-full">
-                    {submittingContact ? 'Sending...' : 'Send Message'} <Send size={16} />
-                  </button>
-                </form>
+              {/* Mode Toggles */}
+              {mode === 'demo' ? (
+                <p style={{ textAlign: 'center', marginTop: '20px', fontSize: '0.9rem', color: 'var(--text-gray)' }}>
+                  Prefer to talk first? <span onClick={() => { setMode('call'); setMeetingSuccess(false); }} style={{ color: 'var(--accent-neon)', cursor: 'pointer', textDecoration: 'underline', fontWeight: '600' }}>Book a Call</span>
+                </p>
+              ) : (
+                <p style={{ textAlign: 'center', marginTop: '20px', fontSize: '0.9rem', color: 'var(--text-gray)' }}>
+                  Want your free demo prototype first? <span onClick={() => { setMode('demo'); setDemoSuccess(false); }} style={{ color: 'var(--accent-neon)', cursor: 'pointer', textDecoration: 'underline', fontWeight: '600' }}>Request Free Demo</span>
+                </p>
               )}
 
             </div>
@@ -506,47 +528,11 @@ export default function Contact({ addToast, initialTab = 'trial' }) {
       </section>
 
       <style>{`
-        .contact-hero {
-          padding: 140px 0 40px 0;
-          background: linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-pure) 100%);
-        }
-        
-        .contact-title {
-          font-size: 3.5rem;
-          margin-bottom: 16px;
-        }
-        
-        .contact-subtitle {
-          font-size: 1.2rem;
-          color: var(--text-gray);
-          max-width: 600px;
-          margin: 0 auto;
-        }
-
-        .contact-forms-section {
-          padding: 60px 0 120px 0;
-          background-color: var(--bg-dark);
-        }
-
         .forms-container {
           display: grid;
-          grid-template-columns: 1fr 1.2fr;
-          gap: 40px;
+          grid-template-columns: 1.1fr 1fr;
+          gap: 48px;
           align-items: start;
-        }
-
-        .contact-info-card {
-          padding: 40px 32px;
-          background: var(--bg-glass);
-          border: 1px solid var(--border-light);
-          border-radius: 20px;
-          text-align: left;
-        }
-
-        .form-card {
-          padding: 40px 32px;
-          text-align: left;
-          height: 100%;
         }
 
         .border-neon-glow {
@@ -581,52 +567,8 @@ export default function Contact({ addToast, initialTab = 'trial' }) {
           gap: 16px;
         }
 
-        .select-control {
-          background-color: var(--bg-charcoal);
-          color: var(--text-white);
-        }
-
-        .select-control option {
-          background-color: var(--bg-charcoal);
-          color: var(--text-white);
-        }
-
         .w-full {
           width: 100%;
-        }
-
-        /* Tabs styling */
-        .contact-tabs {
-          display: flex;
-          gap: 8px;
-          border-bottom: 1px solid var(--border-light);
-          margin-bottom: 28px;
-          padding-bottom: 8px;
-          flex-wrap: wrap;
-        }
-
-        .contact-tab-btn {
-          background: transparent;
-          border: none;
-          outline: none;
-          color: var(--text-gray);
-          font-size: 0.9rem;
-          font-weight: 700;
-          padding: 8px 16px;
-          cursor: pointer;
-          border-radius: 8px;
-          transition: all 0.25s ease;
-        }
-
-        .contact-tab-btn:hover {
-          color: var(--text-white);
-          background: var(--bg-preview-card);
-        }
-
-        .contact-tab-btn.active {
-          color: var(--accent-neon);
-          background: rgba(199, 255, 61, 0.08);
-          box-shadow: inset 0 0 0 1px rgba(199, 255, 61, 0.15);
         }
 
         /* Success screen inside scheduler */
@@ -662,10 +604,11 @@ export default function Contact({ addToast, initialTab = 'trial' }) {
 
         @media (max-width: 768px) {
           .contact-hero {
-            padding: 100px 0 30px 0;
+            padding-top: var(--hero-padding-top-mobile) !important;
+            padding-bottom: var(--hero-padding-bottom-mobile) !important;
           }
           .contact-title {
-            font-size: clamp(2rem, 8vw, 2.6rem);
+            font-size: clamp(2rem, 8vw, 2.6rem) !important;
           }
           .contact-subtitle {
             font-size: 1.05rem;

@@ -2,55 +2,48 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   Phone, PhoneOff, Mic, MicOff, Volume2, Send,
   Zap, Calendar, Shield, Clock, ChevronRight,
-  Star, CheckCircle, ArrowRight, Bot, Headphones
+  Star, CheckCircle, ArrowRight, Bot, Headphones,
+  HelpCircle, UserPlus, Users
 } from 'lucide-react';
 import AudioWaveform from '../components/AudioWaveform';
 
 /* ─── Capability cards ──────────────────────────────────── */
 const CAPABILITIES = [
-  { icon: <Calendar size={20} />, title: 'Booking & Scheduling', desc: 'Books meetings directly into Calendly, HubSpot, or any CRM in real time.' },
-  { icon: <Shield  size={20} />, title: 'Lead Qualification',   desc: 'Asks smart questions to qualify leads before routing to your sales team.' },
-  { icon: <Zap     size={20} />, title: 'Instant Responses',    desc: 'Replies in under 800ms — no hold music, no lost leads, no frustration.' },
-  { icon: <Clock   size={20} />, title: '24 / 7 Availability',  desc: 'Never miss a call. Chloe handles every inquiry day and night, 365 days.' },
-];
-
-const STATS = [
-  { value: '<800ms', label: 'Response latency' },
-  { value: '24/7',   label: 'Availability'     },
-  { value: '98%',    label: 'Accuracy rate'    },
-  { value: '150+',   label: 'Agents deployed'  },
+  { icon: <UserPlus size={20} />, title: 'New patient inquiry', desc: 'Greets callers, answers basic procedural questions, and qualifies them as new patients.' },
+  { icon: <Calendar size={20} />, title: 'Appointment request', desc: 'Collects preferred date, time, reason for visit, and patient contact info.' },
+  { icon: <HelpCircle size={20} />, title: 'Clinic FAQs', desc: 'Answers directions, hours, parking, accepted insurance, and cleaning cost questions.' },
+  { icon: <Clock size={20} />, title: 'After-hours call', desc: 'Captures missed calls during lunch breaks, weekends, or late hours automatically.' },
+  { icon: <Shield size={20} />, title: 'Emergency handoff', desc: 'Identifies urgent pain or broken tooth calls and provides routing instructions.' }
 ];
 
 const QUICK_PROMPTS = [
-  "What services does Noryvex offer?",
-  "Can I book a strategy call?",
-  "Who founded Noryvex?",
-  "How does AI voice work?",
-  "What's the pricing?",
-  "Do you work with small businesses?",
+  "Do you offer teeth whitening?",
+  "What are your opening hours?",
+  "Can I make an appointment request?",
+  "Where is your clinic located?",
+  "What is the cost of a general cleaning?",
+  "What should I do in a dental emergency?",
 ];
 
 const AI_REPLIES = {
-  default: "I didn't quite catch that — could you rephrase? You can ask about our services, scheduling a call, pricing, or who founded Noryvex.",
-  hello:   "Hi there! Great to connect. I'm Chloe, Noryvex's AI receptionist. I can book you a strategy call, explain our AI solutions, or answer any questions you have. What's on your mind?",
-  book:    "Absolutely! To schedule a strategy call with Muhammad Razi, head over to our Contact page. Would you like me to guide you there? The call is completely free and usually 20–30 minutes.",
-  service: "Noryvex builds AI Voice Agents, Business Automation pipelines, CRM integrations, and custom software. Our agents handle inbound calls, qualify leads, and book appointments — all automatically.",
-  price:   "Our solutions are fully custom-built, so pricing depends on scope and integrations. We don't do generic packages. Book a free strategy call and we'll give you a tailored quote with no pressure.",
-  founder: "Noryvex was founded by Muhammad Razi — a Full-Stack AI Developer specializing in intelligent workflow automation and custom AI systems.",
-  small:   "Absolutely! We work with businesses of all sizes. Whether you're a solo founder or a growing team, we can build an AI solution that fits your budget and scales with you.",
-  ai:      "AI voice agents use large language models combined with ultra-low-latency text-to-speech. They understand context, handle interruptions, and sound completely natural — under 800ms response time.",
-  thanks:  "You're very welcome! Feel free to reach out anytime at hello@trynoryvex.com. Have a fantastic day — and I hope to connect you with the Noryvex team soon! 👋",
+  default: "I didn't quite catch that — could you rephrase? You can ask about our cleaning cost, hours, location, teeth whitening, emergency routing, or making an appointment request.",
+  hello:   "Hello! Thanks for calling Bright Dental. This is Chloe, the clinic's AI assistant. I can answer questions about our hours, location, pricing guidance, or collect details for an appointment request. What can I do for you today?",
+  book:    "I can help request an appointment. Could you let me know if mornings or afternoons work better for you, and the reason for your visit?",
+  service: "We offer general cleaning, cosmetic dentistry (like teeth whitening), fillings, crowns, root canals, and emergency consultations. What services are you interested in?",
+  price:   "A general dental cleaning is $150. For cosmetic whitening, treatments, or crowns, we recommend booking a quick consultation so the doctor can assess your needs. Shall I make an appointment request for a consultation?",
+  faq:     "Bright Dental is located at 123 Health Ave, Suite 100. There is free parking directly in front of the clinic. We accept most major PPO insurances and are open Monday to Friday, 8:00 AM to 5:00 PM.",
+  emergency: "If this is a dental emergency like severe pain or a broken tooth, I recommend calling our emergency line at 555-0199 or visiting the nearest urgent care. Would you like me to log this emergency request for our clinical team to contact you?",
+  thanks:  "You're very welcome! If you'd like a custom AI receptionist like me built for your own dental clinic, go to the Contact page to get a free demo. Have a wonderful day! 👋",
 };
 
 function getReply(text) {
   const t = text.toLowerCase();
   if (/hello|hi |hey/.test(t))                                        return AI_REPLIES.hello;
-  if (/book|schedul|meeting|call|calendar|strategy/.test(t))          return AI_REPLIES.book;
-  if (/service|do you|build|capabilit|offer/.test(t))                 return AI_REPLIES.service;
-  if (/pric|cost|rate|package|budget/.test(t))                        return AI_REPLIES.price;
-  if (/founder|owner|razi|muhammad|who/.test(t))                      return AI_REPLIES.founder;
-  if (/small|startup|solo|size/.test(t))                              return AI_REPLIES.small;
-  if (/how.*work|latency|voice|800|ms|model|llm/.test(t))             return AI_REPLIES.ai;
+  if (/book|schedul|meeting|call|calendar|request/.test(t))          return AI_REPLIES.book;
+  if (/service|do you|treatment|cleaning|whitening|offer/.test(t))    return AI_REPLIES.service;
+  if (/pric|cost|rate|fee|budget|how much/.test(t))                   return AI_REPLIES.price;
+  if (/hour|time|open|close|direction|address|where|location/.test(t)) return AI_REPLIES.faq;
+  if (/emergency|pain|broken|hurt/.test(t))                           return AI_REPLIES.emergency;
   if (/thank|bye|goodbye|great|awesome/.test(t))                      return AI_REPLIES.thanks;
   return AI_REPLIES.default;
 }
@@ -71,7 +64,7 @@ export default function LiveDemo({ setActivePage }) {
   const chatLogRef      = useRef(null);
   const recognitionRef  = useRef(null);
 
-  const GREETING = "Noryvex Systems, this is Chloe! Thanks for calling. How can I help automate your business today?";
+  const GREETING = "Bright Dental, this is Chloe! Thanks for calling. How can I help you today?";
 
   /* ── Speech recognition ─────────────────────── */
   useEffect(() => {
@@ -221,24 +214,14 @@ export default function LiveDemo({ setActivePage }) {
 
           {/* LEFT ── value prop */}
           <div className="ld-left">
-            <span className="section-tag ld-tag">Live Interactive Demo</span>
+            <span className="section-tag ld-tag">DEMO</span>
             <h1 className="ld-headline">
-              Meet <span className="ld-name-highlight">Chloe</span> —<br />
-              Your AI Receptionist
+              Hear how your dental <br />
+              <span className="ld-name-highlight">AI receptionist</span> could sound.
             </h1>
             <p className="ld-sub">
-              Chloe handles inbound calls, qualifies leads, and books meetings — 24/7, under 800ms, completely autonomously. Click the phone to experience it yourself.
+              This sample shows how an AI receptionist can answer a dental patient call, collect details, and create an appointment request. For your clinic, we build a custom demo using your real services, hours, and FAQs.
             </p>
-
-            {/* Trust pills */}
-            <div className="ld-trust-row">
-              {STATS.map((s, i) => (
-                <div key={i} className="ld-trust-pill">
-                  <span className="ld-trust-val">{s.value}</span>
-                  <span className="ld-trust-lbl">{s.label}</span>
-                </div>
-              ))}
-            </div>
 
             {/* Capability cards */}
             <div className="ld-caps">
@@ -297,9 +280,9 @@ export default function LiveDemo({ setActivePage }) {
                     </div>
                   </div>
                   <h2 className="ld-chloe-name">Chloe</h2>
-                  <p className="ld-chloe-role">Noryvex AI Receptionist</p>
+                  <p className="ld-chloe-role">Dental AI Receptionist</p>
                   <div className="ld-idle-features">
-                    {['Qualifies leads', 'Books meetings', 'Answers FAQs', '24/7 active'].map((f,i) => (
+                    {['New patient inquiry', 'Appointment request', 'Clinic FAQs', 'Emergency handoff'].map((f,i) => (
                       <span key={i} className="ld-idle-chip">
                         <CheckCircle size={11} /> {f}
                       </span>
@@ -324,7 +307,7 @@ export default function LiveDemo({ setActivePage }) {
                     </div>
                   </div>
                   <h2>Connecting…</h2>
-                  <p className="ld-dial-sub">Routing to Noryvex server</p>
+                  <p className="ld-dial-sub">Routing call to Bright Dental</p>
                   <div className="ld-dial-dots">
                     <span /><span /><span />
                   </div>
@@ -428,14 +411,14 @@ export default function LiveDemo({ setActivePage }) {
                       <div className="ld-ended">
                         <CheckCircle size={32} color="#C7FF3D" />
                         <h3>Call Complete</h3>
-                        <p>That's what your customers will experience — 24/7.</p>
+                        <p>That's how Noryvex answers calls for your clinic — 24/7.</p>
                         <div className="ld-ended-btns">
                           <button className="ld-call-btn sm" onClick={startCall}>
                             <Phone size={16}/> Call Again
                           </button>
                           {setActivePage && (
-                            <button className="ld-book-btn" onClick={() => setActivePage('contact', 'call')}>
-                              Book a Free Strategy Call <ArrowRight size={14} />
+                            <button className="ld-book-btn" onClick={() => setActivePage('contact', 'trial')}>
+                              Get Your Custom Demo <ArrowRight size={14} />
                             </button>
                           )}
                         </div>
@@ -448,77 +431,26 @@ export default function LiveDemo({ setActivePage }) {
             </div>
 
             {/* Floating labels around phone */}
-            <div className="ld-float-label f1"><Zap size={12} /> 800ms latency</div>
-            <div className="ld-float-label f2"><Headphones size={12} /> Natural voice</div>
-            <div className="ld-float-label f3"><Calendar size={12} /> Auto-books</div>
+            <div className="ld-float-label f1"><Zap size={12} /> Natural voice</div>
+            <div className="ld-float-label f2"><Headphones size={12} /> FAQ answers</div>
+            <div className="ld-float-label f3"><Calendar size={12} /> Appt requests</div>
           </div>
 
           {/* Trial banner under the phone demo */}
           <div className="ld-trial-banner glass-card nrx-reveal" style={{ marginTop: '48px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '24px', border: '1px solid var(--accent-neon-border)' }}>
             <div className="ld-trial-banner-content" style={{ textAlign: 'left', flex: '1 1 400px' }}>
-              <h3 style={{ fontSize: '1.25rem', marginBottom: '4px', color: 'var(--text-white)' }}>Want this running for your business?</h3>
-              <p style={{ fontSize: '0.95rem', color: 'var(--text-gray)', margin: 0 }}>Covered under our 7-day checking warranty — no upfront cost, no obligation.</p>
+              <h3 style={{ fontSize: '1.25rem', marginBottom: '4px', color: 'var(--text-white)' }}>Want a custom demo for your clinic?</h3>
+              <p style={{ fontSize: '0.95rem', color: 'var(--text-gray)', margin: 0 }}>We build a short demo using your clinic name, services, hours, and FAQs. Hear how it sounds before paying.</p>
             </div>
              <button 
               className="btn btn-primary btn-lg" 
-              onClick={() => setActivePage('contact', 'call')}
+              onClick={() => setActivePage('contact', 'trial')}
               style={{ flexShrink: 0 }}
             >
-              Book a Free Strategy Call <ArrowRight size={16} />
+              Get Your Custom Demo <ArrowRight size={16} />
             </button>
           </div>
 
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════════════
-          HOW IT WORKS strip
-      ═══════════════════════════════════════════════════ */}
-      <section className="ld-how">
-        <div className="container">
-          <div className="section-header">
-            <span className="section-tag">How It Works</span>
-            <h2 className="section-title">Three steps to never miss a call</h2>
-          </div>
-          <div className="ld-how-grid">
-            {[
-              { n:'01', title:'Customer Calls', desc:'Your phone number routes to Chloe — instant pickup, no hold music, no voicemail.', icon:<Phone size={24}/> },
-              { n:'02', title:'Chloe Engages', desc:'She listens, understands intent, qualifies the lead, and answers questions naturally.', icon:<Bot size={24}/> },
-              { n:'03', title:'Action Taken',  desc:'Meeting booked, CRM updated, or routed to your team — all within the same call.', icon:<CheckCircle size={24}/> },
-            ].map((s, i) => (
-              <div key={i} className="ld-how-card nrx-reveal" style={{ transitionDelay: `${i * 0.1}s` }}>
-                <div className="ld-how-num">{s.n}</div>
-                <div className="ld-how-icon">{s.icon}</div>
-                <h3>{s.title}</h3>
-                <p>{s.desc}</p>
-                {i < 2 && <div className="ld-how-arrow"><ChevronRight size={20} /></div>}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════════════
-          CTA
-      ═══════════════════════════════════════════════════ */}
-      <section className="ld-cta">
-        <div className="container ld-cta-inner">
-          <div className="ld-cta-glow" />
-          <span className="section-tag">Ready to automate?</span>
-          <h2 className="ld-cta-title">Build your own Chloe in&nbsp;days</h2>
-          <p className="ld-cta-sub">Custom-trained on your business. Integrated with your CRM. Live in under 2 weeks.</p>
-          <div className="ld-cta-btns">
-            {setActivePage && (
-              <button className="btn btn-primary btn-lg" onClick={() => setActivePage('contact', 'call')}>
-                Book a Free Strategy Call <ArrowRight size={18} />
-              </button>
-            )}
-          </div>
-          <div className="ld-cta-checks">
-            {['No commitment required', 'Free strategy call', 'Live in under 2 weeks', '24/7 support'].map((c,i) => (
-              <span key={i}><CheckCircle size={14} color="#C7FF3D" /> {c}</span>
-            ))}
-          </div>
         </div>
       </section>
 

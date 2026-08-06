@@ -43,44 +43,34 @@ export default function Home({ setActivePage }) {
 
   const services = [
     {
-      title: "Answers patient calls 24/7",
-      desc: "Answering every call instantly with zero hold times. Never miss another lead, question, or booking inquiry.",
-      icon: <Phone className="svc-icon" />
-    },
-    {
-      title: "Books appointments",
-      desc: "Integrates directly with your practice management software or online calendar (like Calendly) to schedule appointments in real time.",
-      icon: <Calendar className="svc-icon" />
-    },
-    {
-      title: "Handles FAQs",
-      desc: "Trained on your specific clinic details: treatments, location directions, accepted insurances, pricing, and office hours.",
-      icon: <HelpCircle className="svc-icon" />
-    },
-    {
-      title: "Captures patient details",
-      desc: "Collects names, contact info, reason for calling, and insurance information, qualifying new patients before they walk in.",
+      title: "New patient calls",
+      desc: "Answers questions, captures patient details, and sends appointment requests to your team.",
       icon: <UserPlus className="svc-icon" />
     },
     {
-      title: "Sends call summaries",
-      desc: "Instantly sends detailed summaries of every conversation, patient details, and recording links straight to your dashboard.",
+      title: "Appointment requests",
+      desc: "Collects preferred date, time, reason for visit, and contact details so your staff can confirm.",
+      icon: <Calendar className="svc-icon" />
+    },
+    {
+      title: "FAQs and clinic info",
+      desc: "Handles opening hours, location, services, pricing guidance, insurance basics, and common questions.",
+      icon: <HelpCircle className="svc-icon" />
+    },
+    {
+      title: "Missed and after-hours calls",
+      desc: "Covers calls when your front desk is busy, closed, or unavailable.",
+      icon: <Phone className="svc-icon" />
+    },
+    {
+      title: "Call summaries",
+      desc: "Every call can include a transcript, recording, summary, caller details, and next action.",
       icon: <FileText className="svc-icon" />
     },
     {
-      title: "Reduces workload",
-      desc: "Answering FAQs and bookings so your front-desk staff can focus on the patients physically in your clinic.",
-      icon: <Users className="svc-icon" />
-    },
-    {
-      title: "Follows clinic booking rules",
-      desc: "Adheres strictly to your scheduling parameters, slot durations, padding times, and preferred clinic hours.",
-      icon: <Clock className="svc-icon" />
-    },
-    {
-      title: "Transfers urgent calls",
-      desc: "Intelligently identifies dental emergencies or direct staff inquiries and routes the caller to your office line immediately.",
-      icon: <Zap className="svc-icon" />
+      title: "CRM or email handoff",
+      desc: "We send details to your email, dashboard, Google Sheet, calendar, CRM, or workflow tool when possible.",
+      icon: <Link2 className="svc-icon" />
     }
   ];
 
@@ -112,11 +102,11 @@ export default function Home({ setActivePage }) {
   ];
 
   const processSteps = [
-    { num: "01", step: "Strategy Call", desc: "We analyze your treatments, office hours, and booking rules to design your ideal AI receptionist configuration." },
-    { num: "02", step: "Custom Training", desc: "We train our advanced LLM and voice synthesizers on your clinic pricing, insurance options, and FAQ script." },
-    { num: "03", step: "System Integration", desc: "We connect the receptionist directly with your patient dashboard, Calendly/Google Calendar, or local CRM database." },
-    { num: "04", step: "Testing & Review", desc: "We verify calls, routing configurations, emotional responses, and FAQ accuracy in a safe testing sandbox." },
-    { num: "05", step: "Deployment & Go-Live", desc: "We route your missed calls/after-hours numbers to your custom AI receptionist. Live in 48 hours." }
+    { num: "01", step: "Book a demo call", desc: "We discuss your clinic, call volume, services, FAQs, and booking process." },
+    { num: "02", step: "We build your demo", desc: "We create a short AI receptionist demo using your clinic details." },
+    { num: "03", step: "You test the demo", desc: "You call it, listen to it, and tell us what should change." },
+    { num: "04", step: "Approve and launch", desc: "If you like it, we set up the full system with call routing, dashboard, and notifications." },
+    { num: "05", step: "We manage it monthly", desc: "We monitor calls, update FAQs, improve responses, and support your clinic." }
   ];
 
   // Scroll-driven horizontal translation with sticky pinning for the capabilities track
@@ -203,14 +193,14 @@ export default function Home({ setActivePage }) {
           >
             <div className="hero-badge txt-slide">
               <span className="badge-glow"></span>
-              <span className="badge-text">AI Receptionist for Dental Clinics</span>
+              <span className="badge-text">AI RECEPTIONIST FOR DENTAL CLINICS</span>
             </div>
             <h1 className="hero-title txt-reveal">
               Never miss another <br />
               <span className="text-neon-gradient txt-gradient-animate">dental patient call.</span>
             </h1>
             <p className="hero-subtitle txt-blur-in">
-              We build a short AI receptionist demo for your dental clinic using your real services, hours, and FAQs. If you like it, we launch the full system and connect it to your workflow.
+              Noryvex builds and manages custom AI receptionists for dental clinics. Your AI answers calls, handles common questions, captures patient details, and sends appointment requests to your team.
             </p>
             <div className="hero-policy-strip txt-blur-in">
               <span className="policy-item">✓ No software to learn</span>
@@ -219,12 +209,15 @@ export default function Home({ setActivePage }) {
             </div>
             <div className="hero-ctas">
               <button onClick={() => setActivePage('contact', 'trial')} className="btn btn-primary btn-lg">
-                Get your free clinic demo <ArrowRight size={18} />
+                Get Free Clinic Demo <ArrowRight size={18} />
               </button>
-              <button onClick={() => setActivePage('live-demo')} className="btn btn-secondary btn-lg">
+              <button onClick={() => { const el = document.getElementById('how-it-works'); if (el) el.scrollIntoView({ behavior: 'smooth' }); }} className="btn btn-secondary btn-lg">
                 See How It Works
               </button>
             </div>
+            <p className="trust-note" style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '16px', lineHeight: '1.4' }}>
+              No software to learn. No dashboard to configure. We build and manage everything for you.
+            </p>
             <div className="trust-strip nrx-reveal" style={{ transitionDelay: '0.12s', marginTop: '32px' }}>
               <p className="trust-tagline" style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '12px', fontWeight: '500' }}>
                 Built for dental clinics first.
@@ -246,24 +239,6 @@ export default function Home({ setActivePage }) {
                 ))}
               </div>
             </div>
-            <div className="hero-featured-badges nrx-reveal" style={{ transitionDelay: '0.2s', marginTop: '24px' }}>
-              {partners.map((p) => (
-                <a key={p.id} href={p.link} target="_blank" rel="noopener noreferrer" title={p.name}>
-                  <img 
-                    src={p.image} 
-                    alt={p.name} 
-                    className="featured-badge-img" 
-                    style={{ 
-                      height: p.name === 'GoodFirms' ? '40px' : '30px', 
-                      width: 'auto', 
-                      objectFit: 'contain',
-                      opacity: 0.7,
-                      transition: 'opacity 0.2s'
-                    }} 
-                  />
-                </a>
-              ))}
-            </div>
           </div>
 
           {/* Globe tilts with mouse — stronger parallax */}
@@ -279,22 +254,47 @@ export default function Home({ setActivePage }) {
                 <img src="/logo.png" alt="Noryvex Core" className="core-logo" />
                 <div className="core-pulse"></div>
               </div>
-              <div className="floating-node node-1">Voice Agent</div>
-              <div className="floating-node node-2">CRM Link</div>
-              <div className="floating-node node-3">Auto-Dial</div>
+              <div className="floating-node node-1">Dental Voice</div>
+              <div className="floating-node node-2">Booking Sync</div>
+              <div className="floating-node node-3">Emergency Route</div>
             </div>
           </div>
         </div>
       </section>
 
-
-      {/* ── Services Section (4 Pillars, Equal Weight) ── */}
-      <section className="services-grid-section" style={{ padding: '100px 0', background: 'var(--bg-pure)' }}>
+      {/* ── Problem Section ── */}
+      <section className="problem-section" style={{ padding: 'var(--section-padding-desktop) 0', borderBottom: '1px solid var(--border-light)', background: 'var(--bg-dark)' }}>
         <div className="container">
           <div className="section-header">
-            <span className="section-tag txt-slide">Answering &amp; Booking</span>
-            <h2 className="section-title txt-reveal-2">What your dental AI receptionist handles</h2>
-            <p className="section-subtitle txt-blur-in">Fully custom-trained around your clinic rules, treatments, pricing, and booking processes.</p>
+            <span className="section-tag txt-slide">The Reality</span>
+            <h2 className="section-title txt-reveal-2">Missed dental calls turn into missed patients.</h2>
+            <p className="section-subtitle txt-blur-in">Dental practices lose significant revenue when calls go unanswered or straight to voicemail.</p>
+          </div>
+
+          <div className="problem-grid">
+            <div className="glass-card problem-card">
+              <h3 style={{ fontSize: '1.25rem', marginBottom: '12px', color: 'var(--text-white)', fontWeight: '700' }}>1. Front desk gets busy</h3>
+              <p style={{ margin: 0, fontSize: '0.95rem', color: 'var(--text-gray)' }}>When staff are helping patients, new callers often wait, hang up, or go to voicemail.</p>
+            </div>
+            <div className="glass-card problem-card">
+              <h3 style={{ fontSize: '1.25rem', marginBottom: '12px', color: 'var(--text-white)', fontWeight: '700' }}>2. After-hours calls get lost</h3>
+              <p style={{ margin: 0, fontSize: '0.95rem', color: 'var(--text-gray)' }}>Patients call after work, during lunch breaks, or on weekends. Your clinic may never hear from them again.</p>
+            </div>
+            <div className="glass-card problem-card">
+              <h3 style={{ fontSize: '1.25rem', marginBottom: '12px', color: 'var(--text-white)', fontWeight: '700' }}>3. Booking questions repeat daily</h3>
+              <p style={{ margin: 0, fontSize: '0.95rem', color: 'var(--text-gray)' }}>Hours, services, pricing guidance, insurance questions, and appointment availability take time from your team.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Services Section ── */}
+      <section className="services-grid-section" style={{ padding: 'var(--section-padding-desktop) 0', background: 'var(--bg-pure)' }}>
+        <div className="container">
+          <div className="section-header">
+            <span className="section-tag txt-slide">CAPABILITIES</span>
+            <h2 className="section-title txt-reveal-2">What your dental AI receptionist can handle</h2>
+            <p className="section-subtitle txt-blur-in">A custom AI receptionist built around your clinic’s calls, services, hours, and booking workflow.</p>
           </div>
 
           <div className="services-grid">
@@ -484,86 +484,92 @@ export default function Home({ setActivePage }) {
         </div>
       </section>
 
-      {/* ── Tech Stack Section ── */}
-      <section className="nrx-tech-section">
+      {/* ── Demo Before Payment Section ── */}
+      <section className="demo-payment-section" style={{ padding: 'var(--section-padding-desktop) 0', borderTop: '1px solid var(--border-light)', background: 'var(--bg-pure)' }}>
         <div className="container">
           <div className="section-header">
-            <span className="section-tag txt-slide">The Technology Engine</span>
-            <h2 className="section-title txt-reveal-2">Futuristic Voice &amp; Automation Stack</h2>
-            <p className="section-subtitle txt-blur-in">We integrate world-class AI models, speech synthesis, and custom backend APIs to power your receptionist.</p>
+            <span className="section-tag txt-slide">Risk-Free Process</span>
+            <h2 className="section-title txt-reveal-2">Hear your clinic’s AI receptionist before paying.</h2>
+            <p className="section-subtitle txt-blur-in">We build a short custom demo using your clinic name, services, hours, and FAQs. You can hear how it answers patient calls before deciding to launch.</p>
           </div>
-          
-          <div className="tech-stack-grid">
-            <div className="tech-group glass-card nrx-reveal">
-              <span className="group-label">Conversational AI Voice</span>
-              <div className="tech-logos-row">
-                <div className="tech-badge-item">
-                  <span className="tech-badge-dot"></span>
-                  <strong>Vapi</strong>
-                </div>
-                <div className="tech-badge-item">
-                  <span className="tech-badge-dot"></span>
-                  <strong>Retell AI</strong>
-                </div>
-              </div>
-              <p className="group-desc">Custom latency-optimized speech pipelines bypassing normal voice response lag under 800ms.</p>
+
+          <div className="demo-comparison-grid">
+            {/* Left Card: Free Demo */}
+            <div className="glass-card demo-comp-card">
+              <span className="section-tag" style={{ background: 'rgba(199, 255, 61, 0.08)', color: 'var(--accent-neon)', border: '1px solid var(--accent-neon-border)' }}>Included in Free Demo</span>
+              <h3 style={{ fontSize: '1.5rem', fontWeight: '800', marginTop: '16px', marginBottom: '24px' }}>Free Demo Includes</h3>
+              <ul className="comp-list" style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <li style={{ display: 'flex', alignItems: 'start', gap: '12px', fontSize: '0.95rem' }}>
+                  <CheckCircle2 size={18} style={{ color: 'var(--accent-neon)', flexShrink: 0, marginTop: '2px' }} />
+                  <span>Custom clinic greeting using your real practice name</span>
+                </li>
+                <li style={{ display: 'flex', alignItems: 'start', gap: '12px', fontSize: '0.95rem' }}>
+                  <CheckCircle2 size={18} style={{ color: 'var(--accent-neon)', flexShrink: 0, marginTop: '2px' }} />
+                  <span>3–5 clinic FAQs custom-trained on your hours, location, and key services</span>
+                </li>
+                <li style={{ display: 'flex', alignItems: 'start', gap: '12px', fontSize: '0.95rem' }}>
+                  <CheckCircle2 size={18} style={{ color: 'var(--accent-neon)', flexShrink: 0, marginTop: '2px' }} />
+                  <span>New patient inquiry flow testing call handling capabilities</span>
+                </li>
+                <li style={{ display: 'flex', alignItems: 'start', gap: '12px', fontSize: '0.95rem' }}>
+                  <CheckCircle2 size={18} style={{ color: 'var(--accent-neon)', flexShrink: 0, marginTop: '2px' }} />
+                  <span>Appointment request example capturing time/date preferences</span>
+                </li>
+                <li style={{ display: 'flex', alignItems: 'start', gap: '12px', fontSize: '0.95rem' }}>
+                  <CheckCircle2 size={18} style={{ color: 'var(--accent-neon)', flexShrink: 0, marginTop: '2px' }} />
+                  <span>Basic call summary example sent directly to your phone</span>
+                </li>
+              </ul>
             </div>
 
-            <div className="tech-group glass-card nrx-reveal" style={{ transitionDelay: '0.1s' }}>
-              <span className="group-label">Realistic Speech Synthesis</span>
-              <div className="tech-logos-row">
-                <div className="tech-badge-item">
-                  <span className="tech-badge-dot"></span>
-                  <strong>ElevenLabs</strong>
-                </div>
-                <div className="tech-badge-item">
-                  <span className="tech-badge-dot"></span>
-                  <strong>Play.ht</strong>
-                </div>
-              </div>
-              <p className="group-desc">Human-sounding speech engines with custom accents, native dialects, and realistic emotional cues.</p>
+            {/* Right Card: Full Launch */}
+            <div className="glass-card demo-comp-card">
+              <span className="section-tag" style={{ background: 'rgba(255, 255, 255, 0.05)', color: 'var(--text-white)', border: '1px solid var(--border-light)' }}>Full Production Launch</span>
+              <h3 style={{ fontSize: '1.5rem', fontWeight: '800', marginTop: '16px', marginBottom: '24px' }}>Full Launch Can Include</h3>
+              <ul className="comp-list" style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <li style={{ display: 'flex', alignItems: 'start', gap: '12px', fontSize: '0.95rem' }}>
+                  <CheckCircle2 size={18} style={{ color: 'var(--accent-neon)', flexShrink: 0, marginTop: '2px' }} />
+                  <span>Live call routing and active phone line numbers configuration</span>
+                </li>
+                <li style={{ display: 'flex', alignItems: 'start', gap: '12px', fontSize: '0.95rem' }}>
+                  <CheckCircle2 size={18} style={{ color: 'var(--accent-neon)', flexShrink: 0, marginTop: '2px' }} />
+                  <span>Private client dashboard listing live calls, data analytics, and summaries</span>
+                </li>
+                <li style={{ display: 'flex', alignItems: 'start', gap: '12px', fontSize: '0.95rem' }}>
+                  <CheckCircle2 size={18} style={{ color: 'var(--accent-neon)', flexShrink: 0, marginTop: '2px' }} />
+                  <span>Email notifications sent immediately after every conversation</span>
+                </li>
+                <li style={{ display: 'flex', alignItems: 'start', gap: '12px', fontSize: '0.95rem' }}>
+                  <CheckCircle2 size={18} style={{ color: 'var(--accent-neon)', flexShrink: 0, marginTop: '2px' }} />
+                  <span>Direct calendar (Google Calendar/Calendly) or clinic CRM scheduling sync</span>
+                </li>
+                <li style={{ display: 'flex', alignItems: 'start', gap: '12px', fontSize: '0.95rem' }}>
+                  <CheckCircle2 size={18} style={{ color: 'var(--accent-neon)', flexShrink: 0, marginTop: '2px' }} />
+                  <span>Complete call recordings and transcript logging</span>
+                </li>
+                <li style={{ display: 'flex', alignItems: 'start', gap: '12px', fontSize: '0.95rem' }}>
+                  <CheckCircle2 size={18} style={{ color: 'var(--accent-neon)', flexShrink: 0, marginTop: '2px' }} />
+                  <span>Monthly managed support, phrase prompt reviews, and feature expansions</span>
+                </li>
+              </ul>
             </div>
+          </div>
 
-            <div className="tech-group glass-card nrx-reveal" style={{ transitionDelay: '0.2s' }}>
-              <span className="group-label">Intelligence Engines</span>
-              <div className="tech-logos-row">
-                <div className="tech-badge-item">
-                  <span className="tech-badge-dot"></span>
-                  <strong>OpenAI GPT-4o</strong>
-                </div>
-                <div className="tech-badge-item">
-                  <span className="tech-badge-dot"></span>
-                  <strong>Claude 3.5 Sonnet</strong>
-                </div>
-              </div>
-              <p className="group-desc">Deep semantic understanding for lead qualification, customer profile mapping, and CRM entries.</p>
-            </div>
-
-            <div className="tech-group glass-card nrx-reveal" style={{ transitionDelay: '0.3s' }}>
-              <span className="group-label">Backend &amp; Databases</span>
-              <div className="tech-logos-row">
-                <div className="tech-badge-item">
-                  <span className="tech-badge-dot"></span>
-                  <strong>Next.js / Node</strong>
-                </div>
-                <div className="tech-badge-item">
-                  <span className="tech-badge-dot"></span>
-                  <strong>Pinecone / PG</strong>
-                </div>
-              </div>
-              <p className="group-desc">Secure, high-volume server platforms with pre-configured vector databases and API integrations.</p>
-            </div>
+          <div style={{ textAlign: 'center', marginTop: '48px' }}>
+            <button onClick={() => setActivePage('contact', 'trial')} className="btn btn-primary btn-lg">
+              Get Free Clinic Demo <ArrowRight size={18} />
+            </button>
           </div>
         </div>
       </section>
 
       {/* Process Section */}
-      <section className="process-section">
+      <section className="process-section" id="how-it-works" style={{ padding: 'var(--section-padding-desktop) 0', borderTop: '1px solid var(--border-light)', background: 'var(--bg-dark)' }}>
         <div className="container">
           <div className="section-header">
-            <span className="section-tag txt-slide">Our Workflow</span>
-            <h2 className="section-title txt-reveal-2">From Concept to Scale</h2>
-            <p className="section-subtitle txt-blur-in">A highly optimized delivery roadmap engineered to deploy high-grade AI into your stack.</p>
+            <span className="section-tag txt-slide">STEPS</span>
+            <h2 className="section-title txt-reveal-2">How it works</h2>
+            <p className="section-subtitle txt-blur-in">Follow our structured agency path to get your AI receptionist up and running.</p>
           </div>
 
           <div className="timeline-container">
@@ -586,7 +592,7 @@ export default function Home({ setActivePage }) {
       </section>
 
       {/* Expansion/Footnote Section: More Automation Coming Later */}
-      <section className="expansion-footnote-section" style={{ padding: '80px 0', borderTop: '1px solid var(--border-light)', background: 'var(--bg-pure)' }}>
+      <section className="expansion-footnote-section" style={{ padding: 'var(--section-padding-mobile) 0', borderTop: '1px solid var(--border-light)', background: 'var(--bg-pure)' }}>
         <div className="container" style={{ maxWidth: '800px', textAlign: 'center' }}>
           <span className="section-tag txt-slide" style={{ margin: '0 auto 16px auto' }}>Future Roadmap</span>
           <h2 className="section-title txt-reveal-2" style={{ fontSize: '1.8rem', marginBottom: '16px' }}>More automation coming later</h2>
@@ -603,7 +609,45 @@ export default function Home({ setActivePage }) {
         </div>
       </section>
 
+      {/* ── Pricing Section ── */}
+      <section className="pricing-section" style={{ padding: 'var(--section-padding-desktop) 0', borderTop: '1px solid var(--border-light)', background: 'var(--bg-dark)' }}>
+        <div className="container">
+          <div className="section-header">
+            <span className="section-tag txt-slide">Pricing Model</span>
+            <h2 className="section-title txt-reveal-2">Simple agency pricing, not software plans.</h2>
+            <p className="section-subtitle txt-blur-in">Every clinic is different, so we start with a free demo. If you like it, we recommend a launch setup based on your call volume, locations, and integrations.</p>
+          </div>
 
+          <div className="pricing-grid">
+            <div className="glass-card pricing-card">
+              <span className="section-tag" style={{ background: 'rgba(199, 255, 61, 0.08)', color: 'var(--accent-neon)', border: '1px solid var(--accent-neon-border)' }}>Step 1</span>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: '800', marginTop: '16px', marginBottom: '12px' }}>Free Demo</h3>
+              <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-gray)' }}>Hear a short custom AI receptionist demo before paying.</p>
+            </div>
+            <div className="glass-card pricing-card">
+              <span className="section-tag">Step 2</span>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: '800', marginTop: '16px', marginBottom: '12px' }}>Launch Setup</h3>
+              <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-gray)' }}>One-time setup for training, testing, call routing, dashboard, and workflow configuration.</p>
+            </div>
+            <div className="glass-card pricing-card">
+              <span className="section-tag">Step 3</span>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: '800', marginTop: '16px', marginBottom: '12px' }}>Monthly Management</h3>
+              <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-gray)' }}>Ongoing hosting, monitoring, call review, updates, support, and improvements.</p>
+            </div>
+            <div className="glass-card pricing-card">
+              <span className="section-tag">Custom</span>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: '800', marginTop: '16px', marginBottom: '12px' }}>Custom Integrations</h3>
+              <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-gray)' }}>Calendar, CRM, dental software, or custom dashboard integrations are quoted based on your system.</p>
+            </div>
+          </div>
+
+          <div style={{ textAlign: 'center', marginTop: '48px' }}>
+            <button onClick={() => setActivePage('contact', 'trial')} className="btn btn-primary btn-lg">
+              Get Free Clinic Demo <ArrowRight size={18} />
+            </button>
+          </div>
+        </div>
+      </section>
 
       {/* ── Big Kinetic Tagline (Sticky Pin & Scroll Reveal) ── */}
       <section className="nrx-tagline-sticky-parent" ref={taglineSectionRef}>
@@ -647,9 +691,9 @@ export default function Home({ setActivePage }) {
           >
             <span>Noryvex</span>
             <span className="nrx-kinetic-dot">·</span>
-            <span>AI-Powered Business Automation</span>
+            <span>AI-Powered Dental Receptionists</span>
             <span className="nrx-kinetic-dot">·</span>
-            <span>Built for Scale</span>
+            <span>Managed for Clinic Scale</span>
           </div>
 
           <div 
@@ -661,29 +705,29 @@ export default function Home({ setActivePage }) {
           >
             <button
               className="btn btn-primary btn-lg"
-              onClick={() => setActivePage('contact', 'call')}
+              onClick={() => setActivePage('contact', 'trial')}
             >
-              Book a Free Strategy Call
+              Get Free Clinic Demo
             </button>
           </div>
         </div>
       </section>
 
       {/* ── Closing CTA Band ── */}
-      <section className="closing-cta-section" style={{ padding: '100px 0', background: 'var(--bg-pure)', borderTop: '1px solid var(--border-light)' }}>
+      <section className="closing-cta-section" style={{ padding: 'var(--section-padding-desktop) 0', background: 'var(--bg-pure)', borderTop: '1px solid var(--border-light)' }}>
         <div className="container" style={{ textAlign: 'center', maxWidth: '800px' }}>
           <h2 style={{ fontSize: '2.5rem', fontWeight: '800', color: 'var(--text-white)', marginBottom: '24px', lineHeight: '1.2', letterSpacing: '-0.025em' }}>
-            Ready to stop managing another tool and start running your business?
+            Ready to stop missing patient calls?
           </h2>
           <p style={{ fontSize: '1.1rem', color: 'var(--text-gray)', marginBottom: '40px', lineHeight: '1.6' }}>
-            We build it, deploy it, and support it — you don't configure anything yourself. No self-serve signups, no pricing tiers, 100% custom agency delivery.
+            We build, deploy, and manage your custom AI receptionist end-to-end. You don't have to configure a thing.
           </p>
           <button 
-            onClick={() => setActivePage('contact', 'call')} 
+            onClick={() => setActivePage('contact', 'trial')} 
             className="btn btn-primary btn-lg"
             style={{ padding: '18px 40px', fontSize: '1.05rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}
           >
-            Book a Free Strategy Call
+            Get Free Clinic Demo
           </button>
         </div>
       </section>
@@ -696,8 +740,8 @@ export default function Home({ setActivePage }) {
         }
         .services-grid {
           display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 28px;
+          grid-template-columns: repeat(3, 1fr);
+          gap: var(--card-gap-desktop);
           margin-top: 48px;
         }
         .services-grid .service-card {
@@ -1704,65 +1748,51 @@ export default function Home({ setActivePage }) {
           }
         }
 
-        /* ── Tech Section ──────────────────────── */
-        .nrx-tech-section {
-          padding: 100px 0;
-          background-color: var(--bg-pure);
-          border-top: 1px solid var(--border-light);
-        }
-        .tech-stack-grid {
+        /* ── Problem Section ── */
+        .problem-grid {
           display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 24px;
+          grid-template-columns: repeat(3, 1fr);
+          gap: var(--card-gap-desktop);
           margin-top: 48px;
         }
         @media (max-width: 768px) {
-          .tech-stack-grid {
+          .problem-grid {
             grid-template-columns: 1fr;
+            gap: var(--card-gap-mobile);
           }
         }
-        .tech-group {
-          padding: 32px;
-          text-align: left;
-          display: flex;
-          flex-direction: column;
-          gap: 16px;
+
+        /* ── Demo Comparison Section ── */
+        .demo-comparison-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: var(--card-gap-desktop);
+          margin-top: 48px;
         }
-        .group-label {
-          font-family: var(--font-display);
-          font-size: 0.8rem;
-          font-weight: 700;
-          letter-spacing: 0.1em;
-          color: var(--accent-neon);
-          text-transform: uppercase;
+        @media (max-width: 768px) {
+          .demo-comparison-grid {
+            grid-template-columns: 1fr;
+            gap: var(--card-gap-mobile);
+          }
         }
-        .tech-logos-row {
-          display: flex;
-          gap: 12px;
-          flex-wrap: wrap;
+
+        /* ── Pricing Section ── */
+        .pricing-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: var(--card-gap-desktop);
+          margin-top: 48px;
         }
-        .tech-badge-item {
-          background: var(--bg-preview-card);
-          border: 1px solid var(--border-light);
-          padding: 8px 18px;
-          border-radius: 100px;
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          font-size: 0.9rem;
-          color: var(--text-white);
+        @media (max-width: 1024px) {
+          .pricing-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
         }
-        .tech-badge-dot {
-          width: 6px;
-          height: 6px;
-          border-radius: 50%;
-          background: var(--accent-neon);
-          box-shadow: 0 0 6px var(--accent-neon);
-        }
-        .group-desc {
-          font-size: 0.95rem;
-          color: var(--text-gray);
-          line-height: 1.5;
+        @media (max-width: 640px) {
+          .pricing-grid {
+            grid-template-columns: 1fr;
+            gap: var(--card-gap-mobile);
+          }
         }
 
         /* ── Dental Sections Styling ── */
