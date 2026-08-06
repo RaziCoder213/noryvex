@@ -288,26 +288,6 @@ export default function Home({ setActivePage }) {
       </section>
 
 
-
-      {/* ── Marquee ── */}
-      <div className="nrx-marquee-section" aria-hidden="true">
-        <div className="nrx-marquee-track">
-          {[
-            'AI Voice Agents','Business Automation','CRM Integration',
-            'Workflow Automation','AI Chatbots','SaaS Development',
-            'API Integrations','Mobile Apps','Web Applications','24/7 Support',
-            'AI Voice Agents','Business Automation','CRM Integration',
-            'Workflow Automation','AI Chatbots','SaaS Development',
-            'API Integrations','Mobile Apps','Web Applications','24/7 Support',
-          ].map((item, i) => (
-            <span className="nrx-marquee-item" key={i}>
-              <span className="nrx-dot" />
-              {item}
-            </span>
-          ))}
-        </div>
-      </div>
-
       {/* ── Services Section (4 Pillars, Equal Weight) ── */}
       <section className="services-grid-section" style={{ padding: '100px 0', background: 'var(--bg-pure)' }}>
         <div className="container">
