@@ -118,10 +118,10 @@ export default function Navbar({ activePage, setActivePage }) {
           </button>
 
           <button 
-            onClick={() => handleNavClick('contact', 'call')} 
+            onClick={() => handleNavClick('contact', 'trial')} 
             className="btn btn-outline-neon btn-sm nav-cta"
           >
-            Book a Free Strategy Call <ArrowUpRight size={16} />
+            Start Free Trial <ArrowUpRight size={16} />
           </button>
           
           {/* Mobile Menu Toggle */}
@@ -144,11 +144,11 @@ export default function Navbar({ activePage, setActivePage }) {
             </button>
           ))}
           <button
-            onClick={() => handleNavClick('contact', 'call')}
+            onClick={() => handleNavClick('contact', 'trial')}
             className="btn btn-primary mobile-cta"
             style={{ width: '100%', marginBottom: '12px' }}
           >
-            Book a Free Strategy Call <ArrowUpRight size={16} />
+            Start Free Trial <ArrowUpRight size={16} />
           </button>
           <button
             onClick={toggleTheme}

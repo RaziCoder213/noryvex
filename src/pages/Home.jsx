@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { 
   ArrowRight, Phone, Cpu, Zap, MessageSquare, Globe, Smartphone, 
   Layers, Link2, Database, Shield, CheckCircle2, ChevronRight, ChevronLeft,
-  Volume2, FileText, Users, Calendar, BarChart2
+  Volume2, FileText, Users, Calendar, BarChart2, Clock, HelpCircle, UserPlus
 } from 'lucide-react';
 import ParticleCanvas from '../components/ParticleCanvas';
 import { dbGetPartners } from '../utils/dbHelper';
@@ -43,60 +43,80 @@ export default function Home({ setActivePage }) {
 
   const services = [
     {
-      title: "AI Voice Agents & Receptionists",
-      desc: "Answers every call, books appointments, handles FAQs — 24/7, without adding headcount.",
+      title: "Answers patient calls 24/7",
+      desc: "Answering every call instantly with zero hold times. Never miss another lead, question, or booking inquiry.",
       icon: <Phone className="svc-icon" />
     },
     {
-      title: "Business Automation",
-      desc: "We remove the manual, repetitive work slowing your team down — workflows, CRM, follow-up, all automated.",
+      title: "Books appointments",
+      desc: "Integrates directly with your practice management software or online calendar (like Calendly) to schedule appointments in real time.",
+      icon: <Calendar className="svc-icon" />
+    },
+    {
+      title: "Handles FAQs",
+      desc: "Trained on your specific clinic details: treatments, location directions, accepted insurances, pricing, and office hours.",
+      icon: <HelpCircle className="svc-icon" />
+    },
+    {
+      title: "Captures patient details",
+      desc: "Collects names, contact info, reason for calling, and insurance information, qualifying new patients before they walk in.",
+      icon: <UserPlus className="svc-icon" />
+    },
+    {
+      title: "Sends call summaries",
+      desc: "Instantly sends detailed summaries of every conversation, patient details, and recording links straight to your dashboard.",
+      icon: <FileText className="svc-icon" />
+    },
+    {
+      title: "Reduces workload",
+      desc: "Answering FAQs and bookings so your front-desk staff can focus on the patients physically in your clinic.",
+      icon: <Users className="svc-icon" />
+    },
+    {
+      title: "Follows clinic booking rules",
+      desc: "Adheres strictly to your scheduling parameters, slot durations, padding times, and preferred clinic hours.",
+      icon: <Clock className="svc-icon" />
+    },
+    {
+      title: "Transfers urgent calls",
+      desc: "Intelligently identifies dental emergencies or direct staff inquiries and routes the caller to your office line immediately.",
       icon: <Zap className="svc-icon" />
-    },
-    {
-      title: "Websites & Web Apps",
-      desc: "Fast, modern, professional sites and web applications — built and maintained for you, not a drag-and-drop template you manage.",
-      icon: <Globe className="svc-icon" />
-    },
-    {
-      title: "Custom Software & Apps",
-      desc: "Mobile apps, internal tools, full SaaS products — built from scratch around what your business actually needs.",
-      icon: <Layers className="svc-icon" />
     }
   ];
 
   const whyNoryvex = [
     {
-      title: "Custom-built AI Solutions",
-      desc: "No templates or rigid APIs. We design custom AI architectures suited to your unique operations and targets."
+      title: "Live in 48 hours",
+      desc: "Your AI receptionist can start answering patient calls and booking appointments quickly, with zero downtime."
     },
     {
-      title: "Fast Deployment",
-      desc: "Get working automation pipelines live in weeks instead of months, backed by agile sprints and continuous shipping."
+      title: "Built for your clinic",
+      desc: "We train the agent specifically on your treatments, hours, location, pricing, insurance notes, and booking rules."
     },
     {
-      title: "Human-like Conversations",
-      desc: "Engineered voice prompts that sound completely natural, utilizing latency optimization below 800ms for smooth dialogues."
+      title: "No software to learn",
+      desc: "Muhammad Razi and the Noryvex team set up, integrate, and manage everything for you end-to-end."
     },
     {
-      title: "Modern Technology Stack",
-      desc: "We leverage state-of-the-art LLMs, vector search, and cloud infrastructure to guarantee reliability and speed."
+      title: "24/7 call coverage",
+      desc: "Capture patient calls after-hours, during lunch breaks, and when your front-desk staff are busy."
     },
     {
-      title: "Business-focused Automation",
-      desc: "We build for ROI. Every automation is designed to reduce overhead, eliminate human error, and boost conversions."
+      title: "Simple dashboard",
+      desc: "Track everything in one place: call history, voice recordings, conversation transcripts, new leads, and booked appointments."
     },
     {
-      title: "Long-term Support",
-      desc: "We monitor agent performance, update prompt context tables, and scale integrations as your company expands."
+      title: "Free 7-day trial",
+      desc: "Test the custom receptionist under our 7-day checking warranty before paying a single dollar. Risk-free."
     }
   ];
 
   const processSteps = [
-    { num: "01", step: "Discovery", desc: "We deep dive into your business operations to identify bottlenecks and design the ultimate automation strategy." },
-    { num: "02", step: "Planning", desc: "Our team structures custom AI architectures, user journeys, API mappings, and prompt parameters." },
-    { num: "03", step: "Development", desc: "We code custom interfaces, train voice agents, write database connectors, and test workflows." },
-    { num: "04", step: "Deployment", desc: "Launch Noryvex agents into your live customer channels with safe staging and full monitoring setups." },
-    { num: "05", step: "Support", desc: "24/7 system health checks, optimization of agent memory, and scaling integrations as needed." }
+    { num: "01", step: "Strategy Call", desc: "We analyze your treatments, office hours, and booking rules to design your ideal AI receptionist configuration." },
+    { num: "02", step: "Custom Training", desc: "We train our advanced LLM and voice synthesizers on your clinic pricing, insurance options, and FAQ script." },
+    { num: "03", step: "System Integration", desc: "We connect the receptionist directly with your patient dashboard, Calendly/Google Calendar, or local CRM database." },
+    { num: "04", step: "Testing & Review", desc: "We verify calls, routing configurations, emotional responses, and FAQ accuracy in a safe testing sandbox." },
+    { num: "05", step: "Deployment & Go-Live", desc: "We route your missed calls/after-hours numbers to your custom AI receptionist. Live in 48 hours." }
   ];
 
   // Scroll-driven horizontal translation with sticky pinning for the capabilities track
@@ -183,34 +203,34 @@ export default function Home({ setActivePage }) {
           >
             <div className="hero-badge txt-slide">
               <span className="badge-glow"></span>
-              <span className="badge-text">AI Automation Agency — Voice, Web, Software</span>
+              <span className="badge-text">AI Receptionist for Dental Clinics</span>
             </div>
             <h1 className="hero-title txt-reveal">
-              Your Business, <br />
-              <span className="text-neon-gradient txt-gradient-animate">Fully Automated.</span>
+              Never miss another <br />
+              <span className="text-neon-gradient txt-gradient-animate">dental patient call.</span>
             </h1>
             <p className="hero-subtitle txt-blur-in">
-              We build AI voice agents, business automation, websites, and custom software — designed, built, and supported end-to-end. We build it, deploy it, and support it — you don't configure anything yourself. No self-serve tools. No complexity on your end.
+              Noryvex builds and runs a custom AI receptionist for your dental clinic — answering calls, qualifying patients, and booking appointments 24/7. Live in 48 hours. Try it free for 7 days.
             </p>
             <div className="hero-policy-strip txt-blur-in">
-              <span className="policy-item">✓ We build, deploy, & support it</span>
-              <span className="policy-item">✓ You don't configure anything</span>
-              <span className="policy-item">✓ No self-serve software</span>
+              <span className="policy-item">✓ Answer patient calls 24/7</span>
+              <span className="policy-item">✓ Bookings &amp; FAQs handled</span>
+              <span className="policy-item">✓ Live in 48 hours</span>
             </div>
             <div className="hero-ctas">
-              <button onClick={() => setActivePage('contact', 'call')} className="btn btn-primary btn-lg">
-                Book a Free Strategy Call <ArrowRight size={18} />
+              <button onClick={() => setActivePage('contact', 'trial')} className="btn btn-primary btn-lg">
+                Start Free Trial <ArrowRight size={18} />
               </button>
               <button onClick={() => setActivePage('live-demo')} className="btn btn-secondary btn-lg">
-                Try Live Demo
+                See How It Works
               </button>
             </div>
             <div className="trust-strip nrx-reveal" style={{ transitionDelay: '0.12s', marginTop: '32px' }}>
               <p className="trust-tagline" style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '12px', fontWeight: '500' }}>
-                Built for businesses that don't have time to configure another tool.
+                Built for dental clinics first.
               </p>
               <div className="niche-tags" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', justifyContent: 'flex-start' }}>
-                {['Dental', 'Restaurants', 'Home Services', 'Real Estate', 'Startups'].map((tag) => (
+                {['General Dentists', 'Cosmetic Clinics', 'Orthodontists', 'Pediatric Dentists', 'Emergency Clinics'].map((tag) => (
                   <span key={tag} className="niche-tag" style={{
                     fontSize: '0.75rem',
                     fontWeight: '700',
@@ -292,9 +312,9 @@ export default function Home({ setActivePage }) {
       <section className="services-grid-section" style={{ padding: '100px 0', background: 'var(--bg-pure)' }}>
         <div className="container">
           <div className="section-header">
-            <span className="section-tag txt-slide">Capabilities</span>
-            <h2 className="section-title txt-reveal-2">Our Core Automation Pillars</h2>
-            <p className="section-subtitle txt-blur-in">We build it, deploy it, and support it — you don't configure anything yourself.</p>
+            <span className="section-tag txt-slide">Answering &amp; Booking</span>
+            <h2 className="section-title txt-reveal-2">What your dental AI receptionist handles</h2>
+            <p className="section-subtitle txt-blur-in">Fully custom-trained around your clinic rules, treatments, pricing, and booking processes.</p>
           </div>
 
           <div className="services-grid">
@@ -321,13 +341,153 @@ export default function Home({ setActivePage }) {
         </div>
       </section>
 
+      {/* Built for Dental Clinics First */}
+      <section className="dental-first-section" style={{ padding: '100px 0', borderTop: '1px solid var(--border-light)' }}>
+        <div className="container">
+          <div className="dental-first-grid">
+            <div>
+              <span className="section-tag txt-slide">Dedicated Focus</span>
+              <h2 className="section-title txt-reveal-2" style={{ textAlign: 'left', marginBottom: '24px' }}>Built for dental clinics first</h2>
+              <p style={{ color: 'var(--text-gray)', fontSize: '1.1rem', lineHeight: '1.7', marginBottom: '24px' }}>
+                Noryvex is currently focused on helping dental practices stop losing patients from missed calls. Whether you run a solo dental office, family clinic, orthodontic clinic, cosmetic dentistry practice, or multi-location clinic, your AI receptionist is trained around your services, hours, pricing, insurance questions, and booking process.
+              </p>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                {[
+                  'General dentists',
+                  'Cosmetic dentistry clinics',
+                  'Orthodontists',
+                  'Pediatric dentists',
+                  'Emergency dental clinics'
+                ].map((item, idx) => (
+                  <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--text-light)', fontWeight: '600' }}>
+                    <CheckCircle2 size={16} style={{ color: 'var(--accent-neon)' }} />
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div style={{ position: 'relative', display: 'flex', justifyContent: 'center' }}>
+              {/* Visual indicator card */}
+              <div className="glass-card" style={{ padding: '40px', borderRadius: '24px', width: '100%', maxWidth: '450px', border: '1px solid var(--border-light)', background: 'var(--bg-glass)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
+                  <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: 'var(--accent-neon)', boxShadow: '0 0 10px var(--accent-neon)' }} />
+                  <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: '700', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Dental Model Active</span>
+                </div>
+                <h3 style={{ fontSize: '1.5rem', fontWeight: '800', color: 'var(--text-white)', marginBottom: '16px' }}>Trained on Clinical Context</h3>
+                <p style={{ color: 'var(--text-gray)', fontSize: '0.95rem', lineHeight: '1.6', marginBottom: '20px' }}>
+                  Unlike generic voice bots, your Noryvex assistant is programmed with specialized vocabulary for root canals, crowns, teeth cleaning, veneer options, and emergency dental symptoms.
+                </p>
+                <div style={{ borderTop: '1px solid var(--border-light)', paddingTop: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div>
+                    <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-muted)' }}>INTEGRATED PLATFORMS</span>
+                    <span style={{ fontSize: '0.9rem', color: 'var(--text-white)', fontWeight: '700' }}>Local CRM / Calendly / Practice Management</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Dental Demo Dialogue Script */}
+      <section className="dental-demo-section" style={{ padding: '100px 0', background: 'var(--bg-dark)', borderTop: '1px solid var(--border-light)' }}>
+        <div className="container">
+          <div className="section-header">
+            <span className="section-tag txt-slide">Real-World Flow</span>
+            <h2 className="section-title txt-reveal-2">Turn missed dental calls into booked appointments</h2>
+            <p className="section-subtitle txt-blur-in">Watch how your AI receptionist takes a live caller from an inquiry to a confirmed booking in under 60 seconds.</p>
+          </div>
+
+          <div className="dental-demo-container" style={{ maxWidth: '750px', margin: '48px auto 0 auto' }}>
+            <div className="glass-card" style={{ padding: '40px', borderRadius: '24px', border: '1px solid var(--border-light)', background: 'var(--bg-glass)' }}>
+              {/* Header of the mock dialogue */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px', borderBottom: '1px solid var(--border-light)', paddingBottom: '20px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <Volume2 size={20} style={{ color: 'var(--accent-neon)' }} />
+                  <span style={{ fontSize: '0.9rem', color: 'var(--text-white)', fontWeight: '700' }}>Sample Call Recording Transcript</span>
+                </div>
+                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: '700' }}>CALL DURATION: 0:42</span>
+              </div>
+
+              {/* Messages stream */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                {/* Caller */}
+                <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
+                  <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--bg-charcoal)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid var(--border-light)' }}>
+                    <Users size={16} style={{ color: 'var(--text-gray)' }} />
+                  </div>
+                  <div>
+                    <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '4px', fontWeight: '700' }}>CALLER (PATIENT)</span>
+                    <div style={{ background: 'var(--bg-charcoal)', padding: '14px 20px', borderRadius: '0 16px 16px 16px', color: 'var(--text-light)', fontSize: '0.95rem', lineHeight: '1.5', border: '1px solid var(--border-light)' }}>
+                      “Hi, do you offer teeth whitening?”
+                    </div>
+                  </div>
+                </div>
+
+                {/* AI Receptionist */}
+                <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start', justifyContent: 'flex-end', textAlign: 'right', flexDirection: 'row-reverse' }}>
+                  <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--accent-neon-glow)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid var(--accent-neon-border)' }}>
+                    <Phone size={16} style={{ color: 'var(--accent-neon)' }} />
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                    <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--accent-neon)', marginBottom: '4px', fontWeight: '700' }}>AI RECEPTIONIST (CHLOE)</span>
+                    <div style={{ background: 'var(--accent-neon-glow)', padding: '14px 20px', borderRadius: '16px 0 16px 16px', color: 'var(--text-white)', fontSize: '0.95rem', lineHeight: '1.5', border: '1px solid var(--accent-neon-border)', textAlign: 'left' }}>
+                      “Yes, we do. Are you looking for an in-office whitening appointment or a consultation?”
+                    </div>
+                  </div>
+                </div>
+
+                {/* Caller */}
+                <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
+                  <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--bg-charcoal)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid var(--border-light)' }}>
+                    <Users size={16} style={{ color: 'var(--text-gray)' }} />
+                  </div>
+                  <div>
+                    <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '4px', fontWeight: '700' }}>CALLER (PATIENT)</span>
+                    <div style={{ background: 'var(--bg-charcoal)', padding: '14px 20px', borderRadius: '0 16px 16px 16px', color: 'var(--text-light)', fontSize: '0.95rem', lineHeight: '1.5', border: '1px solid var(--border-light)' }}>
+                      “In-office.”
+                    </div>
+                  </div>
+                </div>
+
+                {/* AI Receptionist */}
+                <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start', justifyContent: 'flex-end', textAlign: 'right', flexDirection: 'row-reverse' }}>
+                  <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--accent-neon-glow)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid var(--accent-neon-border)' }}>
+                    <Phone size={16} style={{ color: 'var(--accent-neon)' }} />
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                    <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--accent-neon)', marginBottom: '4px', fontWeight: '700' }}>AI RECEPTIONIST (CHLOE)</span>
+                    <div style={{ background: 'var(--accent-neon-glow)', padding: '14px 20px', borderRadius: '16px 0 16px 16px', color: 'var(--text-white)', fontSize: '0.95rem', lineHeight: '1.5', border: '1px solid var(--accent-neon-border)', textAlign: 'left' }}>
+                      “Great. I can help book that. Are mornings or afternoons better for you?”
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Result box at bottom of conversation */}
+              <div style={{ marginTop: '36px', background: 'var(--bg-pure)', border: '1px solid var(--accent-neon-border)', padding: '24px', borderRadius: '16px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+                <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--accent-neon-glow)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <CheckCircle2 size={20} style={{ color: 'var(--accent-neon)' }} />
+                </div>
+                <div>
+                  <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--accent-neon)', fontWeight: '700', letterSpacing: '0.05em', textTransform: 'uppercase' }}>RESULT SUMMARY</span>
+                  <p style={{ color: 'var(--text-white)', fontSize: '0.95rem', fontWeight: '600', margin: 0 }}>
+                    New patient captured, appointment booked, details instantly synced to your scheduling system.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Why Noryvex */}
       <section className="why-section">
         <div className="container">
           <div className="section-header">
-            <span className="section-tag txt-slide">Why Noryvex</span>
-            <h2 className="section-title txt-reveal-2">Engineered For Unmatched ROI</h2>
-            <p className="section-subtitle txt-blur-in">We replace bloated legacy systems with intelligent autonomous agents designed to close deals.</p>
+            <span className="section-tag txt-slide">Practice ROI</span>
+            <h2 className="section-title txt-reveal-2">Why dental clinics choose Noryvex</h2>
+            <p className="section-subtitle txt-blur-in">We build, train, and host custom voice receptionists designed specifically to stop losing patients from missed calls.</p>
           </div>
 
           <div className="why-grid">
@@ -440,6 +600,24 @@ export default function Home({ setActivePage }) {
                   <p className="timeline-desc">{step.desc}</p>
                 </div>
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Expansion/Footnote Section: More Automation Coming Later */}
+      <section className="expansion-footnote-section" style={{ padding: '80px 0', borderTop: '1px solid var(--border-light)', background: 'var(--bg-pure)' }}>
+        <div className="container" style={{ maxWidth: '800px', textAlign: 'center' }}>
+          <span className="section-tag txt-slide" style={{ margin: '0 auto 16px auto' }}>Future Roadmap</span>
+          <h2 className="section-title txt-reveal-2" style={{ fontSize: '1.8rem', marginBottom: '16px' }}>More automation coming later</h2>
+          <p style={{ color: 'var(--text-gray)', fontSize: '1.05rem', lineHeight: '1.6', margin: '0 auto 24px auto', maxWidth: '650px' }}>
+            Right now, we focus exclusively on AI receptionists for dental clinics so we can deliver the best possible results. As we grow, Noryvex will expand into CRM automation, chatbots, workflow automation, and custom AI systems for more industries.
+          </p>
+          <div style={{ display: 'inline-flex', flexWrap: 'wrap', justifyContent: 'center', gap: '12px' }}>
+            {['CRM Automation', 'Custom AI Chatbots', 'Workflow Integrations', 'Multi-Industry Systems'].map((item, idx) => (
+              <span key={idx} style={{ fontSize: '0.75rem', fontWeight: '600', padding: '6px 14px', background: 'var(--bg-preview-card)', border: '1px solid var(--border-light)', borderRadius: '100px', color: 'var(--text-muted)' }}>
+                {item}
+              </span>
             ))}
           </div>
         </div>
@@ -1700,6 +1878,20 @@ export default function Home({ setActivePage }) {
           font-size: 0.95rem;
           color: var(--text-gray);
           line-height: 1.5;
+        }
+
+        /* ── Dental Sections Styling ── */
+        .dental-first-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 60px;
+          align-items: center;
+        }
+        @media (max-width: 992px) {
+          .dental-first-grid {
+            grid-template-columns: 1fr;
+            gap: 40px;
+          }
         }
       `}</style>
 

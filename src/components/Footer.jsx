@@ -44,8 +44,8 @@ export default function Footer({ setActivePage, addToast }) {
             <img src="/logo.png" alt="Noryvex Logo" className="footer-logo" />
             <span className="footer-title">NORYVE<span className="footer-title-x">X</span></span>
           </div>
-          <p className="footer-tagline">Automate. Communicate. Grow.</p>
-          <p className="footer-desc">Building futuristic AI Voice Agents, Business Automation, and Intelligent Software to scale enterprises.</p>
+          <p className="footer-tagline">Never miss another call.</p>
+          <p className="footer-desc">Building custom AI receptionists for dental practices to stop losing patients from missed calls, qualify leads, and book appointments 24/7.</p>
 
           <div className="footer-newsletter">
             <span className="newsletter-label">Stay Automated</span>
@@ -80,16 +80,16 @@ export default function Footer({ setActivePage, addToast }) {
           <div className="footer-link-group">
             <span className="group-title">Company</span>
             <button onClick={() => handleNavClick('about')} className="footer-btn-link">About Us</button>
-            <button onClick={() => handleNavClick('contact', 'call')} className="footer-btn-link">Book a Free Strategy Call</button>
-            <button onClick={() => handleNavClick('contact', 'trial')} className="footer-btn-link">Checking Warranty</button>
+            <button onClick={() => handleNavClick('contact', 'trial')} className="footer-btn-link">Start Free Trial</button>
+            <button onClick={() => handleNavClick('contact', 'call')} className="footer-btn-link">Book Free Strategy Call</button>
             <button onClick={() => handleNavClick('admin')} className="footer-btn-link admin-trigger">Admin Panel</button>
           </div>
 
           <div className="footer-link-group">
             <span className="group-title">Solutions</span>
             <button onClick={() => handleNavClick('solutions')} className="footer-btn-link">Voice Receptionists</button>
-            <button onClick={() => handleNavClick('solutions')} className="footer-btn-link">Workflow Automation</button>
-            <button onClick={() => handleNavClick('solutions')} className="footer-btn-link">Intelligent Software</button>
+            <button onClick={() => handleNavClick('solutions')} className="footer-btn-link">FAQ Answering</button>
+            <button onClick={() => handleNavClick('solutions')} className="footer-btn-link">Practice Dashboard</button>
           </div>
 
           <div className="footer-link-group">

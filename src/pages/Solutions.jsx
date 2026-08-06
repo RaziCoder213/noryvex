@@ -4,54 +4,32 @@ import { Phone, Cpu, Zap, Shield, CheckCircle2, Terminal, Code, Database, Globe 
 export default function Solutions({ setActivePage }) {
   const categories = [
     {
-      title: "AI Voice Agents & Receptionists",
+      title: "Dental AI Receptionist Features",
       icon: <Phone size={32} className="sol-icon" />,
       highlight: "800ms Latency Response",
       description: "Our high-performance conversational speech engines bypass normal voice response delays, making Noryvex voice receptionists indistinguishable from humans.",
       features: [
-        "Dynamic scheduling (integrates directly with Google Calendar/Calendly)",
-        "Semantic lead qualification and automatic profiling",
-        "CRM data injection (Salesforce, HubSpot, GoHighLevel, etc.)",
-        "Configurable accents, speaking speeds, and emotional states",
-        "Automated call transfer to human executives for hot leads"
+        "Answers new patient calls 24/7",
+        "Books appointments directly into your practice calendar",
+        "Answers treatment, pricing, insurance, and directions FAQs",
+        "Collects and profiles patient details before bookings",
+        "Intelligently routes emergency dental inquiries to human staff"
       ]
+    }
+  ];
+
+  const secondaryCapabilities = [
+    {
+      title: "Workflow & CRM Automation",
+      desc: "Connect your voice receptionists to custom HubSpot, Salesforce, GoHighLevel, or custom REST APIs to auto-log call data and lead notes."
     },
     {
-      title: "Business Automation",
-      icon: <Zap size={32} className="sol-icon" />,
-      highlight: "Save up to 40 Hours/Week",
-      description: "We orchestrate multi-step pipelines across your application layers, replacing manual entries with autonomous data synchronizations.",
-      features: [
-        "Multi-app sync (Make/Zapier workflows, custom Webhook receivers)",
-        "AI-assisted document parsing & PDF information extraction",
-        "Automated invoice processing and financial reconciliation",
-        "Internal Slack/Discord bots mapping company metrics",
-        "Daily automated reporting and scraping pipelines"
-      ]
+      title: "Websites & Web Apps",
+      desc: "High-performance marketing websites and interactive booking portals built from scratch and fully maintained by Noryvex."
     },
     {
-      title: "Websites & Web Applications",
-      icon: <Globe size={32} className="sol-icon" />,
-      highlight: "100% Fully Managed",
-      description: "We design and build fast, modern websites and web applications — marketing sites, booking portals, internal dashboards, and client-facing tools. Built on modern frameworks, maintained by us, not handed off as a DIY template.",
-      features: [
-        "Marketing & business websites",
-        "Booking and scheduling portals",
-        "Client dashboards and internal tools",
-        "E-commerce and ordering systems"
-      ]
-    },
-    {
-      title: "Custom Software & Apps",
-      icon: <Cpu size={32} className="sol-icon" />,
-      highlight: "Tailored to Your Operations",
-      description: "Full product builds — mobile apps, SaaS platforms, and custom internal software — built from architecture to launch around your specific business, not a generic off-the-shelf tool.",
-      features: [
-        "iOS & Android apps",
-        "Custom SaaS products",
-        "Internal business tools",
-        "API and third-party integrations"
-      ]
+      title: "Custom Software Development",
+      desc: "Full product engineering — tailored internal business apps, mobile applications, and cloud-native databases built specifically around your operations."
     }
   ];
 
@@ -61,8 +39,8 @@ export default function Solutions({ setActivePage }) {
         <div className="container">
           <div className="section-header">
             <span className="section-tag">Solutions</span>
-            <h1 className="solutions-title">Intelligent AI Architectures</h1>
-            <p className="solutions-subtitle">High-grade autonomous infrastructure engineered to scale lead pipelines, communications, and workflows.</p>
+            <h1 className="solutions-title">Dental AI Receptionist Solutions</h1>
+            <p className="solutions-subtitle">Autonomous clinical communication engines custom-built to qualify leads, handle FAQs, and book patient appointments 24/7.</p>
           </div>
         </div>
       </section>
@@ -78,12 +56,20 @@ export default function Solutions({ setActivePage }) {
                 </div>
                 <h2 className="sol-row-title">{cat.title}</h2>
                 <p className="sol-row-desc">{cat.description}</p>
-                <button 
-                  onClick={() => setActivePage('contact', 'call')} 
-                  className="btn btn-outline-neon"
-                >
-                  Book a Free Strategy Call
-                </button>
+                <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                  <button 
+                    onClick={() => setActivePage('contact', 'trial')} 
+                    className="btn btn-primary"
+                  >
+                    Start Free Trial
+                  </button>
+                  <button 
+                    onClick={() => setActivePage('contact', 'call')} 
+                    className="btn btn-outline-neon"
+                  >
+                    Book Free Strategy Call
+                  </button>
+                </div>
               </div>
 
               <div className="sol-features-block">
@@ -99,6 +85,25 @@ export default function Solutions({ setActivePage }) {
               </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      <section className="solutions-secondary" style={{ padding: '80px 0', borderTop: '1px solid var(--border-light)', background: 'var(--bg-pure)' }}>
+        <div className="container" style={{ maxWidth: '800px', textAlign: 'center' }}>
+          <span className="section-tag" style={{ margin: '0 auto 16px auto' }}>Expanding Roadmap</span>
+          <h2 className="section-title" style={{ fontSize: '1.8rem', marginBottom: '16px' }}>Additional Custom Automation Capabilities</h2>
+          <p style={{ color: 'var(--text-gray)', fontSize: '1.05rem', lineHeight: '1.6', marginBottom: '40px' }}>
+            We focus primarily on dental AI receptionists to ensure absolute reliability. However, we also design and support secondary automation infrastructure on demand.
+          </p>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '20px', textAlign: 'left' }}>
+            {secondaryCapabilities.map((cap, index) => (
+              <div key={index} className="glass-card" style={{ padding: '24px 32px', border: '1px solid var(--border-light)', borderRadius: '16px', background: 'var(--bg-glass)' }}>
+                <h3 style={{ fontSize: '1.2rem', fontWeight: '700', color: 'var(--text-white)', marginBottom: '8px' }}>{cap.title}</h3>
+                <p style={{ color: 'var(--text-gray)', fontSize: '0.95rem', lineHeight: '1.5', margin: 0 }}>{cap.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
