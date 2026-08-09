@@ -20,6 +20,7 @@ import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
 import NotFound from './pages/NotFound';
 import UnderConstruction from './pages/UnderConstruction';
+import Calculator from './pages/Calculator';
 import { dbGetUnderConstruction } from './utils/dbHelper';
 
 export default function App() {
@@ -139,7 +140,7 @@ export default function App() {
     const hash = window.location.hash.replace('#', '');
     const path = window.location.pathname.replace(/^\//, '').replace(/\/$/, '').toLowerCase();
     const hostname = window.location.hostname;
-    const all = ['solutions','live-demo','about','contact','home','privacy','terms','admin'];
+    const all = ['solutions','live-demo','about','contact','home','privacy','terms','admin','calculator'];
     
     if (hostname.startsWith('admin.') || path === 'admin' || hash === 'admin') {
       return 'admin';
@@ -201,16 +202,17 @@ export default function App() {
 
   const renderPage = () => {
     switch (activePage) {
-      case 'home':      return <Home setActivePage={changePage} />;
-      case 'solutions': return <Solutions setActivePage={changePage} />;
-      case 'live-demo': return <LiveDemo setActivePage={changePage} />;
-      case 'about':     return <About />;
-      case 'contact':   return <Contact addToast={addToast} initialTab={initialContactTab} />;
-      case 'admin':     return <Admin addToast={addToast} setActivePage={changePage} />;
-      case 'privacy':   return <Privacy setActivePage={changePage} />;
-      case 'terms':     return <Terms setActivePage={changePage} />;
-      case 'not-found': return <NotFound setActivePage={changePage} />;
-      default:          return <Home setActivePage={changePage} />;
+      case 'home':       return <Home setActivePage={changePage} />;
+      case 'solutions':  return <Solutions setActivePage={changePage} />;
+      case 'live-demo':  return <LiveDemo setActivePage={changePage} />;
+      case 'about':      return <About />;
+      case 'contact':    return <Contact addToast={addToast} initialTab={initialContactTab} />;
+      case 'calculator': return <Calculator setActivePage={changePage} />;
+      case 'admin':      return <Admin addToast={addToast} setActivePage={changePage} />;
+      case 'privacy':    return <Privacy setActivePage={changePage} />;
+      case 'terms':      return <Terms setActivePage={changePage} />;
+      case 'not-found':  return <NotFound setActivePage={changePage} />;
+      default:           return <Home setActivePage={changePage} />;
     }
   };
 

@@ -69,10 +69,11 @@ export default function Navbar({ activePage, setActivePage }) {
   }, [isOpen]);
 
   const navLinks = [
-    { name: 'Home', id: 'home' },
-    { name: 'Solutions', id: 'solutions' },
-    { name: 'About', id: 'about' },
-    { name: 'Contact', id: 'contact' },
+    { name: 'Home',       id: 'home'       },
+    { name: 'Solutions',  id: 'solutions'  },
+    { name: 'Calculator', id: 'calculator' },
+    { name: 'About',      id: 'about'      },
+    { name: 'Contact',    id: 'contact'    },
   ];
 
   const handleNavClick = (id, option = 'trial') => {
