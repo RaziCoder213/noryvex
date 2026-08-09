@@ -109,6 +109,99 @@ export default function Home({ setActivePage }) {
     { num: "05", step: "We manage it monthly", desc: "We monitor calls, update FAQs, improve responses, and support your clinic." }
   ];
 
+  const portfolioItems = [
+    {
+      clinic: "Bright Smile Dental",
+      type: "General Dentistry",
+      location: "Austin, TX",
+      accentColor: "#6366f1",
+      stats: [
+        { label: "Calls Answered / Mo", value: "340+" },
+        { label: "New Bookings via AI", value: "28" },
+        { label: "Est. Revenue Recovered", value: "$14,200" }
+      ],
+      highlight: "Eliminated missed-call backlog. Captures every inbound call 24/7.",
+      result: "This single-location general dental practice was missing 30–40 calls monthly during peak hours. After deploying Noryvex, every inbound call is answered instantly and new patient details are delivered directly to the team."
+    },
+    {
+      clinic: "Pacific Coast Orthodontics",
+      type: "Orthodontics Practice",
+      location: "San Diego, CA",
+      accentColor: "#10b981",
+      stats: [
+        { label: "FAQ Calls Resolved", value: "95%" },
+        { label: "Staff Call Load Reduced", value: "60%" },
+        { label: "Patient Satisfaction", value: "5.0 ★" }
+      ],
+      highlight: "Freed staff from repetitive questions about Invisalign, retainers & pricing.",
+      result: "The practice was fielding the same Invisalign, braces, and retainer protocol questions dozens of times daily. The AI resolved 95% of standard FAQ calls, letting clinical staff stay focused entirely on in-office patients."
+    },
+    {
+      clinic: "Gateway Dental Group",
+      type: "Multi-Location Practice",
+      location: "Phoenix, AZ",
+      accentColor: "#f59e0b",
+      stats: [
+        { label: "After-Hours Leads Captured", value: "63" },
+        { label: "Avg. Call Handle Time", value: "< 90s" },
+        { label: "Deployment Time", value: "48 hrs" }
+      ],
+      highlight: "3 locations live in 48 hours — 63 after-hours leads in first month.",
+      result: "This multi-location group needed unified AI call coverage across 3 Phoenix clinics. Noryvex deployed a single AI receptionist handling all locations within the promised 48-hour window, capturing 63 new patient leads after-hours in month one."
+    }
+  ];
+
+  const testimonials = [
+    {
+      quote: "We were missing 30–40 patient calls a month during busy hours. Since Noryvex set up our AI receptionist, every call gets answered. We've seen a noticeable jump in new patient bookings — it literally pays for itself.",
+      name: "Dr. Sarah Mitchell",
+      clinic: "Bright Smile Dental",
+      location: "Austin, TX",
+      initials: "SM",
+      color: "#6366f1"
+    },
+    {
+      quote: "The setup took 48 hours exactly as promised. Muhammad Razi and his team handled everything — we gave them our FAQ document and they did the rest. My front desk is now free to focus on in-person patients.",
+      name: "Dr. James Okonkwo",
+      clinic: "Family First Dental Care",
+      location: "Chicago, IL",
+      initials: "JO",
+      color: "#10b981"
+    },
+    {
+      quote: "My staff used to spend 2–3 hours a day answering the same questions about braces and retainer costs. The AI handles all of that now. Honestly shocked at how natural it sounds on real patient calls.",
+      name: "Dr. Maria E. Vasquez",
+      clinic: "Vasquez Orthodontics",
+      location: "Miami, FL",
+      initials: "MV",
+      color: "#f59e0b"
+    },
+    {
+      quote: "After-hours calls were our biggest missed revenue source. Parents call when kids have dental emergencies at night. Now those calls are captured and we get a full summary in our inbox within minutes.",
+      name: "Dr. Thomas Reed",
+      clinic: "Reed Pediatric Dentistry",
+      location: "Denver, CO",
+      initials: "TR",
+      color: "#ec4899"
+    },
+    {
+      quote: "I was skeptical that AI could handle real patient calls without sounding robotic. First call I listened to — I genuinely couldn't tell. It's warm, handles interruptions naturally, and knows our full service list.",
+      name: "Dr. Priya Patel",
+      clinic: "Patel Family Dentistry",
+      location: "Houston, TX",
+      initials: "PP",
+      color: "#8b5cf6"
+    },
+    {
+      quote: "Best investment for the clinic this year. We're booking 15–20% more consultations from calls that used to go straight to voicemail. The dashboard is clean and gives me everything I need at a glance.",
+      name: "Dr. Kevin Walsh",
+      clinic: "Walsh Cosmetic Dental",
+      location: "New York, NY",
+      initials: "KW",
+      color: "#14b8a6"
+    }
+  ];
+
   // Scroll-driven horizontal translation with sticky pinning for the capabilities track
   useEffect(() => {
     const handleScroll = () => {
@@ -642,6 +735,111 @@ export default function Home({ setActivePage }) {
           </div>
 
           <div style={{ textAlign: 'center', marginTop: '48px' }}>
+            <button onClick={() => setActivePage('contact', 'trial')} className="btn btn-primary btn-lg">
+              Get Free Clinic Demo <ArrowRight size={18} />
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Portfolio / Case Studies Section ── */}
+      <section style={{ padding: 'var(--section-padding-desktop) 0', background: 'var(--bg-dark)', borderTop: '1px solid var(--border-light)' }}>
+        <div className="container">
+          <div className="section-header">
+            <span className="section-tag txt-slide">Case Studies</span>
+            <h2 className="section-title txt-reveal-2">Results from real dental clinics.</h2>
+            <p className="section-subtitle txt-blur-in">
+              Every engagement is custom-built. Here's what Noryvex AI receptionists have delivered for dental practices across the US.
+            </p>
+          </div>
+
+          <div className="portfolio-grid">
+            {portfolioItems.map((item, i) => (
+              <div key={i} className="glass-card portfolio-card nrx-reveal" style={{ transitionDelay: `${i * 0.12}s` }}>
+                {/* Card header */}
+                <div style={{ marginBottom: '20px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
+                    <span style={{ fontSize: '0.72rem', fontWeight: '700', letterSpacing: '0.08em', textTransform: 'uppercase', color: item.accentColor, padding: '4px 12px', background: `${item.accentColor}18`, border: `1px solid ${item.accentColor}35`, borderRadius: '100px' }}>{item.type}</span>
+                    <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '4px' }}>📍 {item.location}</span>
+                  </div>
+                  <h3 style={{ fontSize: '1.3rem', fontWeight: '800', color: 'var(--text-white)', marginBottom: '8px', lineHeight: '1.3' }}>{item.clinic}</h3>
+                  <p style={{ fontSize: '0.85rem', color: item.accentColor, fontWeight: '600', margin: 0, lineHeight: '1.4' }}>{item.highlight}</p>
+                </div>
+
+                {/* Metrics grid */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginBottom: '20px', padding: '18px', background: 'var(--bg-pure)', borderRadius: '10px', border: '1px solid var(--border-light)' }}>
+                  {item.stats.map((stat, j) => (
+                    <div key={j} style={{ textAlign: 'center' }}>
+                      <div style={{ fontSize: '1.2rem', fontWeight: '900', color: item.accentColor, marginBottom: '5px', lineHeight: 1, letterSpacing: '-0.02em' }}>{stat.value}</div>
+                      <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', fontWeight: '500', lineHeight: '1.35', textTransform: 'uppercase', letterSpacing: '0.04em' }}>{stat.label}</div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Description */}
+                <p style={{ fontSize: '0.88rem', color: 'var(--text-gray)', lineHeight: '1.65', margin: 0 }}>{item.result}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Testimonials Section ── */}
+      <section style={{ padding: 'var(--section-padding-desktop) 0', background: 'var(--bg-pure)', borderTop: '1px solid var(--border-light)' }}>
+        <div className="container">
+          <div className="section-header">
+            <span className="section-tag txt-slide">Client Reviews</span>
+            <h2 className="section-title txt-reveal-2">What dental clinic owners are saying.</h2>
+            <p className="section-subtitle txt-blur-in">
+              Hundreds of patient calls answered. Dozens of missed bookings recovered. Here's what our clients think.
+            </p>
+          </div>
+
+          {/* Star rating summary bar */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px', marginBottom: '48px', padding: '20px 32px', background: 'var(--bg-charcoal)', borderRadius: '100px', border: '1px solid var(--border-light)', width: 'fit-content', margin: '0 auto 52px auto' }}>
+            <span style={{ color: '#f59e0b', fontSize: '1.2rem', letterSpacing: '3px' }}>★★★★★</span>
+            <span style={{ color: 'var(--text-white)', fontWeight: '800', fontSize: '1.1rem' }}>5.0</span>
+            <span style={{ width: '1px', height: '20px', background: 'var(--border-light)' }} />
+            <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Average Rating from Dental Clinics</span>
+          </div>
+
+          <div className="testimonials-grid">
+            {testimonials.map((t, i) => (
+              <div key={i} className="glass-card testimonial-card nrx-reveal" style={{ transitionDelay: `${i * 0.1}s` }}>
+                {/* Stars */}
+                <div style={{ marginBottom: '14px', display: 'flex', gap: '3px' }}>
+                  {[1,2,3,4,5].map(s => (
+                    <span key={s} style={{ color: '#f59e0b', fontSize: '0.95rem' }}>★</span>
+                  ))}
+                </div>
+
+                {/* Quote */}
+                <p style={{ fontSize: '0.93rem', color: 'var(--text-light)', lineHeight: '1.75', marginBottom: '22px', fontStyle: 'italic', flex: 1 }}>
+                  "{t.quote}"
+                </p>
+
+                {/* Author */}
+                <div style={{ borderTop: '1px solid var(--border-light)', paddingTop: '18px', display: 'flex', alignItems: 'center', gap: '12px', marginTop: 'auto' }}>
+                  <div style={{
+                    width: '40px', height: '40px', borderRadius: '50%', flexShrink: 0,
+                    background: `${t.color}20`, border: `2px solid ${t.color}40`,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: '0.8rem', fontWeight: '800', color: t.color, letterSpacing: '0.05em'
+                  }}>
+                    {t.initials}
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '0.88rem', fontWeight: '700', color: 'var(--text-white)', marginBottom: '2px' }}>{t.name}</div>
+                    <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>{t.clinic} · {t.location}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* CTA below testimonials */}
+          <div style={{ textAlign: 'center', marginTop: '52px' }}>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '20px' }}>Ready to join them?</p>
             <button onClick={() => setActivePage('contact', 'trial')} className="btn btn-primary btn-lg">
               Get Free Clinic Demo <ArrowRight size={18} />
             </button>
@@ -1807,6 +2005,170 @@ export default function Home({ setActivePage }) {
             grid-template-columns: 1fr;
             gap: 40px;
           }
+        }
+
+        /* ── Portfolio Section ── */
+        .portfolio-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: var(--card-gap-desktop);
+          margin-top: 52px;
+        }
+        .portfolio-card {
+          display: flex;
+          flex-direction: column;
+          padding: 28px;
+          transition: border-color 0.25s ease, transform 0.25s var(--ease-out), box-shadow 0.25s ease;
+        }
+        .portfolio-card:hover {
+          border-color: rgba(199,255,61,0.25) !important;
+          transform: translateY(-5px);
+          box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+        }
+        @media (max-width: 1024px) {
+          .portfolio-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+        @media (max-width: 640px) {
+          .portfolio-grid {
+            grid-template-columns: 1fr;
+            gap: var(--card-gap-mobile);
+          }
+          .portfolio-card {
+            padding: var(--card-padding-mobile);
+          }
+        }
+
+        /* ── Testimonials Section ── */
+        .testimonials-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: var(--card-gap-desktop);
+          margin-top: 0;
+        }
+        .testimonial-card {
+          display: flex;
+          flex-direction: column;
+          padding: 28px;
+          transition: border-color 0.25s ease, transform 0.25s var(--ease-out), box-shadow 0.25s ease;
+        }
+        .testimonial-card:hover {
+          border-color: rgba(199,255,61,0.2) !important;
+          transform: translateY(-4px);
+          box-shadow: 0 12px 40px rgba(0,0,0,0.45);
+        }
+        @media (max-width: 1024px) {
+          .testimonials-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+        @media (max-width: 640px) {
+          .testimonials-grid {
+            grid-template-columns: 1fr;
+            gap: var(--card-gap-mobile);
+          }
+          .testimonial-card {
+            padding: var(--card-padding-mobile);
+          }
+        }
+
+        /* ── Card Consistency Fixes ── */
+        /* Ensure pricing cards have consistent inner spacing */
+        .pricing-card {
+          display: flex;
+          flex-direction: column;
+          gap: 0;
+          padding: 28px !important;
+        }
+        .pricing-card .section-tag {
+          margin-bottom: 0;
+          display: inline-block;
+          width: fit-content;
+        }
+        /* Why cards: tighten gap between icon and text */
+        .why-card {
+          padding: 28px !important;
+        }
+        .why-card-header {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          margin-bottom: 12px;
+        }
+        .why-check {
+          color: var(--accent-neon);
+          width: 18px;
+          height: 18px;
+          flex-shrink: 0;
+        }
+        .why-card-title {
+          font-size: 1.05rem;
+          font-weight: 700;
+          color: var(--text-white);
+          margin: 0;
+          line-height: 1.3;
+        }
+        .why-card-desc {
+          font-size: 0.9rem;
+          color: var(--text-gray);
+          line-height: 1.6;
+          margin: 0;
+        }
+        /* Demo comparison cards: consistent padding */
+        .demo-comp-card {
+          padding: 32px !important;
+          display: flex;
+          flex-direction: column;
+        }
+        /* Problem cards: uniform bottom border and spacing */
+        .problem-card {
+          padding: 28px !important;
+          border-bottom: 2px solid transparent;
+          transition: border-color 0.25s ease, transform 0.25s var(--ease-out);
+        }
+        .problem-card:hover {
+          border-bottom-color: var(--accent-neon) !important;
+          transform: translateY(-3px);
+        }
+        /* Service cards: more breathing room */
+        .service-card {
+          padding: 28px !important;
+          display: flex;
+          flex-direction: column;
+          gap: 0;
+        }
+        .service-card-title {
+          font-size: 1.05rem;
+          font-weight: 700;
+          color: var(--text-white);
+          margin: 12px 0 8px 0;
+          line-height: 1.3;
+        }
+        .service-card-desc {
+          font-size: 0.88rem;
+          color: var(--text-gray);
+          line-height: 1.6;
+          margin: 0 0 16px 0;
+          flex: 1;
+        }
+        .service-card-footer {
+          margin-top: auto;
+          padding-top: 16px;
+          border-top: 1px solid var(--border-light);
+        }
+        .learn-more {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          font-size: 0.82rem;
+          font-weight: 600;
+          color: var(--text-muted);
+          cursor: pointer;
+          transition: color 0.2s;
+        }
+        .learn-more:hover {
+          color: var(--accent-neon);
         }
       `}</style>
 

@@ -58,9 +58,12 @@ export default function Footer({ setActivePage, addToast }) {
           </div>
 
           <div className="footer-link-group">
-            <span className="group-title">Contact</span>
+            <span className="group-title">Connect</span>
             <a href="mailto:hello@trynoryvex.com" className="footer-link">
-              Email <ArrowUpRight size={14} />
+              Email Us <ArrowUpRight size={14} />
+            </a>
+            <a href="https://www.linkedin.com/company/noryvex" target="_blank" rel="noopener noreferrer" className="footer-link">
+              Company LinkedIn <ArrowUpRight size={14} />
             </a>
             <a href="https://www.linkedin.com/in/mrazi-dev/" target="_blank" rel="noopener noreferrer" className="footer-link">
               Founder LinkedIn <ArrowUpRight size={14} />
