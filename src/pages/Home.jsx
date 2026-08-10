@@ -980,6 +980,42 @@ clinic: "",
         </div>
       </section>
 
+
+      {/* ── FAQ Section ── */}
+      <section id="faq" style={{ padding: 'var(--section-padding-desktop) 0', background: 'var(--bg-dark)', borderTop: '1px solid var(--border-light)' }}>
+        <div className="container">
+          <div style={{ textAlign: 'center', marginBottom: '52px' }}>
+            <span className="section-tag" style={{ margin: '0 auto 16px auto' }}>COMMON QUESTIONS</span>
+            <h2 style={{ fontSize: '2.2rem', fontWeight: '800', color: 'var(--text-white)', marginBottom: '16px' }}>
+              Frequently Asked Questions
+            </h2>
+            <p style={{ maxWidth: 600, margin: '0 auto', fontSize: '1rem', color: 'var(--text-gray)', lineHeight: '1.65' }}>
+              Everything you need to know about Noryvex's managed AI dental receptionist service.
+            </p>
+          </div>
+          <div className="faq-list">
+            {[
+              { q: 'Will my patients know they\'re talking to an AI?', a: 'Modern voice AI is indistinguishable from a human receptionist for routine calls. Noryvex builds custom voice models with natural speech patterns, appropriate pauses, and context-aware responses. That said, we follow best practices — the AI will never claim to be human if a patient directly asks.' },
+              { q: 'How long does setup take?', a: 'Our standard turnaround is 48 hours from kickoff call to live deployment. We handle everything: voice prompt scripting, FAQ training, calendar integration, and sandbox testing. All you need to do is forward calls to the number we provision.' },
+              { q: 'Do we need to change our existing phone number?', a: 'No. We provision a secondary number that receives forwarded calls. Your clinic\'s published phone number stays exactly the same — patients call the same number they always have; the AI handles it behind the scenes.' },
+              { q: 'What happens during a dental emergency?', a: 'The AI is trained to recognize emergency language and immediately escalates those calls to your on-call staff or emergency line. You define the escalation logic during setup — we configure it exactly the way you\'d want your human receptionist to handle it.' },
+              { q: 'Is Noryvex HIPAA compliant?', a: 'Yes. We sign a Business Associate Agreement (BAA) with every client, use US-based encrypted call infrastructure, and process all patient data in compliance with HIPAA regulations. Ask us for a copy of our BAA during your demo call.' },
+              { q: 'What if a patient asks something the AI doesn\'t know?', a: 'The AI acknowledges the question politely, takes a message, and flags it for follow-up by your team. You can expand the FAQ training at any time — just send us updated information and we\'ll retrain within 24 hours at no extra charge.' },
+              { q: 'What does Noryvex cost?', a: 'Pricing is based on call volume and the features your practice needs. We\'re transparent about costs — book a free 30-minute strategy call and we\'ll give you a custom quote with no pressure and no hidden fees.' },
+              { q: 'Can I try it before I pay anything?', a: 'Yes. We build a short custom AI demo for your clinic — using your real services, hours, and FAQs — completely free. If you like what you hear, we deploy the full system. If not, there\'s no obligation and no charge.' },
+            ].map((item, idx) => (
+              <details key={idx} className="faq-item">
+                <summary className="faq-q" id={`faq-q-${idx}`}>
+                  <span>{item.q}</span>
+                  <span className="faq-chevron" aria-hidden="true">+</span>
+                </summary>
+                <p className="faq-a">{item.a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── Closing CTA Band ── */}
       <section className="closing-cta-section" style={{ padding: 'var(--section-padding-desktop) 0', background: 'var(--bg-pure)', borderTop: '1px solid var(--border-light)' }}>
         <div className="container" style={{ textAlign: 'center', maxWidth: '800px' }}>
@@ -2253,6 +2289,62 @@ clinic: "",
         .learn-more:hover {
           color: var(--accent-neon);
         }
+
+        /* ── FAQ Section ── */
+        .faq-list {
+          max-width: 760px;
+          margin: 0 auto;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+        .faq-item {
+          border: 1px solid var(--border-light);
+          border-radius: 12px;
+          background: rgba(255,255,255,0.02);
+          overflow: hidden;
+          transition: border-color 0.2s, background 0.2s;
+        }
+        .faq-item[open] {
+          border-color: rgba(199,255,61,0.2);
+          background: rgba(199,255,61,0.015);
+        }
+        .faq-q {
+          list-style: none;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 16px;
+          padding: 20px 24px;
+          cursor: pointer;
+          font-weight: 600;
+          font-size: 0.97rem;
+          color: var(--text-white);
+          user-select: none;
+          transition: color 0.15s;
+        }
+        .faq-q::-webkit-details-marker { display: none; }
+        .faq-q::marker { display: none; }
+        .faq-q:hover { color: var(--accent-neon); }
+        .faq-chevron {
+          flex-shrink: 0;
+          font-size: 1.4rem;
+          color: var(--accent-neon);
+          line-height: 1;
+          transition: transform 0.2s;
+          font-weight: 300;
+        }
+        .faq-item[open] .faq-chevron { transform: rotate(45deg); }
+        .faq-a {
+          padding: 0 24px 20px;
+          font-size: 0.9rem;
+          color: var(--text-gray);
+          line-height: 1.7;
+          margin: 0;
+          border-top: 1px solid var(--border-light);
+          padding-top: 16px;
+        }
+
       `}</style>
 
     </div>

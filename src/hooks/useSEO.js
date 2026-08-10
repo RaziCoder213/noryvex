@@ -31,8 +31,8 @@ const PAGE_META = {
     canonical: `${BASE_URL}/about`,
   },
   contact: {
-    title: 'Book a Free Strategy Call | Noryvex AI Automation',
-    description: 'Ready to automate your business? Book a free strategy call with Noryvex. We\'ll design a custom AI Voice Agent or automation solution tailored to your operations.',
+    title: 'Book a Strategy Call | Chat on WhatsApp | Noryvex',
+    description: 'Connect with Noryvex. Book a free 30-minute strategy call, chat on WhatsApp, or join our Slack. Full calendar with timezone support and instant slot booking.',
     canonical: `${BASE_URL}/contact`,
   },
   privacy: {
@@ -44,6 +44,11 @@ const PAGE_META = {
     title: 'Terms of Service | Noryvex',
     description: 'Read the Noryvex Terms of Service — the rules governing use of our website, services, and AI automation solutions.',
     canonical: `${BASE_URL}/terms`,
+  },
+  calculator: {
+    title: 'Missed Call Revenue Calculator | Noryvex',
+    description: 'Find out exactly how much revenue your dental clinic loses every month from missed patient calls. Free calculator tool by Noryvex — takes 30 seconds.',
+    canonical: `${BASE_URL}/calculator`,
   },
 };
 
