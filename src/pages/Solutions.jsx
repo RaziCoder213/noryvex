@@ -5,7 +5,7 @@ export default function Solutions({ setActivePage }) {
   const solutionsList = [
     {
       title: "1. Voice receptionist for dental clinics",
-      desc: "Your AI receptionist answers calls in a natural voice, asks the right questions, and captures the details your team needs.",
+      desc: "Your AI receptionist answers calls in a natural voice, asks the right questions, and captures the details your team needs. We assign a phone number in any US state for your clinic's line.",
       icon: <Phone size={24} />
     },
     {
@@ -72,14 +72,30 @@ export default function Solutions({ setActivePage }) {
             ))}
           </div>
 
-          {/* AI / Medical Safety Disclaimer Box */}
-          <div className="safety-disclaimer-box glass-card" style={{ marginTop: '48px', background: 'rgba(199, 255, 61, 0.02)', border: '1px solid rgba(199, 255, 61, 0.15)', display: 'flex', gap: '16px', alignItems: 'start' }}>
-            <ShieldAlert size={24} style={{ color: 'var(--accent-neon)', flexShrink: 0, marginTop: '2px' }} />
-            <div>
-              <h4 style={{ fontSize: '0.95rem', fontWeight: '700', color: 'var(--text-white)', marginBottom: '4px' }}>AI Medical Safety Disclaimer</h4>
-              <p style={{ color: 'var(--text-gray)', fontSize: '0.85rem', lineHeight: '1.45', margin: 0 }}>
-                The AI does not give medical advice. It collects details, answers approved clinic FAQs, and routes urgent cases according to your clinic’s instructions.
-              </p>
+          {/* HIPAA & Patient Data Security Section */}
+          <div className="security-compliance-box glass-card" style={{ marginTop: '48px', padding: '32px', background: 'rgba(255, 255, 255, 0.01)', border: '1px solid var(--border-light)', borderRadius: '12px' }}>
+            <h3 style={{ fontSize: '1.4rem', fontWeight: '800', color: 'var(--text-white)', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <ShieldAlert style={{ color: 'var(--accent-neon)' }} size={26} /> HIPAA Compliance &amp; Patient Data Security
+            </h3>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
+              <div>
+                <h4 style={{ fontSize: '1rem', fontWeight: '700', color: 'var(--text-white)', marginBottom: '8px' }}>🔐 HIPAA Compliance &amp; BAAs</h4>
+                <p style={{ color: 'var(--text-gray)', fontSize: '0.88rem', lineHeight: '1.55', margin: 0 }}>
+                  We understand the importance of patient privacy. Noryvex signs standard Business Associate Agreements (BAAs) and ensures all call logs, transcripts, and patient details are handled through secure, HIPAA-compliant speech and database pipelines.
+                </p>
+              </div>
+              <div>
+                <h4 style={{ fontSize: '1rem', fontWeight: '700', color: 'var(--text-white)', marginBottom: '8px' }}>🛡️ AI Safety &amp; Medical Disclaimer</h4>
+                <p style={{ color: 'var(--text-gray)', fontSize: '0.88rem', lineHeight: '1.55', margin: 0 }}>
+                  Our AI receptionists do not give clinical or medical advice. They are strictly configured to answer pre-approved practice FAQs, collect contact details, schedule appointment slots, and route emergency calls directly to your live clinical staff.
+                </p>
+              </div>
+              <div>
+                <h4 style={{ fontSize: '1rem', fontWeight: '700', color: 'var(--text-white)', marginBottom: '8px' }}>💻 Secure US Infrastructure</h4>
+                <p style={{ color: 'var(--text-gray)', fontSize: '0.88rem', lineHeight: '1.55', margin: 0 }}>
+                  All customer telephone line routing, speech synthesis services, and database servers run on highly secure, encrypted US-based cloud infrastructure (TLS 1.3 in-transit and AES-256 at-rest encryption).
+                </p>
+              </div>
             </div>
           </div>
 

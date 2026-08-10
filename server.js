@@ -198,20 +198,20 @@ app.post('/api/trial', async (req, res) => {
     await saveTrial(businessName, contactName, email, phone, businessType, aiHandling);
     
     // Also save to contacts table for general logs listing
-    await saveContact(contactName, businessName, email, phone, `7-Day Trial (${businessType})`, `AI Tasks: ${aiHandling.toUpperCase()}`);
+    await saveContact(contactName, businessName, email, phone, `Free Demo (${businessType})`, `AI Tasks: ${aiHandling.toUpperCase()}`);
 
     // Trigger email notification
-    const subject = `[Noryvex Trial] New 7-Day Free Trial Request from ${contactName}`;
+    const subject = `[Noryvex Demo] New Free Demo Request from ${contactName}`;
     const htmlContent = `
-      <h2>New 7-Day Free Trial Requested</h2>
+      <h2>New Free Demo Requested</h2>
       <p><strong>Business Name:</strong> ${businessName}</p>
       <p><strong>Contact Name:</strong> ${contactName}</p>
       <p><strong>Email Address:</strong> ${email}</p>
       <p><strong>Phone Number:</strong> ${phone || '—'}</p>
       <p><strong>Business Type/Niche:</strong> ${businessType}</p>
       <p><strong>AI Tasks:</strong> ${aiHandling.toUpperCase()}</p>
-      <p><strong>Trial Status:</strong> REQUESTED</p>
-      <p><strong>Limit:</strong> 30 Minutes call time / 7 Days</p>
+      <p><strong>Demo Status:</strong> REQUESTED</p>
+      <p><strong>Demo Setup:</strong> Prototype Voice Line Routing</p>
       <p style="font-size: 0.85rem; color: #777; margin-top: 24px;">Sent from Noryvex Operations Hub.</p>
     `;
     sendEmailNotification(subject, htmlContent);

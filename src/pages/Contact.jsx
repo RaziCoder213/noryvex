@@ -185,6 +185,10 @@ ${integrationList.length > 0 ? integrationList.join(', ') : 'None selected'}
                   </li>
                   <li style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.88rem', color: 'var(--text-gray)' }}>
                     <CheckCircle2 size={16} color="#C7FF3D" style={{ flexShrink: 0 }} />
+                    <span>We assign a phone number in any US state for your clinic's demo.</span>
+                  </li>
+                  <li style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.88rem', color: 'var(--text-gray)' }}>
+                    <CheckCircle2 size={16} color="#C7FF3D" style={{ flexShrink: 0 }} />
                     <span>You only pay when you decide to launch the full system.</span>
                   </li>
                 </ul>

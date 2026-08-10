@@ -111,9 +111,9 @@ export default function Home({ setActivePage }) {
 
   const portfolioItems = [
     {
-      clinic: "Bright Smile Dental",
+      clinic: "Dr. Mitchell's Practice",
       type: "General Dentistry",
-      location: "Austin, TX",
+      location: "TX",
       accentColor: "#6366f1",
       stats: [
         { label: "Calls Answered / Mo", value: "340+" },
@@ -124,9 +124,9 @@ export default function Home({ setActivePage }) {
       result: "This single-location general dental practice was missing 30–40 calls monthly during peak hours. After deploying Noryvex, every inbound call is answered instantly and new patient details are delivered directly to the team."
     },
     {
-      clinic: "Pacific Coast Orthodontics",
+      clinic: "Dr. Vasquez's Practice",
       type: "Orthodontics Practice",
-      location: "San Diego, CA",
+      location: "FL",
       accentColor: "#10b981",
       stats: [
         { label: "FAQ Calls Resolved", value: "95%" },
@@ -137,9 +137,9 @@ export default function Home({ setActivePage }) {
       result: "The practice was fielding the same Invisalign, braces, and retainer protocol questions dozens of times daily. The AI resolved 95% of standard FAQ calls, letting clinical staff stay focused entirely on in-office patients."
     },
     {
-      clinic: "Gateway Dental Group",
+      clinic: "Dr. Okonkwo's Practice",
       type: "Multi-Location Practice",
-      location: "Phoenix, AZ",
+      location: "IL",
       accentColor: "#f59e0b",
       stats: [
         { label: "After-Hours Leads Captured", value: "63" },
@@ -147,7 +147,7 @@ export default function Home({ setActivePage }) {
         { label: "Deployment Time", value: "48 hrs" }
       ],
       highlight: "3 locations live in 48 hours — 63 after-hours leads in first month.",
-      result: "This multi-location group needed unified AI call coverage across 3 Phoenix clinics. Noryvex deployed a single AI receptionist handling all locations within the promised 48-hour window, capturing 63 new patient leads after-hours in month one."
+      result: "This multi-location group needed unified AI call coverage across 3 clinic locations. Noryvex deployed a single AI receptionist handling all locations within the promised 48-hour window, capturing 63 new patient leads after-hours in month one."
     }
   ];
 
@@ -155,6 +155,7 @@ export default function Home({ setActivePage }) {
     {
       quote: "We were missing 30–40 patient calls a month during busy hours. Since Noryvex set up our AI receptionist, every call gets answered. We've seen a noticeable jump in new patient bookings — it literally pays for itself.",
       name: "Dr. Sarah Mitchell",
+clinic: "",
       location: "Texas",
       initials: "SM",
       color: "#6366f1"
@@ -162,6 +163,7 @@ export default function Home({ setActivePage }) {
     {
       quote: "The setup took 48 hours exactly as promised. Muhammad Razi and his team handled everything — we gave them our FAQ document and they did the rest. My front desk is now free to focus on in-person patients.",
       name: "Dr. James Okonkwo",
+clinic: "",
       location: "Illinois",
       initials: "JO",
       color: "#10b981"
@@ -169,6 +171,7 @@ export default function Home({ setActivePage }) {
     {
       quote: "My staff used to spend 2–3 hours a day answering the same questions about braces and retainer costs. The AI handles all of that now. Honestly shocked at how natural it sounds on real patient calls.",
       name: "Dr. Maria E. Vasquez",
+clinic: "",
       location: "Florida",
       initials: "MV",
       color: "#f59e0b"
@@ -176,6 +179,7 @@ export default function Home({ setActivePage }) {
     {
       quote: "After-hours calls were our biggest missed revenue source. Parents call when kids have dental emergencies at night. Now those calls are captured and we get a full summary in our inbox within minutes.",
       name: "Dr. Thomas Reed",
+clinic: "",
       location: "Colorado",
       initials: "TR",
       color: "#ec4899"
@@ -183,6 +187,7 @@ export default function Home({ setActivePage }) {
     {
       quote: "I was skeptical that AI could handle real patient calls without sounding robotic. First call I listened to — I genuinely couldn't tell. It's warm, handles interruptions naturally, and knows our full service list.",
       name: "Dr. Priya Patel",
+clinic: "",
       location: "Texas",
       initials: "PP",
       color: "#8b5cf6"
@@ -190,6 +195,7 @@ export default function Home({ setActivePage }) {
     {
       quote: "Best investment for the clinic this year. We're booking 15–20% more consultations from calls that used to go straight to voicemail. The dashboard is clean and gives me everything I need at a glance.",
       name: "Dr. Kevin Walsh",
+clinic: "",
       location: "New York",
       initials: "KW",
       color: "#14b8a6"
@@ -616,7 +622,7 @@ export default function Home({ setActivePage }) {
               <ul className="comp-list" style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <li style={{ display: 'flex', alignItems: 'start', gap: '12px', fontSize: '0.95rem' }}>
                   <CheckCircle2 size={18} style={{ color: 'var(--accent-neon)', flexShrink: 0, marginTop: '2px' }} />
-                  <span>Live call routing and active phone line numbers configuration</span>
+                  <span>Live call routing with phone number assigned in any US state</span>
                 </li>
                 <li style={{ display: 'flex', alignItems: 'start', gap: '12px', fontSize: '0.95rem' }}>
                   <CheckCircle2 size={18} style={{ color: 'var(--accent-neon)', flexShrink: 0, marginTop: '2px' }} />
@@ -837,6 +843,75 @@ export default function Home({ setActivePage }) {
             <button onClick={() => setActivePage('contact', 'trial')} className="btn btn-primary btn-lg">
               Get Free Clinic Demo <ArrowRight size={18} />
             </button>
+          </div>
+        </div>
+      </section>
+
+      {/* ── HIPAA Compliance & Security Section ── */}
+      <section style={{ padding: 'var(--section-padding-desktop) 0', background: 'var(--bg-pure)', borderTop: '1px solid var(--border-light)' }}>
+        <div className="container">
+          <div className="security-section-grid">
+            <div>
+              <span className="section-tag txt-slide">Data Protection</span>
+              <h2 className="section-title txt-reveal-2" style={{ textAlign: 'left', marginBottom: '20px' }}>HIPAA Compliant &amp; Secure Patient Data Flow</h2>
+              <p className="section-subtitle txt-blur-in" style={{ textAlign: 'left', margin: 0, marginBottom: '24px' }}>
+                We design and run our voice systems to adhere strictly to healthcare privacy standards. Your practice retains complete ownership of your call records and transcripts.
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div style={{ display: 'flex', gap: '12px', alignItems: 'start' }}>
+                  <CheckCircle2 size={18} style={{ color: 'var(--accent-neon)', flexShrink: 0, marginTop: '3px' }} />
+                  <div>
+                    <h4 style={{ color: 'var(--text-white)', fontSize: '0.95rem', fontWeight: '700', margin: 0, marginBottom: '4px' }}>Business Associate Agreements (BAAs)</h4>
+                    <p style={{ color: 'var(--text-gray)', fontSize: '0.85rem', margin: 0, lineHeight: 1.4 }}>We sign BAAs with all US dental clinics to guarantee HIPAA compliance.</p>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: '12px', alignItems: 'start' }}>
+                  <CheckCircle2 size={18} style={{ color: 'var(--accent-neon)', flexShrink: 0, marginTop: '3px' }} />
+                  <div>
+                    <h4 style={{ color: 'var(--text-white)', fontSize: '0.95rem', fontWeight: '700', margin: 0, marginBottom: '4px' }}>End-to-End Encryption</h4>
+                    <p style={{ color: 'var(--text-gray)', fontSize: '0.85rem', margin: 0, lineHeight: 1.4 }}>All patient interactions and database fields are encrypted in transit and at rest.</p>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: '12px', alignItems: 'start' }}>
+                  <CheckCircle2 size={18} style={{ color: 'var(--accent-neon)', flexShrink: 0, marginTop: '3px' }} />
+                  <div>
+                    <h4 style={{ color: 'var(--text-white)', fontSize: '0.95rem', fontWeight: '700', margin: 0, marginBottom: '4px' }}>Zero Public AI Training</h4>
+                    <p style={{ color: 'var(--text-gray)', fontSize: '0.85rem', margin: 0, lineHeight: 1.4 }}>Your patient calls and clinic records are never used to train public LLM models.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Visual flow container */}
+            <div className="glass-card" style={{ padding: '32px', border: '1px solid var(--border-light)', display: 'flex', flexDirection: 'column', gap: '20px', background: 'var(--bg-charcoal)', borderRadius: '12px' }}>
+              <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: 'var(--text-white)', margin: 0, borderBottom: '1px solid var(--border-light)', paddingBottom: '14px' }}>Secure Call Data Flow</h3>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', background: 'rgba(255, 255, 255, 0.02)', borderRadius: '8px', border: '1px solid var(--border-light)' }}>
+                  <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(199, 255, 61, 0.1)', color: 'var(--accent-neon)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', fontWeight: '800' }}>1</div>
+                  <div>
+                    <div style={{ fontSize: '0.85rem', fontWeight: '700', color: 'var(--text-white)' }}>Inbound Call Routed</div>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Encrypted SIP/VoIP voice stream connection</div>
+                  </div>
+                </div>
+                
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', background: 'rgba(255, 255, 255, 0.02)', borderRadius: '8px', border: '1px solid var(--border-light)' }}>
+                  <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(199, 255, 61, 0.1)', color: 'var(--accent-neon)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', fontWeight: '800' }}>2</div>
+                  <div>
+                    <div style={{ fontSize: '0.85rem', fontWeight: '700', color: 'var(--text-white)' }}>HIPAA-Compliant Processing</div>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Secure audio processing, speech-to-text, and local LLM triaging</div>
+                  </div>
+                </div>
+                
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', background: 'rgba(255, 255, 255, 0.02)', borderRadius: '8px', border: '1px solid var(--border-light)' }}>
+                  <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(199, 255, 61, 0.1)', color: 'var(--accent-neon)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', fontWeight: '800' }}>3</div>
+                  <div>
+                    <div style={{ fontSize: '0.85rem', fontWeight: '700', color: 'var(--text-white)' }}>Direct Handoff to Clinic CRM</div>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>SSL encrypted webhook pushing details directly to your system</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -2064,6 +2139,20 @@ export default function Home({ setActivePage }) {
           }
           .testimonial-card {
             padding: var(--card-padding-mobile);
+          }
+        }
+
+        /* ── HIPAA Security Section ── */
+        .security-section-grid {
+          display: grid;
+          grid-template-columns: 1.15fr 0.85fr;
+          gap: 48px;
+          align-items: center;
+        }
+        @media (max-width: 1024px) {
+          .security-section-grid {
+            grid-template-columns: 1fr;
+            gap: 32px;
           }
         }
 
