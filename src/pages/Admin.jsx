@@ -612,7 +612,7 @@ export default function Admin({ addToast, setActivePage }) {
                               <div className="phone-subtext">{c.phone || '—'}</div>
                             </td>
                             <td>
-                              <div className={`service-tag-badge ${c.service && c.service.includes('7-Day Trial') ? 'trial-badge' : ''}`}>{c.service}</div>
+                              <div className={`service-tag-badge ${c.service && (c.service.includes('7-Day Trial') || c.service.includes('Free Demo')) ? 'trial-badge' : ''}`}>{c.service}</div>
                               <p className="message-content-text">{c.message}</p>
                             </td>
                             <td>
