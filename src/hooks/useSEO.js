@@ -11,8 +11,8 @@ const SITE_NAME = 'Noryvex';
 
 const PAGE_META = {
   home: {
-    title: 'Noryvex | Best AI Automation Agency — Custom Voice Agents & Workflows',
-    description: 'Noryvex is a premier AI Automation Agency. We build custom AI Voice Calling Agents, Autonomous Receptionist AI systems, and Business Workflow Automation to help companies scale 24/7. Founded by Muhammad Razi.',
+    title: 'AI Receptionist for Dental Clinics | Noryvex',
+    description: 'Noryvex is a managed AI receptionist agency for dental clinics. We build, train, and run custom AI voice receptionists that answer patient calls 24/7, handle FAQs, and capture new bookings. 48-hour setup. Get a free clinic demo.',
     canonical: `${BASE_URL}/`,
   },
   solutions: {

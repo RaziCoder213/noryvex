@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, Lock, Mail, Calendar, LogOut, Check, Trash2, Eye, Plus, Star, Link, Image, Activity, Award, Settings } from 'lucide-react';
+import { Shield, Lock, Mail, Calendar, LogOut, Check, Trash2, Eye, Plus, Star, Link, Image, Activity, Award, Settings, User } from 'lucide-react';
 import { 
   dbGetContacts, 
   dbGetMeetings, 
@@ -50,6 +50,41 @@ export default function Admin({ addToast, setActivePage }) {
   // CMS forms
   const [newClient, setNewClient] = useState({ name: '', company: '', rating: 5, quote: '' });
   const [newPartner, setNewPartner] = useState({ name: '', link: '', image: '' });
+
+  // Brand & Founder profile (persisted to localStorage, read by About page)
+  const BRAND_PROFILE_KEY = 'noryvex_brand_profile';
+  const DEFAULT_BRAND_PROFILE = {
+    founderName:    'Muhammad Razi',
+    founderTitle:   'Founder & Full-Stack AI Developer',
+    founderBio:     "Muhammad Razi is the founder of Noryvex. Razi personally reviews, configures, and tests every clinic's receptionist configuration to ensure patient conversations feel natural, clinic scheduling works seamlessly, and FAQs are answered accurately.",
+    founderPhoto:   '',
+    founderLinkedIn:'https://www.linkedin.com/in/mrazi-dev/',
+    founderTwitter: '',
+    founderGitHub:  'https://github.com/RaziCoder213',
+    founderEmail:   'razi@trynoryvex.com',
+    companyName:    'Noryvex',
+    companyTagline: 'Never miss another dental patient call.',
+    companyDescription: 'Noryvex is a managed AI receptionist agency for dental clinics. We build, train, and manage custom AI voice receptionists that answer patient calls 24/7.',
+    companyLinkedIn:'',
+    companyTwitter: '',
+    companyWebsite: 'https://trynoryvex.com',
+  };
+  const [brandProfile, setBrandProfile] = useState(() => {
+    try {
+      const saved = localStorage.getItem(BRAND_PROFILE_KEY);
+      return saved ? { ...DEFAULT_BRAND_PROFILE, ...JSON.parse(saved) } : DEFAULT_BRAND_PROFILE;
+    } catch { return DEFAULT_BRAND_PROFILE; }
+  });
+  const [brandSaved, setBrandSaved] = useState(false);
+  const updateBrandProfile = (key, value) => setBrandProfile(prev => ({ ...prev, [key]: value }));
+  const saveBrandProfile = () => {
+    try {
+      localStorage.setItem(BRAND_PROFILE_KEY, JSON.stringify(brandProfile));
+      setBrandSaved(true);
+      addToast('Brand profile saved! About page updated.', 'success');
+      setTimeout(() => setBrandSaved(false), 3000);
+    } catch { addToast('Failed to save brand profile.', 'error'); }
+  };
 
   // Fetch admin dashboard data
   const fetchData = async (authToken) => {
@@ -505,6 +540,14 @@ export default function Admin({ addToast, setActivePage }) {
             <span>B2B Trust Badges</span>
           </button>
 
+          <button 
+            onClick={() => setActiveTab('brand-profile')} 
+            className={`nav-item ${activeTab === 'brand-profile' ? 'active' : ''}`}
+          >
+            <User size={18} />
+            <span>Brand &amp; Profile</span>
+          </button>
+
           <div className="nav-divider">CONNECTIONS</div>
 
           <button 
@@ -537,6 +580,7 @@ export default function Admin({ addToast, setActivePage }) {
               {activeTab === 'trials-tracker' && 'Active Campaigns'}
               {activeTab === 'cms-clients' && 'CMS Testimonials'}
               {activeTab === 'cms-partners' && 'CMS Trust Badges'}
+              {activeTab === 'brand-profile' && 'Brand & Founder Profile'}
               {activeTab === 'db-settings' && 'Cloud Database Settings'}
             </span>
           </div>
@@ -1066,7 +1110,153 @@ export default function Admin({ addToast, setActivePage }) {
               </div>
             )}
 
-            </>
+
+              {/* Tab 7: Brand & Founder Profile */}
+              {activeTab === 'brand-profile' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+
+                    {/* Founder profile column */}
+                    <div className="cms-form-card">
+                      <h3 style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <User size={20} className="icon-neon" /> Founder Profile
+                      </h3>
+
+                      {/* Photo preview */}
+                      <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+                        {brandProfile.founderPhoto ? (
+                          <img
+                            src={brandProfile.founderPhoto}
+                            alt="Founder"
+                            style={{ width: 100, height: 100, borderRadius: '50%', objectFit: 'cover', border: '2px solid #C7FF3D', display: 'block', margin: '0 auto 12px auto' }}
+                          />
+                        ) : (
+                          <div style={{ width: 100, height: 100, borderRadius: '50%', background: '#121215', border: '2px solid #C7FF3D', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px auto' }}>
+                            <User size={38} style={{ color: '#C7FF3D' }} />
+                          </div>
+                        )}
+                        <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', margin: 0 }}>Enter a photo URL below to update this preview</p>
+                      </div>
+
+                      {[{ label: 'Full Name', key: 'founderName', type: 'text', placeholder: 'Muhammad Razi' },
+                        { label: 'Title / Role', key: 'founderTitle', type: 'text', placeholder: 'Founder & Full-Stack AI Developer' },
+                        { label: 'Photo URL', key: 'founderPhoto', type: 'url', placeholder: 'https://example.com/photo.jpg' },
+                        { label: 'Email', key: 'founderEmail', type: 'email', placeholder: 'razi@trynoryvex.com' },
+                      ].map(f => (
+                        <div key={f.key} className="form-group">
+                          <label className="form-label">{f.label}</label>
+                          <input
+                            type={f.type}
+                            value={brandProfile[f.key] || ''}
+                            placeholder={f.placeholder}
+                            onChange={e => updateBrandProfile(f.key, e.target.value)}
+                            className="form-input"
+                          />
+                        </div>
+                      ))}
+
+                      <div className="form-group">
+                        <label className="form-label">Bio</label>
+                        <textarea
+                          value={brandProfile.founderBio || ''}
+                          rows={4}
+                          onChange={e => updateBrandProfile('founderBio', e.target.value)}
+                          className="form-input"
+                          style={{ resize: 'vertical', minHeight: 90 }}
+                        />
+                      </div>
+
+                      <p style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--text-muted)', margin: '20px 0 12px 0' }}>Founder Social Links</p>
+                      {[{ label: 'LinkedIn Profile URL', key: 'founderLinkedIn', placeholder: 'https://linkedin.com/in/...' },
+                        { label: 'Twitter / X Profile URL', key: 'founderTwitter', placeholder: 'https://x.com/...' },
+                        { label: 'GitHub Profile URL', key: 'founderGitHub', placeholder: 'https://github.com/...' },
+                      ].map(f => (
+                        <div key={f.key} className="form-group">
+                          <label className="form-label">{f.label}</label>
+                          <input
+                            type="url"
+                            value={brandProfile[f.key] || ''}
+                            placeholder={f.placeholder}
+                            onChange={e => updateBrandProfile(f.key, e.target.value)}
+                            className="form-input"
+                          />
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Company profile column */}
+                    <div className="cms-form-card">
+                      <h3 style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <Settings size={20} className="icon-neon" /> Company Profile
+                      </h3>
+
+                      {[{ label: 'Company Name', key: 'companyName', placeholder: 'Noryvex' },
+                        { label: 'Tagline', key: 'companyTagline', placeholder: 'Never miss another dental patient call.' },
+                        { label: 'Website', key: 'companyWebsite', placeholder: 'https://trynoryvex.com' },
+                      ].map(f => (
+                        <div key={f.key} className="form-group">
+                          <label className="form-label">{f.label}</label>
+                          <input
+                            type="text"
+                            value={brandProfile[f.key] || ''}
+                            placeholder={f.placeholder}
+                            onChange={e => updateBrandProfile(f.key, e.target.value)}
+                            className="form-input"
+                          />
+                        </div>
+                      ))}
+
+                      <div className="form-group">
+                        <label className="form-label">Company Description</label>
+                        <textarea
+                          value={brandProfile.companyDescription || ''}
+                          rows={4}
+                          onChange={e => updateBrandProfile('companyDescription', e.target.value)}
+                          className="form-input"
+                          style={{ resize: 'vertical', minHeight: 90 }}
+                        />
+                      </div>
+
+                      <p style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--text-muted)', margin: '20px 0 12px 0' }}>Company Social Links</p>
+                      {[{ label: 'Company LinkedIn URL', key: 'companyLinkedIn', placeholder: 'https://linkedin.com/company/noryvex' },
+                        { label: 'Company Twitter / X URL', key: 'companyTwitter', placeholder: 'https://x.com/noryvex' },
+                      ].map(f => (
+                        <div key={f.key} className="form-group">
+                          <label className="form-label">{f.label}</label>
+                          <input
+                            type="url"
+                            value={brandProfile[f.key] || ''}
+                            placeholder={f.placeholder}
+                            onChange={e => updateBrandProfile(f.key, e.target.value)}
+                            className="form-input"
+                          />
+                        </div>
+                      ))}
+
+                      {/* Preview of how About page will look */}
+                      <div style={{ marginTop: '28px', padding: '18px', background: 'rgba(199,255,61,0.03)', border: '1px solid rgba(199,255,61,0.08)', borderRadius: '10px' }}>
+                        <p style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--accent-neon)', marginBottom: '10px' }}>Live Preview — About Page Card</p>
+                        <p style={{ fontSize: '0.85rem', color: 'var(--text-white)', fontWeight: 700, marginBottom: '4px' }}>{brandProfile.founderName || '—'}</p>
+                        <p style={{ fontSize: '0.78rem', color: 'var(--text-gray)', marginBottom: '6px' }}>{brandProfile.founderTitle || '—'}</p>
+                        <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', lineHeight: 1.5, margin: 0 }}>{(brandProfile.founderBio || '').slice(0, 120)}{brandProfile.founderBio?.length > 120 ? '…' : ''}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                    <button
+                      onClick={saveBrandProfile}
+                      className="btn btn-primary"
+                      style={{ minWidth: '200px' }}
+                    >
+                      {brandSaved ? <><Check size={16} /> Saved!</> : <><User size={16} /> Save Brand Profile</>}
+                    </button>
+                    <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: 0 }}>Changes appear on the About page immediately after saving.</p>
+                  </div>
+                </div>
+              )}
+
+              </>
           )}
 
         </div>
