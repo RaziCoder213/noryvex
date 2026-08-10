@@ -2,7 +2,7 @@ import pg from 'pg';
 const { Pool } = pg;
 
 // Connection string from environment variable or user fallback
-const connectionString = process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_JGY3PNIXWe2D@ep-orange-water-ayb9mumo-pooler.c-5.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require';
+const connectionString = process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_JGY3PNIXWe2D@ep-orange-water-ayb9mumo-pooler.c-5.us-east-2.aws.neon.tech/neondb?sslmode=require';
 
 const pool = new Pool({
   connectionString,
@@ -37,13 +37,17 @@ export async function initDb() {
         email VARCHAR(255) NOT NULL,
         company VARCHAR(255),
         phone VARCHAR(255),
-        date VARCHAR(50) NOT NULL,
-        time VARCHAR(50) NOT NULL,
+        date VARCHAR(255) NOT NULL,
+        time VARCHAR(255) NOT NULL,
         notes TEXT,
         status VARCHAR(50) DEFAULT 'pending',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
+
+    // Widen date/time columns if they were created with old VARCHAR(50) definition
+    await client.query(`ALTER TABLE meetings ALTER COLUMN date TYPE VARCHAR(255)`);
+    await client.query(`ALTER TABLE meetings ALTER COLUMN time TYPE VARCHAR(255)`);
 
     // 3. Create trials table
     await client.query(`
@@ -136,7 +140,11 @@ let dbInitPromise = null;
 
 export async function ensureDbConnected() {
   if (!dbInitPromise) {
-    dbInitPromise = initDb();
+    dbInitPromise = initDb().catch(err => {
+      // Reset so the next request can retry rather than caching a rejected promise forever
+      dbInitPromise = null;
+      throw err;
+    });
   }
   return dbInitPromise;
 }
@@ -235,6 +243,18 @@ export async function saveMeeting(name, email, company, phone, date, time, notes
     [name, email, company, phone, date, time, notes]
   );
   return { lastID: res.rows[0].id };
+}
+
+export async function getBookedSlots(dateFragment) {
+  const res = dateFragment
+    ? await pool.query(
+        "SELECT date, time FROM meetings WHERE date ILIKE $1 AND status != 'cancelled'",
+        [`%${dateFragment}%`]
+      )
+    : await pool.query(
+        "SELECT date, time FROM meetings WHERE status != 'cancelled'"
+      );
+  return res.rows;
 }
 
 export async function getMeetings() {

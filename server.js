@@ -15,6 +15,7 @@ import {
   getMeetings, 
   markMeetingCompleted, 
   deleteMeeting,
+  getBookedSlots,
   saveTrial,
   getTrials,
   updateTrialStatus,
@@ -182,8 +183,27 @@ app.post('/api/meeting', async (req, res) => {
 
     res.status(201).json({ message: 'Meeting scheduled successfully.' });
   } catch (error) {
-    console.error('Error saving meeting:', error);
+    // Log full Postgres error so it shows in Vercel function logs
+    console.error('[/api/meeting] saveMeeting failed:', {
+      message: error.message,
+      code: error.code,
+      detail: error.detail,
+      hint: error.hint,
+      position: error.position,
+    });
     res.status(500).json({ error: 'Server error. Please try again later.' });
+  }
+});
+
+// Return booked slot keys for a date — used by the booking calendar for cross-device blocking
+app.get('/api/slots', async (req, res) => {
+  try {
+    const { date } = req.query; // optional date fragment, e.g. 'August 11'
+    const slots = await getBookedSlots(date || null);
+    res.json({ slots });
+  } catch (error) {
+    console.error('[/api/slots] query failed:', error.message);
+    res.status(500).json({ error: 'Failed to fetch slots.' });
   }
 });
 
