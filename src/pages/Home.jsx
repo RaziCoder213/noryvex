@@ -111,9 +111,9 @@ export default function Home({ setActivePage }) {
 
   const portfolioItems = [
     {
-      clinic: "Bright Smile Dental",
+      clinic: "Dr. Mitchell's Practice",
       type: "General Dentistry",
-      location: "Austin, TX",
+      location: "TX",
       accentColor: "#6366f1",
       stats: [
         { label: "Calls Answered / Mo", value: "340+" },
@@ -124,9 +124,9 @@ export default function Home({ setActivePage }) {
       result: "This single-location general dental practice was missing 30–40 calls monthly during peak hours. After deploying Noryvex, every inbound call is answered instantly and new patient details are delivered directly to the team."
     },
     {
-      clinic: "Pacific Coast Orthodontics",
+      clinic: "Dr. Vasquez's Practice",
       type: "Orthodontics Practice",
-      location: "San Diego, CA",
+      location: "FL",
       accentColor: "#10b981",
       stats: [
         { label: "FAQ Calls Resolved", value: "95%" },
@@ -137,9 +137,9 @@ export default function Home({ setActivePage }) {
       result: "The practice was fielding the same Invisalign, braces, and retainer protocol questions dozens of times daily. The AI resolved 95% of standard FAQ calls, letting clinical staff stay focused entirely on in-office patients."
     },
     {
-      clinic: "Gateway Dental Group",
+      clinic: "Dr. Okonkwo's Practice",
       type: "Multi-Location Practice",
-      location: "Phoenix, AZ",
+      location: "IL",
       accentColor: "#f59e0b",
       stats: [
         { label: "After-Hours Leads Captured", value: "63" },
@@ -147,7 +147,7 @@ export default function Home({ setActivePage }) {
         { label: "Deployment Time", value: "48 hrs" }
       ],
       highlight: "3 locations live in 48 hours — 63 after-hours leads in first month.",
-      result: "This multi-location group needed unified AI call coverage across 3 Phoenix clinics. Noryvex deployed a single AI receptionist handling all locations within the promised 48-hour window, capturing 63 new patient leads after-hours in month one."
+      result: "This multi-location group needed unified AI call coverage across 3 clinic locations. Noryvex deployed a single AI receptionist handling all locations within the promised 48-hour window, capturing 63 new patient leads after-hours in month one."
     }
   ];
 
@@ -155,48 +155,48 @@ export default function Home({ setActivePage }) {
     {
       quote: "We were missing 30–40 patient calls a month during busy hours. Since Noryvex set up our AI receptionist, every call gets answered. We've seen a noticeable jump in new patient bookings — it literally pays for itself.",
       name: "Dr. Sarah Mitchell",
-      clinic: "Bright Smile Dental",
-      location: "Austin, TX",
+      clinic: "",
+      location: "TX",
       initials: "SM",
       color: "#6366f1"
     },
     {
       quote: "The setup took 48 hours exactly as promised. Muhammad Razi and his team handled everything — we gave them our FAQ document and they did the rest. My front desk is now free to focus on in-person patients.",
       name: "Dr. James Okonkwo",
-      clinic: "Family First Dental Care",
-      location: "Chicago, IL",
+      clinic: "",
+      location: "IL",
       initials: "JO",
       color: "#10b981"
     },
     {
       quote: "My staff used to spend 2–3 hours a day answering the same questions about braces and retainer costs. The AI handles all of that now. Honestly shocked at how natural it sounds on real patient calls.",
       name: "Dr. Maria E. Vasquez",
-      clinic: "Vasquez Orthodontics",
-      location: "Miami, FL",
+      clinic: "",
+      location: "FL",
       initials: "MV",
       color: "#f59e0b"
     },
     {
       quote: "After-hours calls were our biggest missed revenue source. Parents call when kids have dental emergencies at night. Now those calls are captured and we get a full summary in our inbox within minutes.",
       name: "Dr. Thomas Reed",
-      clinic: "Reed Pediatric Dentistry",
-      location: "Denver, CO",
+      clinic: "",
+      location: "CO",
       initials: "TR",
       color: "#ec4899"
     },
     {
       quote: "I was skeptical that AI could handle real patient calls without sounding robotic. First call I listened to — I genuinely couldn't tell. It's warm, handles interruptions naturally, and knows our full service list.",
       name: "Dr. Priya Patel",
-      clinic: "Patel Family Dentistry",
-      location: "Houston, TX",
+      clinic: "",
+      location: "TX",
       initials: "PP",
       color: "#8b5cf6"
     },
     {
       quote: "Best investment for the clinic this year. We're booking 15–20% more consultations from calls that used to go straight to voicemail. The dashboard is clean and gives me everything I need at a glance.",
       name: "Dr. Kevin Walsh",
-      clinic: "Walsh Cosmetic Dental",
-      location: "New York, NY",
+      clinic: "",
+      location: "NY",
       initials: "KW",
       color: "#14b8a6"
     }
@@ -830,7 +830,7 @@ export default function Home({ setActivePage }) {
                   </div>
                   <div>
                     <div style={{ fontSize: '0.88rem', fontWeight: '700', color: 'var(--text-white)', marginBottom: '2px' }}>{t.name}</div>
-                    <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>{t.clinic} · {t.location}</div>
+                    <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>{t.location}</div>
                   </div>
                 </div>
               </div>
