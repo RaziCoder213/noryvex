@@ -17,6 +17,7 @@ Noryvex is a done-for-you AI receptionist agency for dental clinics. We build an
 - **Summaries & recordings**: Logs of calls, recordings, and text summaries pushed directly to your team's email or dashboard.
 - **US Phone Numbers**: We provide a dedicated phone number in any US state for your clinic's line.
 - **Practice Management Integration**: Direct or dashboard/email handoffs to existing clinic tools.
+- **HIPAA Compliance**: Business Associate Agreements (BAAs) signed with clinics; TLS 1.3/AES-256 data security protocols.
 
 ## Navigation & Entry Points
 - **Home**: Overview of dental receptionist solutions, process flow, and custom pricing comparison.

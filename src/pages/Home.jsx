@@ -847,6 +847,75 @@ export default function Home({ setActivePage }) {
         </div>
       </section>
 
+      {/* ── HIPAA Compliance & Security Section ── */}
+      <section style={{ padding: 'var(--section-padding-desktop) 0', background: 'var(--bg-pure)', borderTop: '1px solid var(--border-light)' }}>
+        <div className="container">
+          <div className="security-section-grid">
+            <div>
+              <span className="section-tag txt-slide">Data Protection</span>
+              <h2 className="section-title txt-reveal-2" style={{ textAlign: 'left', marginBottom: '20px' }}>HIPAA Compliant &amp; Secure Patient Data Flow</h2>
+              <p className="section-subtitle txt-blur-in" style={{ textAlign: 'left', margin: 0, marginBottom: '24px' }}>
+                We design and run our voice systems to adhere strictly to healthcare privacy standards. Your practice retains complete ownership of your call records and transcripts.
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div style={{ display: 'flex', gap: '12px', alignItems: 'start' }}>
+                  <CheckCircle2 size={18} style={{ color: 'var(--accent-neon)', flexShrink: 0, marginTop: '3px' }} />
+                  <div>
+                    <h4 style={{ color: 'var(--text-white)', fontSize: '0.95rem', fontWeight: '700', margin: 0, marginBottom: '4px' }}>Business Associate Agreements (BAAs)</h4>
+                    <p style={{ color: 'var(--text-gray)', fontSize: '0.85rem', margin: 0, lineHeight: 1.4 }}>We sign BAAs with all US dental clinics to guarantee HIPAA compliance.</p>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: '12px', alignItems: 'start' }}>
+                  <CheckCircle2 size={18} style={{ color: 'var(--accent-neon)', flexShrink: 0, marginTop: '3px' }} />
+                  <div>
+                    <h4 style={{ color: 'var(--text-white)', fontSize: '0.95rem', fontWeight: '700', margin: 0, marginBottom: '4px' }}>End-to-End Encryption</h4>
+                    <p style={{ color: 'var(--text-gray)', fontSize: '0.85rem', margin: 0, lineHeight: 1.4 }}>All patient interactions and database fields are encrypted in transit and at rest.</p>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: '12px', alignItems: 'start' }}>
+                  <CheckCircle2 size={18} style={{ color: 'var(--accent-neon)', flexShrink: 0, marginTop: '3px' }} />
+                  <div>
+                    <h4 style={{ color: 'var(--text-white)', fontSize: '0.95rem', fontWeight: '700', margin: 0, marginBottom: '4px' }}>Zero Public AI Training</h4>
+                    <p style={{ color: 'var(--text-gray)', fontSize: '0.85rem', margin: 0, lineHeight: 1.4 }}>Your patient calls and clinic records are never used to train public LLM models.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Visual flow container */}
+            <div className="glass-card" style={{ padding: '32px', border: '1px solid var(--border-light)', display: 'flex', flexDirection: 'column', gap: '20px', background: 'var(--bg-charcoal)', borderRadius: '12px' }}>
+              <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: 'var(--text-white)', margin: 0, borderBottom: '1px solid var(--border-light)', paddingBottom: '14px' }}>Secure Call Data Flow</h3>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', background: 'rgba(255, 255, 255, 0.02)', borderRadius: '8px', border: '1px solid var(--border-light)' }}>
+                  <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(199, 255, 61, 0.1)', color: 'var(--accent-neon)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', fontWeight: '800' }}>1</div>
+                  <div>
+                    <div style={{ fontSize: '0.85rem', fontWeight: '700', color: 'var(--text-white)' }}>Inbound Call Routed</div>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Encrypted SIP/VoIP voice stream connection</div>
+                  </div>
+                </div>
+                
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', background: 'rgba(255, 255, 255, 0.02)', borderRadius: '8px', border: '1px solid var(--border-light)' }}>
+                  <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(199, 255, 61, 0.1)', color: 'var(--accent-neon)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', fontWeight: '800' }}>2</div>
+                  <div>
+                    <div style={{ fontSize: '0.85rem', fontWeight: '700', color: 'var(--text-white)' }}>HIPAA-Compliant Processing</div>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Secure audio processing, speech-to-text, and local LLM triaging</div>
+                  </div>
+                </div>
+                
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', background: 'rgba(255, 255, 255, 0.02)', borderRadius: '8px', border: '1px solid var(--border-light)' }}>
+                  <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(199, 255, 61, 0.1)', color: 'var(--accent-neon)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', fontWeight: '800' }}>3</div>
+                  <div>
+                    <div style={{ fontSize: '0.85rem', fontWeight: '700', color: 'var(--text-white)' }}>Direct Handoff to Clinic CRM</div>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>SSL encrypted webhook pushing details directly to your system</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── Big Kinetic Tagline (Sticky Pin & Scroll Reveal) ── */}
       <section className="nrx-tagline-sticky-parent" ref={taglineSectionRef}>
         <div className="nrx-tagline-sticky-wrapper">
@@ -2070,6 +2139,20 @@ export default function Home({ setActivePage }) {
           }
           .testimonial-card {
             padding: var(--card-padding-mobile);
+          }
+        }
+
+        /* ── HIPAA Security Section ── */
+        .security-section-grid {
+          display: grid;
+          grid-template-columns: 1.15fr 0.85fr;
+          gap: 48px;
+          align-items: center;
+        }
+        @media (max-width: 1024px) {
+          .security-section-grid {
+            grid-template-columns: 1fr;
+            gap: 32px;
           }
         }
 

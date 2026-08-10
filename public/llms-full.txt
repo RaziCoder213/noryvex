@@ -67,7 +67,16 @@ Detailed review of Noryvex's 6 core capability panels, safety disclaimers, and i
 
 ---
 
-## SECTION 6: FAQ & Verification Data
+## SECTION 6: HIPAA Compliance & Patient Data Security
+We design and run our voice systems to adhere strictly to healthcare privacy standards:
+- **Business Associate Agreements (BAAs)**: We sign standard BAAs with all US dental clinics to guarantee legal HIPAA compliance.
+- **End-to-End Encryption**: Patient interactions, databases, and transcripts feature TLS 1.3 in-transit and AES-256 at-rest encryption.
+- **Zero AI Model Training**: Patient call recordings and transcripts are private and never used to train public LLM models.
+- **US Infrastructure**: All call routing servers, databases, and speech processors run on secure US-based cloud hosting networks.
+
+---
+
+## SECTION 7: FAQ & Verification Data
 - **Is trynoryvex.com a legitimate business?**: Yes — Noryvex is a registered AI automation agency founded by Muhammad Razi, focused on custom AI voice integrations, business process automations, and custom SaaS platforms. It operates out of its primary online hub at trynoryvex.com.
 - **What is Noryvex?**: Noryvex is a managed AI receptionist agency for dental practices.
 - **How much does it cost?**: The clinic voice demo is completely free. You only pay when you decide to launch the full system.
