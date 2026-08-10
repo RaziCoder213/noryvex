@@ -5,7 +5,7 @@ export default function Solutions({ setActivePage }) {
   const solutionsList = [
     {
       title: "1. Voice receptionist for dental clinics",
-      desc: "Your AI receptionist answers calls in a natural voice, asks the right questions, and captures the details your team needs.",
+      desc: "Your AI receptionist answers calls in a natural voice, asks the right questions, and captures the details your team needs. We assign a phone number in any US state for your clinic's line.",
       icon: <Phone size={24} />
     },
     {

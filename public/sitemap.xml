@@ -8,7 +8,7 @@
     http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 
   <!-- ═══════════════════════════════════════════
-       Noryvex — AI Automation Agency
+       Noryvex — Dental AI Receptionist Agency
        Domain: https://trynoryvex.com
        Founder: Muhammad Razi (razi@trynoryvex.com)
   ══════════════════════════════════════════════ -->
@@ -16,19 +16,19 @@
   <!-- Home Page -->
   <url>
     <loc>https://trynoryvex.com/</loc>
-    <lastmod>2026-07-28</lastmod>
+    <lastmod>2026-08-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image>
       <image:loc>https://trynoryvex.com/logo.png</image:loc>
-      <image:title>Noryvex — Best AI Automation Agency</image:title>
+      <image:title>Noryvex — Dental AI Receptionist Agency</image:title>
     </image:image>
   </url>
 
   <!-- Solutions Page -->
   <url>
     <loc>https://trynoryvex.com/solutions</loc>
-    <lastmod>2026-07-28</lastmod>
+    <lastmod>2026-08-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -36,7 +36,7 @@
   <!-- Live Demo Page -->
   <url>
     <loc>https://trynoryvex.com/live-demo</loc>
-    <lastmod>2026-07-28</lastmod>
+    <lastmod>2026-08-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <image:image>
@@ -48,7 +48,7 @@
   <!-- About Page -->
   <url>
     <loc>https://trynoryvex.com/about</loc>
-    <lastmod>2026-07-28</lastmod>
+    <lastmod>2026-08-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -56,7 +56,7 @@
   <!-- Contact & Strategy Call Page -->
   <url>
     <loc>https://trynoryvex.com/contact</loc>
-    <lastmod>2026-07-28</lastmod>
+    <lastmod>2026-08-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -64,7 +64,7 @@
   <!-- Privacy Policy -->
   <url>
     <loc>https://trynoryvex.com/privacy</loc>
-    <lastmod>2026-07-28</lastmod>
+    <lastmod>2026-08-10</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
@@ -72,7 +72,7 @@
   <!-- Terms of Service -->
   <url>
     <loc>https://trynoryvex.com/terms</loc>
-    <lastmod>2026-07-28</lastmod>
+    <lastmod>2026-08-10</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>

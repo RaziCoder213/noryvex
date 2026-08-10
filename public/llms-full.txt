@@ -1,14 +1,14 @@
 # Noryvex — Full Directory and Content Specification
 
-This file contains the complete textual content of Noryvex AI Automation Agency website for indexing by Large Language Models and Search Crawlers.
+This file contains the complete textual content of Noryvex Dental AI Receptionist Agency website for indexing by Large Language Models and Search Crawlers.
 
 ---
 
 ## SECTION 1: Brand & Identity
 - **Company Name**: Noryvex
-- **Tagline**: Automate. Communicate. Grow.
+- **Tagline**: Never miss another dental patient call.
 - **Website**: https://trynoryvex.com
-- **Founder**: Muhammad Razi (Founder & Full-Stack AI Developer)
+- **Founder**: Muhammad Razi (Founder & Lead AI Architect)
 - **LinkedIn Profile**: https://www.linkedin.com/in/mrazi-dev/
 - **LinkedIn Company Page**: https://www.linkedin.com/company/noryvex
 - **GitHub Repository**: https://github.com/RaziCoder213/noryvex
@@ -17,100 +17,59 @@ This file contains the complete textual content of Noryvex AI Automation Agency 
 ---
 
 ## SECTION 2: Hero Section & Mission Statement
-"Your AI Employee That Never Sleeps."
-We build AI Voice Agents, Business Automation, and Intelligent Software that answer calls, automate workflows, and help businesses scale exponentially.
-- Outbound Campaigns & Inbound Reception
-- Latency-optimized speech synthesis under 800ms
-- 24/7 lead qualification and meeting bookings
+"Never miss another dental patient call."
+Noryvex builds and runs a custom AI receptionist for your dental clinic — answering calls, qualifying patients, and booking appointments 24/7. Live in 48 hours.
+- Done-For-You (DFY) service agency, not a self-serve software platform.
+- Latency-optimized natural sounding speech synthesis under 800ms.
+- We assign a phone number in any US state for your clinic's demo.
 
 ---
 
 ## SECTION 3: Key Capabilities & Services
 
-### 1. AI Voice Agents
-Futuristic human-sounding voice agents capable of conducting outbound campaigns and inbound support with realistic emotional cues and sub-800ms latency.
+### 1. Inbound AI Receptionist
+Answers calls in a natural voice, asks for patient names, contact numbers, and checks appointment requests. Runs 24/7.
 
-### 2. AI Receptionists
-Fully autonomous 24/7 receptionists answering calls, qualifying leads, and scheduling appointments directly inside your CRM (HubSpot, Salesforce, GoHighLevel).
+### 2. Clinic FAQ Answering
+Responds automatically to patient inquiries about opening hours, clinic location, treatments, pricing guidance, and insurance coverage.
 
-### 3. Business Automation
-Save hundreds of hours by automating repetitive administrative processes, reporting, and operational tasks.
+### 3. Appointment Requests
+Collects patient preferred date, time, contact info, and reason for visit so your front desk can confirm booking slots easily.
 
-### 4. Workflow Automation
-Connect your entire software stack and orchestrate multi-step data flows that trigger automatically with zero human effort.
+### 4. Call Summaries & Transcripts
+Every conversation is recorded and transcribed, sending call logs, audio recordings, and text summaries to your email or dashboard.
 
-### 5. AI Chatbots
-Conversational agents that understand context, resolve customer concerns, and convert web traffic into booked sales calls.
+### 5. US State Phone Numbers
+We configure a phone line in any US state for your clinic's demo and production launch.
 
-### 6. Web Applications
-Bespoke web applications built from scratch with modern technology, optimized for lightning performance and security.
-
-### 7. Mobile Apps
-Premium iOS and Android mobile experiences engineered with native fluid feeling, integrated with AI features.
-
-### 8. SaaS Development
-End-to-end design and coding of Software-as-a-Service platforms ready for scale, subscription logic, and user onboarding.
-
-### 9. API Integrations
-Harmonize data layers by designing custom API webhooks, linking legacy databases, and enabling real-time communications.
-
-### 10. CRM Automation
-Synchronize customer leads automatically into platforms like HubSpot, Salesforce, or GoHighLevel with deep custom triggers.
+### 6. Workflow Integrations
+Syncs patient details and appointment requests into your existing practice tools, calendar systems (Google Calendar, Calendly), or email lists.
 
 ---
 
 ## SECTION 4: Our Workflow & Delivery Timeline
-- **01 | Discovery**: We deep dive into your business operations to identify bottlenecks and design the ultimate automation strategy.
-- **02 | Planning**: Our team structures custom AI architectures, user journeys, API mappings, and prompt parameters.
-- **03 | Development**: We code custom interfaces, train voice agents, write database connectors, and test workflows.
-- **04 | Deployment**: Launch Noryvex agents into your live customer channels with safe staging and full monitoring setups.
-- **05 | Support**: 24/7 system health checks, optimization of agent memory, and scaling integrations as needed.
+- **1. Book a Demo Call**: Discuss clinic FAQs, hours, and calendar setups.
+- **2. We Build Your Demo**: We configure and train a prototype voice receptionist.
+- **3. You Test the Demo**: We send you a phone number to call and hear it live.
+- **4. Approve and Launch**: Connect call routing and sync workflows.
+- **5. We Manage It Monthly**: Continuous prompt updates, QA review, and logs monitoring.
 
 ---
 
 ## SECTION 5: Solutions Details
-
-### Voice Receptionist Solutions
-Designed for businesses losing leads to missed phone calls. Features include:
-- Custom conversational flows
-- Sub-800ms API response latency
-- Native lead qualification logic
-- Multi-channel support (SMS, Phone, Web Call)
-
-### Workflow & Business Automation
-Designed to eliminate manual copy-pasting and repetitive administrative tasks. Features include:
-- Auto-sync leads from advertising channels to CRM
-- Document generation and automated reporting
-- Multi-platform integrations (Slack, Gmail, Stripe, QuickBooks)
-- Database backups and sync pipelines
-
-### Intelligent Software & SaaS
-For companies seeking bespoke software platforms or tools. Features include:
-- React/Node.js web portals
-- Cryptographically secure interfaces
-- Vector search and embeddings retrieval
-- Stripe recurring subscription engines
+Detailed review of Noryvex's 6 core capability panels, safety disclaimers, and integration paths.
+- **Voice Receptionist**: Custom conversational voice flows with sub-800ms API response latency.
+- **FAQ Answering**: Natural responses to common questions about your clinic services and hours.
+- **Appointment Requests**: Gathering patient time/date preferences for front-desk handoff.
+- **Dashboard & Handoff**: Email summaries and logs pushed directly to your team.
+- **CRM and Calendar Integrations**: Connecting to existing practice management tools where possible.
+- **Monthly Management**: Prompt optimization, QA logs review, and FAQ updates.
 
 ---
 
 ## SECTION 6: FAQ & Verification Data
 - **Is trynoryvex.com a legitimate business?**: Yes — Noryvex is a registered AI automation agency founded by Muhammad Razi, focused on custom AI voice integrations, business process automations, and custom SaaS platforms. It operates out of its primary online hub at trynoryvex.com.
-- **What is Noryvex?**: Noryvex is an AI technology agency founded by Muhammad Razi that designs and builds custom AI voice agents, CRM integrations, and SaaS portals.
-- **Is it a SaaS tool?**: No, Noryvex is a service-based agency. We build, host, and maintain custom solutions for you.
-- **Where can I test it?**: An interactive browser demo simulates a live phone call with "Chloe", the AI Receptionist, at trynoryvex.com/#live-demo.
-- **Does Noryvex offer a checking warranty?**: Yes — a 7-day checking warranty with up to 30 minutes of real call time, no credit card required. Noryvex sets up the custom agent directly under this checking phase; it's not a self-serve signup.
-
----
-
-## SECTION 7: Industries We Serve
-Noryvex engineers custom AI Voice Agents, autonomous receptionists, and workflow automation solutions across all major industries, including:
-- **Healthcare & Medical (Dental, Pediatric, Clinical):** Eliminate missed calls, qualify patient leads, and schedule appointments into practice management software 24/7.
-- **Real Estate & Property Management:** Automate tenant call routing, qualify buyer leads, and book property showings directly.
-- **E-commerce & Retail:** Deploy custom AI chatbots and order-tracking voice flows to handle inquiries and support.
-- **SaaS & Tech Startups:** Design custom AI data syncing, Stripe billing connections, and user onboarding flows.
-- **Legal & Consulting:** Streamline client intake forms, triage case severity, and book consultation strategy calls.
-- **Finance & Insurance:** Automate CPA lead generation, report syncs, and client appointment scheduling.
-- **Logistics & Transportation:** Coordinate dispatch channels, track delivery statuses, and handle communications automatically.
-- **Local Home Services (Plumbing, HVAC, Electrical, Roofing):** Capture high-urgency after-hours service requests and dispatch technicians.
-- **Education & E-learning:** Automate student enrollment questions, course reminders, and calendar coordination.
-- **Hospitality & Bookings (Restaurants, Salons, Gyms):** Automate seat reservations, booking schedules, and appointment notifications.
+- **What is Noryvex?**: Noryvex is a managed AI receptionist agency for dental practices.
+- **How much does it cost?**: The clinic voice demo is completely free. You only pay when you decide to launch the full system.
+- **Does it require software setup?**: No. Muhammad Razi and the Noryvex team configure, test, and manage the system for you end-to-end.
+- **Are there safety safeguards?**: Yes. The AI is configured with medical safety guardrails. It never gives medical advice; it only triages calls and collects appointment details.

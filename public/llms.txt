@@ -1,28 +1,31 @@
 # Noryvex
 
-> Automate. Communicate. Grow.
+> Never miss another dental patient call.
 
-Noryvex is a premium, modern AI automation agency specializing in building custom conversational AI voice assistants, end-to-end business workflow integrations, and bespoke intelligent software.
+Noryvex is a done-for-you AI receptionist agency for dental clinics. We build and manage custom AI voice receptionists that answer calls, capture patient details, handle clinic FAQs, collect appointment requests, and hand them off to your existing calendar or CRM.
 
 ## Key Information
 - **Official Website**: https://trynoryvex.com
 - **Founder**: Muhammad Razi (https://www.linkedin.com/in/mrazi-dev/)
-- **Core Focus**: Scaling business operations, qualifying leads, and booking meetings automatically 24/7.
-- **Tech Stack**: State-of-the-art LLMs, latency-optimized speech synthesis (&lt;800ms), and custom cloud pipeline syncs.
+- **Core Focus**: Done-for-you AI voice receptionists for dental clinics (cosmetic, general, orthodontist, pediatric, emergency).
+- **Tech Stack**: Latency-optimized speech synthesis (&lt;800ms) utilizing Twilio, Vapi, ElevenLabs, and custom integration pipelines.
 
 ## Capabilities
-- **AI Voice Agents**: Conversational voice bots for inbound reception and outbound cold/warm campaigns.
-- **AI Receptionists**: 24/7 lead capture, qualifying, and appointment booking synced to CRMs.
-- **Business & Workflow Automation**: Automated administrative reporting, cross-app data routing (HubSpot, Salesforce, GoHighLevel).
-- **Intelligent Software**: End-to-end custom SaaS interfaces, database systems, and custom API connections.
+- **Inbound AI Receptionist**: Answering patient calls 24/7 (during lunch breaks, peak times, and after-hours).
+- **Appointment Requests**: Gathering patient preferred date, time, contact info, and reason for visit.
+- **Clinic FAQs Answering**: Responding to opening hours, location details, accepted insurances, pricing guidance, and treatment questions.
+- **Summaries & recordings**: Logs of calls, recordings, and text summaries pushed directly to your team's email or dashboard.
+- **US Phone Numbers**: We provide a dedicated phone number in any US state for your clinic's line.
+- **Practice Management Integration**: Direct or dashboard/email handoffs to existing clinic tools.
 
 ## Navigation & Entry Points
-- **Home**: Main overview of services, case stats, and timeline.
-- **Solutions**: Detailed breakdown of voice, workflow, and SaaS packages.
-- **Live Demo**: Interactive browser phone simulator demonstrating "Chloe", an AI receptionist.
-- **About**: Agency philosophy and background.
-- **Contact**: Free strategy call bookings and general inquiries.
+- **Home**: Overview of dental receptionist solutions, process flow, and custom pricing comparison.
+- **Solutions**: Detailed review of the 6 core capability panels, safety disclaimers, and integration paths.
+- **Live Demo**: Browser-simulated live call with "Chloe" configured for Bright Dental clinic.
+- **About**: Description of founder Muhammad Razi's 4-step quality assurance review workflow.
+- **Contact**: Clinic intake form to get a free custom demo.
 
 ## FAQ
-- **Is trynoryvex.com a legitimate business?**: Yes — Noryvex is a registered AI automation agency founded by Muhammad Razi, focused on custom AI voice integrations, workflow automation, and custom SaaS applications.
-- **Does Noryvex offer a checking warranty?**: Yes — a 7-day checking warranty with up to 30 minutes of real call time, no credit card required. Noryvex sets up the custom agent directly under this checking phase; it's not a self-serve signup.
+- **Is Noryvex a SaaS product?**: No, Noryvex is a full-service managed agency. We build, train, configure, test, and manage the receptionist for you end-to-end.
+- **How much does it cost?**: We build a free custom demo first. You only pay when you decide to launch the full system.
+- **How long does it take?**: We can design, configure, and share your clinic's voice prototype in under 48 hours.

@@ -108,10 +108,9 @@ export async function initDb() {
     if (parseInt(partnersRes.rows[0].count, 10) === 0) {
       await client.query(`
         INSERT INTO partners (name, link, image) VALUES
-        ('Super Launch', 'https://www.superlaun.ch/products/2926', 'https://www.superlaun.ch/badge.png'),
-        ('Twelve Tools', 'https://twelve.tools', 'https://twelve.tools/badge3-dark.svg'),
-        ('Wired Business', 'https://wired.business', 'https://wired.business/badge3-dark.svg'),
-        ('GoodFirms', 'https://www.goodfirms.co/company/noryvex', 'https://www.goodfirms.co/img/badges/recognized-on-goodfirms.png')
+        ('Vapi', 'https://vapi.ai', 'https://vapi.ai/favicon.ico'),
+        ('ElevenLabs', 'https://elevenlabs.io', 'https://elevenlabs.io/static/favicon.png'),
+        ('Twilio', 'https://www.twilio.com', 'https://www.twilio.com/favicon.ico')
       `);
     }
 

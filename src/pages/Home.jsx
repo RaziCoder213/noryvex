@@ -622,7 +622,7 @@ export default function Home({ setActivePage }) {
               <ul className="comp-list" style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <li style={{ display: 'flex', alignItems: 'start', gap: '12px', fontSize: '0.95rem' }}>
                   <CheckCircle2 size={18} style={{ color: 'var(--accent-neon)', flexShrink: 0, marginTop: '2px' }} />
-                  <span>Live call routing and active phone line numbers configuration</span>
+                  <span>Live call routing with phone number assigned in any US state</span>
                 </li>
                 <li style={{ display: 'flex', alignItems: 'start', gap: '12px', fontSize: '0.95rem' }}>
                   <CheckCircle2 size={18} style={{ color: 'var(--accent-neon)', flexShrink: 0, marginTop: '2px' }} />
