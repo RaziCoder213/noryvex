@@ -71,6 +71,7 @@ export default function Navbar({ activePage, setActivePage }) {
   const navLinks = [
     { name: 'Home',       id: 'home'       },
     { name: 'Solutions',  id: 'solutions'  },
+    { name: 'Live Demo',  id: 'live-demo'  },
     { name: 'Calculator', id: 'calculator' },
     { name: 'About',      id: 'about'      },
     { name: 'Contact',    id: 'contact'    },
@@ -357,7 +358,27 @@ export default function Navbar({ activePage, setActivePage }) {
           margin-top: 16px;
         }
         
-        @media (max-width: 1024px) {
+        @media (max-width: 1280px) {
+          .nav-menu {
+            gap: 16px;
+            padding: 6px 18px;
+          }
+          .nav-link {
+            font-size: 0.9rem;
+          }
+          .theme-label {
+            display: none; /* Hide text to save space */
+          }
+          .theme-toggle-btn {
+            padding: 8px; /* Make icon button compact */
+          }
+          .nav-cta {
+            padding: 8px 14px;
+            font-size: 0.8rem;
+          }
+        }
+
+        @media (max-width: 1120px) {
           .nav-menu {
             display: none;
           }
@@ -369,6 +390,9 @@ export default function Navbar({ activePage, setActivePage }) {
           }
           .nav-cta {
             display: none; /* Hide on small screens to save space */
+          }
+          .theme-toggle-btn {
+            display: none; /* Desktop toggle hidden, mobile drawer has its own */
           }
         }
         

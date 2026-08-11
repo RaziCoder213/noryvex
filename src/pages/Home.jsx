@@ -304,8 +304,8 @@ clinic: "",
               <button onClick={() => setActivePage('contact', 'trial')} className="btn btn-primary btn-lg">
                 Get Free Clinic Demo <ArrowRight size={18} />
               </button>
-              <button onClick={() => { const el = document.getElementById('how-it-works'); if (el) el.scrollIntoView({ behavior: 'smooth' }); }} className="btn btn-secondary btn-lg">
-                See How It Works
+              <button onClick={() => setActivePage('live-demo')} className="btn btn-secondary btn-lg">
+                Try Interactive Web Demo <ArrowRight size={18} />
               </button>
             </div>
             <p className="trust-note" style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '16px', lineHeight: '1.4' }}>
@@ -648,9 +648,12 @@ clinic: "",
             </div>
           </div>
 
-          <div style={{ textAlign: 'center', marginTop: '48px' }}>
+          <div style={{ textAlign: 'center', marginTop: '48px', display: 'flex', justifyContent: 'center', gap: '16px', flexWrap: 'wrap' }}>
             <button onClick={() => setActivePage('contact', 'trial')} className="btn btn-primary btn-lg">
               Get Free Clinic Demo <ArrowRight size={18} />
+            </button>
+            <button onClick={() => setActivePage('live-demo')} className="btn btn-secondary btn-lg">
+              Try Interactive Web Demo
             </button>
           </div>
         </div>
