@@ -1117,7 +1117,7 @@ export default function Admin({ addToast, setActivePage }) {
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
 
                     {/* Founder profile column */}
-                    <div className="cms-form-card">
+                    <div className="glass-card cms-form-card">
                       <h3 style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <User size={20} className="icon-neon" /> Founder Profile
                       </h3>
@@ -1128,10 +1128,10 @@ export default function Admin({ addToast, setActivePage }) {
                           <img
                             src={brandProfile.founderPhoto}
                             alt="Founder"
-                            style={{ width: 100, height: 100, borderRadius: '50%', objectFit: 'cover', border: '2px solid #C7FF3D', display: 'block', margin: '0 auto 12px auto' }}
+                            style={{ width: 100, height: 100, borderRadius: '50%', objectFit: 'cover', border: '2px solid var(--accent-neon)', display: 'block', margin: '0 auto 12px auto' }}
                           />
                         ) : (
-                          <div style={{ width: 100, height: 100, borderRadius: '50%', background: '#121215', border: '2px solid #C7FF3D', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px auto' }}>
+                          <div style={{ width: 100, height: 100, borderRadius: '50%', background: 'var(--bg-charcoal)', border: '2px solid var(--accent-neon)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px auto' }}>
                             <User size={38} style={{ color: '#C7FF3D' }} />
                           </div>
                         )}
@@ -1150,7 +1150,7 @@ export default function Admin({ addToast, setActivePage }) {
                             value={brandProfile[f.key] || ''}
                             placeholder={f.placeholder}
                             onChange={e => updateBrandProfile(f.key, e.target.value)}
-                            className="form-input"
+                            className="form-control"
                           />
                         </div>
                       ))}
@@ -1161,7 +1161,7 @@ export default function Admin({ addToast, setActivePage }) {
                           value={brandProfile.founderBio || ''}
                           rows={4}
                           onChange={e => updateBrandProfile('founderBio', e.target.value)}
-                          className="form-input"
+                          className="form-control"
                           style={{ resize: 'vertical', minHeight: 90 }}
                         />
                       </div>
@@ -1178,14 +1178,14 @@ export default function Admin({ addToast, setActivePage }) {
                             value={brandProfile[f.key] || ''}
                             placeholder={f.placeholder}
                             onChange={e => updateBrandProfile(f.key, e.target.value)}
-                            className="form-input"
+                            className="form-control"
                           />
                         </div>
                       ))}
                     </div>
 
                     {/* Company profile column */}
-                    <div className="cms-form-card">
+                    <div className="glass-card cms-form-card">
                       <h3 style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <Settings size={20} className="icon-neon" /> Company Profile
                       </h3>
@@ -1201,7 +1201,7 @@ export default function Admin({ addToast, setActivePage }) {
                             value={brandProfile[f.key] || ''}
                             placeholder={f.placeholder}
                             onChange={e => updateBrandProfile(f.key, e.target.value)}
-                            className="form-input"
+                            className="form-control"
                           />
                         </div>
                       ))}
@@ -1212,7 +1212,7 @@ export default function Admin({ addToast, setActivePage }) {
                           value={brandProfile.companyDescription || ''}
                           rows={4}
                           onChange={e => updateBrandProfile('companyDescription', e.target.value)}
-                          className="form-input"
+                          className="form-control"
                           style={{ resize: 'vertical', minHeight: 90 }}
                         />
                       </div>
@@ -1228,7 +1228,7 @@ export default function Admin({ addToast, setActivePage }) {
                             value={brandProfile[f.key] || ''}
                             placeholder={f.placeholder}
                             onChange={e => updateBrandProfile(f.key, e.target.value)}
-                            className="form-input"
+                            className="form-control"
                           />
                         </div>
                       ))}
@@ -2040,6 +2040,59 @@ export default function Admin({ addToast, setActivePage }) {
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
           }
+          .brand-profile-grid {
+            grid-template-columns: 1fr !important;
+          }
+        }
+
+        /* ── Admin-scoped form-control overrides ──────────── */
+        /* Ensures inputs look great inside the dark admin panel
+           regardless of the global light/dark mode toggle */
+        .admin-dashboard-layout .form-control {
+          background: rgba(255, 255, 255, 0.04);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          color: #ffffff;
+          border-radius: 8px;
+          padding: 11px 14px;
+          font-size: 0.9rem;
+          font-family: 'Inter', sans-serif;
+          width: 100%;
+          transition: border-color 0.2s ease, background 0.2s ease;
+        }
+        .admin-dashboard-layout .form-control::placeholder {
+          color: rgba(255, 255, 255, 0.3);
+        }
+        .admin-dashboard-layout .form-control:focus {
+          outline: none;
+          border-color: var(--accent-neon);
+          background: rgba(199, 255, 61, 0.03);
+          box-shadow: 0 0 0 3px rgba(199, 255, 61, 0.08);
+        }
+        .admin-dashboard-layout textarea.form-control {
+          resize: vertical;
+          min-height: 100px;
+          line-height: 1.55;
+        }
+        .admin-dashboard-layout select.form-control,
+        .admin-dashboard-layout .select-control {
+          appearance: none;
+          cursor: pointer;
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23A1A1AA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+          background-repeat: no-repeat;
+          background-position: right 12px center;
+          padding-right: 36px;
+        }
+        .admin-dashboard-layout .form-label {
+          color: rgba(255, 255, 255, 0.45);
+          font-size: 0.75rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
+          margin-bottom: 6px;
+          display: block;
+        }
+        .admin-dashboard-layout .form-group {
+          margin-bottom: 18px;
         }
       `}</style>
     </div>

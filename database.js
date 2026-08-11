@@ -97,6 +97,17 @@ export async function initDb() {
       )
     `);
 
+    // 7. Create faqs table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS faqs (
+        id SERIAL PRIMARY KEY,
+        question TEXT NOT NULL,
+        answer TEXT NOT NULL,
+        display_order INTEGER DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
     // Seed clients if table is empty
     const clientsRes = await client.query('SELECT COUNT(*) FROM clients');
     if (parseInt(clientsRes.rows[0].count, 10) === 0) {
@@ -128,6 +139,43 @@ export async function initDb() {
     const redirectRes = await client.query("SELECT COUNT(*) FROM noryvex_settings WHERE key = 'booking_redirect_url'");
     if (parseInt(redirectRes.rows[0].count, 10) === 0) {
       await client.query("INSERT INTO noryvex_settings (key, value) VALUES ('booking_redirect_url', 'https://calendly.com/noryvex')");
+    }
+
+    // Seed FAQ items if table is empty
+    const faqsRes = await client.query('SELECT COUNT(*) FROM faqs');
+    if (parseInt(faqsRes.rows[0].count, 10) === 0) {
+      const defaultFaqs = [
+        ['Will my patients know they\'re talking to an AI?', 'Modern voice AI is indistinguishable from a human receptionist for routine calls. Noryvex builds custom voice models with natural speech patterns, appropriate pauses, and context-aware responses. The AI will never claim to be human if a patient directly asks.', 1],
+        ['How long does setup take?', 'Our standard turnaround is 48 hours from kickoff call to live deployment. We handle everything: voice prompt scripting, FAQ training, calendar integration, and sandbox testing. All you need to do is forward calls to the number we provision.', 2],
+        ['Do we need to change our existing phone number?', 'No. We provision a secondary number that receives forwarded calls. Your clinic\'s published phone number stays exactly the same — patients call the same number they always have; the AI handles it behind the scenes.', 3],
+        ['What happens during a dental emergency?', 'The AI is trained to recognize emergency language and immediately escalates those calls to your on-call staff or emergency line. You define the escalation logic during setup — we configure it exactly the way you\'d want your human receptionist to handle it.', 4],
+        ['Is Noryvex HIPAA compliant?', 'Yes. We sign a Business Associate Agreement (BAA) with every client, use US-based encrypted call infrastructure, and process all patient data in compliance with HIPAA regulations. Ask us for a copy of our BAA during your demo call.', 5],
+        ['What if a patient asks something the AI doesn\'t know?', 'The AI acknowledges the question politely, takes a message, and flags it for follow-up by your team. You can expand the FAQ training at any time — just send us updated information and we\'ll retrain within 24 hours at no extra charge.', 6],
+        ['What does Noryvex cost?', 'Pricing is based on call volume and the features your practice needs. We\'re transparent about costs — book a free 30-minute strategy call and we\'ll give you a custom quote with no pressure and no hidden fees.', 7],
+        ['Can I try it before I pay anything?', 'Yes. We build a short custom AI demo for your clinic — using your real services, hours, and FAQs — completely free. If you like what you hear, we deploy the full system. If not, there\'s no obligation and no charge.', 8],
+      ];
+      for (const [q, a, ord] of defaultFaqs) {
+        await client.query(
+          'INSERT INTO faqs (question, answer, display_order) VALUES ($1, $2, $3)',
+          [q, a, ord]
+        );
+      }
+    }
+
+    // Seed contact config settings if missing
+    const contactConfigKeys = [
+      ['whatsapp_number', '+13478884099'],
+      ['whatsapp_message', "Hi! I'm interested in Noryvex's AI receptionist for my dental clinic."],
+      ['slack_link', 'https://join.slack.com/t/noryvex/shared_invite/placeholder'],
+    ];
+    for (const [key, def] of contactConfigKeys) {
+      const exists = await client.query('SELECT 1 FROM noryvex_settings WHERE key = $1', [key]);
+      if (exists.rows.length === 0) {
+        await client.query(
+          'INSERT INTO noryvex_settings (key, value) VALUES ($1, $2)',
+          [key, def]
+        );
+      }
     }
 
     console.log('Neon Postgres Database initialized and seeded successfully.');
@@ -324,4 +372,37 @@ export async function savePartner(id, name, link, image) {
 export async function deletePartner(id) {
   await pool.query('DELETE FROM partners WHERE id = $1', [Number(id)]);
   return { success: true };
+}
+
+// ── FAQ Operations ─────────────────────────────────────────────────────────
+
+export async function getFaqs() {
+  const res = await pool.query('SELECT * FROM faqs ORDER BY display_order ASC, id ASC');
+  return res.rows;
+}
+
+export async function saveFaq(question, answer) {
+  const orderRes = await pool.query('SELECT COALESCE(MAX(display_order), 0) + 1 AS next_order FROM faqs');
+  const nextOrder = orderRes.rows[0].next_order;
+  const res = await pool.query(
+    'INSERT INTO faqs (question, answer, display_order) VALUES ($1, $2, $3) RETURNING id',
+    [question, answer, nextOrder]
+  );
+  return { success: true, lastID: res.rows[0].id };
+}
+
+export async function deleteFaq(id) {
+  await pool.query('DELETE FROM faqs WHERE id = $1', [Number(id)]);
+  return { success: true };
+}
+
+// ── Contact Config Operations ──────────────────────────────────────────────
+
+export async function getContactConfig() {
+  const res = await pool.query(
+    "SELECT key, value FROM noryvex_settings WHERE key IN ('whatsapp_number', 'whatsapp_message', 'slack_link')"
+  );
+  const config = { whatsapp_number: '', whatsapp_message: '', slack_link: '' };
+  for (const row of res.rows) config[row.key] = row.value;
+  return config;
 }

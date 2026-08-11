@@ -461,3 +461,88 @@ export const dbSetBookingRedirectUrl = async (url) => {
     return { success: false };
   }
 };
+
+// ── FAQ Helpers ────────────────────────────────────────────────────────────
+
+/** Public: fetch all FAQ items */
+export const dbGetFaqs = async () => {
+  try {
+    const data = await fetchNoCacheJSON('/api/faqs');
+    return data.faqs || [];
+  } catch (e) {
+    console.error('Failed to fetch FAQs:', e);
+    return [];
+  }
+};
+
+/** Admin: add a new FAQ */
+export const dbAdminSaveFaq = async (question, answer) => {
+  const token = getAdminToken();
+  try {
+    const res = await fetch(`/api/admin/faqs?t=${Date.now()}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ question, answer })
+    });
+    checkAuthStatus(res);
+    if (res.ok) return { success: true };
+    const err = await res.json();
+    return { success: false, error: err.error };
+  } catch (e) {
+    console.error('Failed to save FAQ:', e);
+    return { success: false, error: 'Network error' };
+  }
+};
+
+/** Admin: delete a FAQ by id */
+export const dbAdminDeleteFaq = async (id) => {
+  const token = getAdminToken();
+  try {
+    const res = await fetch(`/api/admin/faqs/${Number(id)}?t=${Date.now()}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    checkAuthStatus(res);
+    return { success: res.ok };
+  } catch (e) {
+    console.error('Failed to delete FAQ:', e);
+    return { success: false };
+  }
+};
+
+// ── Contact Config Helpers ─────────────────────────────────────────────────
+
+/** Public: get WhatsApp/Slack configuration */
+export const dbGetContactConfig = async () => {
+  try {
+    const data = await fetchNoCacheJSON('/api/settings/contact-config');
+    return data;
+  } catch (e) {
+    console.error('Failed to fetch contact config:', e);
+    return { whatsapp_number: '', whatsapp_message: '', slack_link: '' };
+  }
+};
+
+/** Admin: save WhatsApp/Slack configuration */
+export const dbAdminSetContactConfig = async (config) => {
+  const token = getAdminToken();
+  try {
+    const res = await fetch(`/api/admin/settings/contact-config?t=${Date.now()}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(config)
+    });
+    checkAuthStatus(res);
+    return { success: res.ok };
+  } catch (e) {
+    console.error('Failed to save contact config:', e);
+    return { success: false };
+  }
+};
+

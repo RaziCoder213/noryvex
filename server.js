@@ -26,6 +26,10 @@ import {
   getPartners,
   savePartner,
   deletePartner,
+  getFaqs,
+  saveFaq,
+  deleteFaq,
+  getContactConfig,
   getSetting,
   setSetting
 } from './database.js';
@@ -204,6 +208,72 @@ app.get('/api/slots', async (req, res) => {
   } catch (error) {
     console.error('[/api/slots] query failed:', error.message);
     res.status(500).json({ error: 'Failed to fetch slots.' });
+  }
+});
+
+// ── FAQ Routes ─────────────────────────────────────────────────────────────
+
+// Public — read all FAQs
+app.get('/api/faqs', async (req, res) => {
+  try {
+    const faqs = await getFaqs();
+    res.json({ faqs });
+  } catch (error) {
+    console.error('[/api/faqs GET]', error.message);
+    res.status(500).json({ error: 'Failed to fetch FAQs.' });
+  }
+});
+
+// Admin — add a FAQ
+app.post('/api/admin/faqs', verifyToken, async (req, res) => {
+  try {
+    const { question, answer } = req.body;
+    if (!question || !answer) {
+      return res.status(400).json({ error: 'Question and answer are required.' });
+    }
+    const result = await saveFaq(question.trim(), answer.trim());
+    res.status(201).json({ success: true, lastID: result.lastID });
+  } catch (error) {
+    console.error('[/api/admin/faqs POST]', error.message);
+    res.status(500).json({ error: 'Failed to save FAQ.' });
+  }
+});
+
+// Admin — delete a FAQ
+app.delete('/api/admin/faqs/:id', verifyToken, async (req, res) => {
+  try {
+    await deleteFaq(req.params.id);
+    res.json({ success: true });
+  } catch (error) {
+    console.error('[/api/admin/faqs DELETE]', error.message);
+    res.status(500).json({ error: 'Failed to delete FAQ.' });
+  }
+});
+
+// ── Contact Config Routes ──────────────────────────────────────────────────
+
+// Public — get WhatsApp, Slack config
+app.get('/api/settings/contact-config', async (req, res) => {
+  try {
+    const config = await getContactConfig();
+    res.json(config);
+  } catch (error) {
+    console.error('[/api/settings/contact-config GET]', error.message);
+    res.status(500).json({ error: 'Failed to fetch contact config.' });
+  }
+});
+
+// Admin — save WhatsApp, Slack config
+app.post('/api/admin/settings/contact-config', verifyToken, async (req, res) => {
+  try {
+    const { whatsapp_number, whatsapp_message, slack_link } = req.body;
+    await setSetting('whatsapp_number', whatsapp_number || '');
+    await setSetting('whatsapp_message', whatsapp_message || '');
+    await setSetting('slack_link', slack_link || '');
+    res.json({ success: true });
+  } catch (error) {
+    console.error('[/api/admin/settings/contact-config POST]', error.message);
+    res.status(500).json({ error: 'Failed to save contact config.' });
   }
 });
 
