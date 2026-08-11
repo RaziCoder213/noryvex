@@ -71,6 +71,7 @@ export default function Navbar({ activePage, setActivePage }) {
   const navLinks = [
     { name: 'Home',       id: 'home'       },
     { name: 'Solutions',  id: 'solutions'  },
+    { name: 'Live Demo',  id: 'live-demo'  },
     { name: 'Calculator', id: 'calculator' },
     { name: 'About',      id: 'about'      },
     { name: 'Contact',    id: 'contact'    },
