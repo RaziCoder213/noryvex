@@ -242,13 +242,15 @@ clinic: "",
     const handleScroll = () => {
       const parent = taglineSectionRef.current;
       if (!parent) return;
-      
+
       const rect = parent.getBoundingClientRect();
       const winHeight = window.innerHeight;
-      
-      const totalDist = rect.height - winHeight;
-      const scrolled = -rect.top;
-      const pct = Math.max(0, Math.min(1, scrolled / totalDist));
+
+      // Total scrollable distance inside the sticky parent (parent height - viewport)
+      const totalDist = Math.max(1, rect.height - winHeight);
+      // How far we've scrolled into this section (negative rect.top = scrolled distance)
+      const scrolled = Math.max(0, -rect.top);
+      const pct = Math.min(1, scrolled / totalDist);
       setTaglineProgress(pct);
     };
 
@@ -264,8 +266,6 @@ clinic: "",
   // Parallax deltas from normalised mouse pos
   const px = (mousePos.x - 0.5) * 22;   // -11 to +11px
   const py = (mousePos.y - 0.5) * 14;   // -7  to +7px
-
-  const fadeOutFactor = taglineProgress > 0.78 ? Math.max(0.15, 1 - (taglineProgress - 0.78) * 5) : 1.0;
 
   return (
     <div className="home-page page-enter">
@@ -923,40 +923,44 @@ clinic: "",
       <section className="nrx-tagline-sticky-parent" ref={taglineSectionRef}>
         <div className="nrx-tagline-sticky-wrapper">
           <div className="nrx-kinetic-inner">
-            <span 
-              className={`nrx-kinetic-line nrx-kinetic-word ${taglineProgress > 0.15 ? 'active' : ''}`}
-              style={{ 
-                opacity: taglineProgress >= 0.95 ? 0.15 : Math.max(0.1, Math.min(1.0, (taglineProgress - 0.05) * 5)) * fadeOutFactor,
-                transform: taglineProgress >= 0.95 ? 'none' : `scale(${Math.max(0.95, Math.min(1.0, 0.95 + (taglineProgress - 0.05) * 0.25))})`
+            {/* Word 1: AUTOMATE — reveals 0%→25% */}
+            <span
+              className={`nrx-kinetic-line nrx-kinetic-word ${taglineProgress >= 0.12 ? 'active' : ''}`}
+              style={{
+                opacity: Math.max(0.08, Math.min(1.0, (taglineProgress - 0.02) * 8)),
+                transform: `scale(${Math.max(0.94, Math.min(1.0, 0.94 + (taglineProgress - 0.02) * 0.4))})`
               }}
             >
               AUTOMATE.
             </span>
-            <span 
-              className={`nrx-kinetic-line nrx-kinetic-word ${taglineProgress > 0.45 ? 'active' : ''}`}
-              style={{ 
-                opacity: taglineProgress >= 0.95 ? 0.15 : Math.max(0.1, Math.min(1.0, (taglineProgress - 0.35) * 5)) * fadeOutFactor,
-                transform: taglineProgress >= 0.95 ? 'none' : `scale(${Math.max(0.95, Math.min(1.0, 0.95 + (taglineProgress - 0.35) * 0.25))})`
+            {/* Word 2: COMMUNICATE — reveals 30%→55% */}
+            <span
+              className={`nrx-kinetic-line nrx-kinetic-word ${taglineProgress >= 0.42 ? 'active' : ''}`}
+              style={{
+                opacity: Math.max(0.08, Math.min(1.0, (taglineProgress - 0.32) * 8)),
+                transform: `scale(${Math.max(0.94, Math.min(1.0, 0.94 + (taglineProgress - 0.32) * 0.4))})`
               }}
             >
               COMMUNICATE.
             </span>
-            <span 
-              className={`nrx-kinetic-line nrx-kinetic-word nrx-kinetic-accent ${taglineProgress > 0.75 ? 'active' : ''}`}
-              style={{ 
-                opacity: taglineProgress >= 0.95 ? 0.15 : Math.max(0.1, Math.min(1.0, (taglineProgress - 0.65) * 5)) * fadeOutFactor,
-                transform: taglineProgress >= 0.95 ? 'none' : `scale(${Math.max(0.95, Math.min(1.0, 0.95 + (taglineProgress - 0.65) * 0.25))})`
+            {/* Word 3: GROW — reveals 60%→85% */}
+            <span
+              className={`nrx-kinetic-line nrx-kinetic-word nrx-kinetic-accent ${taglineProgress >= 0.72 ? 'active' : ''}`}
+              style={{
+                opacity: Math.max(0.08, Math.min(1.0, (taglineProgress - 0.62) * 8)),
+                transform: `scale(${Math.max(0.94, Math.min(1.0, 0.94 + (taglineProgress - 0.62) * 0.4))})`
               }}
             >
               GROW.
             </span>
           </div>
 
-          <div 
-            className="nrx-kinetic-sub" 
-            style={{ 
-              opacity: taglineProgress >= 0.95 ? 1.0 : Math.max(0, Math.min(1, (taglineProgress - 0.85) * 8)),
-              transform: taglineProgress >= 0.95 ? 'none' : `translateY(${Math.max(0, 15 - (taglineProgress - 0.85) * 120)}px)`
+          {/* Tagline subtitle — fades in at 88%+ */}
+          <div
+            className="nrx-kinetic-sub"
+            style={{
+              opacity: Math.max(0, Math.min(1, (taglineProgress - 0.85) * 10)),
+              transform: `translateY(${Math.max(0, 18 - (taglineProgress - 0.85) * 140)}px)`
             }}
           >
             <span>Noryvex</span>
@@ -966,11 +970,12 @@ clinic: "",
             <span>Managed for Clinic Scale</span>
           </div>
 
-          <div 
+          {/* CTA button — fades in at 91%+ */}
+          <div
             className="nrx-tagline-btn-wrap"
-            style={{ 
-              opacity: taglineProgress >= 0.95 ? 1.0 : Math.max(0, Math.min(1, (taglineProgress - 0.88) * 8)),
-              transform: taglineProgress >= 0.95 ? 'none' : `translateY(${Math.max(0, 15 - (taglineProgress - 0.88) * 120)}px)`
+            style={{
+              opacity: Math.max(0, Math.min(1, (taglineProgress - 0.88) * 12)),
+              transform: `translateY(${Math.max(0, 18 - (taglineProgress - 0.88) * 150)}px)`
             }}
           >
             <button
@@ -1926,14 +1931,14 @@ clinic: "",
         /* ── Kinetic Tagline Sticky Scroll ──────────────── */
         .nrx-tagline-sticky-parent {
           position: relative;
-          height: 200vh; /* scrollable distance for locking */
+          height: 300vh; /* generous scroll distance so all 3 words complete before unpinning */
           background: linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-pure) 100%);
           border-top: 1px solid var(--border-light);
         }
         .nrx-tagline-sticky-wrapper {
           position: sticky;
-          top: 80px; /* align below the 80px navbar */
-          height: calc(100vh - 80px); /* remaining viewport height */
+          top: 0;
+          height: 100vh; /* full viewport pinned */
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -2033,22 +2038,21 @@ clinic: "",
 
         @media (max-width: 1024px) {
           .nrx-tagline-sticky-wrapper {
-            top: 66px;
-            height: calc(100vh - 66px);
+            top: 0;
+            height: 100vh;
           }
         }
 
         @media (max-width: 768px) {
           .nrx-tagline-sticky-parent {
-            height: 200vh !important;
-            background: linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-pure) 100%);
-          }
-          .nrx-tagline-sticky-wrapper {
-            position: sticky !important;
+            height: 280vh;
           }
           .nrx-kinetic-sub {
-            margin-top: 24px;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 20px;
           }
+          .nrx-kinetic-dot { display: none; }
           .nrx-tagline-btn-wrap {
             margin-top: 16px;
           }

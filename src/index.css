@@ -158,14 +158,14 @@ html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+  overflow-x: clip; /* clip ≠ hidden — does NOT create a new scroll container, so sticky still works */
 }
 
 body {
   background-color: var(--bg-pure);
   color: var(--text-light);
   font-family: var(--font-sans);
-  overflow-x: hidden;
+  overflow-x: clip; /* clip preserves sticky child behavior */
   /* Smooth theme transitions */
   transition: background-color 0.3s ease, color 0.3s ease;
 }

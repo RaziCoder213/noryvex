@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, Lock, Mail, Calendar, LogOut, Check, Trash2, Eye, Plus, Star, Link, Image, Activity, Award, Settings, User } from 'lucide-react';
+import { Shield, Lock, Mail, Calendar, LogOut, Check, Trash2, Eye, Plus, Star, Link, Image, Activity, Award, Settings, User, HelpCircle, MessageCircle, Phone, Edit3, Save, X, Slack, Globe, AlignLeft } from 'lucide-react';
 import { 
   dbGetContacts, 
   dbGetMeetings, 
@@ -17,7 +17,12 @@ import {
   dbGetTrials,
   dbUpdateTrialStatus,
   dbGetUnderConstruction,
-  dbSetUnderConstruction
+  dbSetUnderConstruction,
+  dbGetFaqs,
+  dbAdminSaveFaq,
+  dbAdminDeleteFaq,
+  dbGetContactConfig,
+  dbAdminSetContactConfig
 } from '../utils/dbHelper';
 
 export default function Admin({ addToast, setActivePage }) {
@@ -50,6 +55,18 @@ export default function Admin({ addToast, setActivePage }) {
   // CMS forms
   const [newClient, setNewClient] = useState({ name: '', company: '', rating: 5, quote: '' });
   const [newPartner, setNewPartner] = useState({ name: '', link: '', image: '' });
+
+  // FAQs state
+  const [faqs, setFaqs] = useState([]);
+  const [newFaq, setNewFaq] = useState({ question: '', answer: '' });
+  const [savingFaq, setSavingFaq] = useState(false);
+  const [editingFaqId, setEditingFaqId] = useState(null);
+  const [loadingFaqs, setLoadingFaqs] = useState(false);
+
+  // Contact Config state (WhatsApp / Slack)
+  const [contactConfig, setContactConfig] = useState({ whatsapp_number: '', whatsapp_message: '', slack_link: '' });
+  const [savingConfig, setSavingConfig] = useState(false);
+  const [configSaved, setConfigSaved] = useState(false);
 
   // Brand & Founder profile (persisted to localStorage, read by About page)
   const BRAND_PROFILE_KEY = 'noryvex_brand_profile';
@@ -97,6 +114,8 @@ export default function Admin({ addToast, setActivePage }) {
       const partnersData = await dbGetPartners();
       const trialsData = await dbGetTrials(authToken);
       const ucStatus = await dbGetUnderConstruction();
+      const faqsData = await dbGetFaqs();
+      const configData = await dbGetContactConfig();
       
       setContacts(contactsData);
       setMeetings(meetingsData);
@@ -104,6 +123,8 @@ export default function Admin({ addToast, setActivePage }) {
       setPartners(partnersData);
       setTrials(trialsData);
       setUnderConstruction(ucStatus);
+      setFaqs(faqsData);
+      setContactConfig(prev => ({ ...prev, ...configData }));
     } catch (err) {
       console.error(err);
       addToast('Error fetching dashboard records.', 'error');
@@ -195,6 +216,69 @@ export default function Admin({ addToast, setActivePage }) {
   };
 
 
+
+  // ── FAQ Handlers ──────────────────────────────────────────────────────────
+  const handleAddFaq = async (e) => {
+    e.preventDefault();
+    if (!newFaq.question.trim() || !newFaq.answer.trim()) {
+      addToast('Both question and answer are required.', 'error');
+      return;
+    }
+    setSavingFaq(true);
+    try {
+      const result = await dbAdminSaveFaq(newFaq.question.trim(), newFaq.answer.trim());
+      if (result.success) {
+        const updated = await dbGetFaqs();
+        setFaqs(updated);
+        setNewFaq({ question: '', answer: '' });
+        addToast('FAQ added successfully!', 'success');
+      } else {
+        addToast(result.error || 'Failed to add FAQ.', 'error');
+      }
+    } catch (err) {
+      console.error(err);
+      addToast('Failed to add FAQ.', 'error');
+    } finally {
+      setSavingFaq(false);
+    }
+  };
+
+  const handleDeleteFaq = async (id) => {
+    if (!window.confirm('Delete this FAQ?')) return;
+    try {
+      const result = await dbAdminDeleteFaq(id);
+      if (result.success) {
+        setFaqs(prev => prev.filter(f => f.id !== id));
+        addToast('FAQ removed.', 'success');
+      } else {
+        addToast('Failed to delete FAQ.', 'error');
+      }
+    } catch (err) {
+      console.error(err);
+      addToast('Failed to delete FAQ.', 'error');
+    }
+  };
+
+  // ── Contact Config Handlers ───────────────────────────────────────────────
+  const handleSaveContactConfig = async (e) => {
+    e.preventDefault();
+    setSavingConfig(true);
+    try {
+      const result = await dbAdminSetContactConfig(contactConfig);
+      if (result.success) {
+        setConfigSaved(true);
+        addToast('Contact configuration saved!', 'success');
+        setTimeout(() => setConfigSaved(false), 3000);
+      } else {
+        addToast('Failed to save contact config.', 'error');
+      }
+    } catch (err) {
+      console.error(err);
+      addToast('Failed to save contact config.', 'error');
+    } finally {
+      setSavingConfig(false);
+    }
+  };
 
   // Contact actions
   const handleMarkContactRead = async (id) => {
@@ -541,6 +625,15 @@ export default function Admin({ addToast, setActivePage }) {
           </button>
 
           <button 
+            onClick={() => setActiveTab('faqs')} 
+            className={`nav-item ${activeTab === 'faqs' ? 'active' : ''}`}
+          >
+            <HelpCircle size={18} />
+            <span>FAQ Manager</span>
+            <span className="nav-badge">{faqs.length}</span>
+          </button>
+
+          <button 
             onClick={() => setActiveTab('brand-profile')} 
             className={`nav-item ${activeTab === 'brand-profile' ? 'active' : ''}`}
           >
@@ -549,6 +642,14 @@ export default function Admin({ addToast, setActivePage }) {
           </button>
 
           <div className="nav-divider">CONNECTIONS</div>
+
+          <button 
+            onClick={() => setActiveTab('contact-config')} 
+            className={`nav-item ${activeTab === 'contact-config' ? 'active' : ''}`}
+          >
+            <MessageCircle size={18} />
+            <span>Contact Config</span>
+          </button>
 
           <button 
             onClick={() => setActiveTab('db-settings')} 
@@ -580,7 +681,9 @@ export default function Admin({ addToast, setActivePage }) {
               {activeTab === 'trials-tracker' && 'Active Campaigns'}
               {activeTab === 'cms-clients' && 'CMS Testimonials'}
               {activeTab === 'cms-partners' && 'CMS Trust Badges'}
+              {activeTab === 'faqs' && 'FAQ Manager'}
               {activeTab === 'brand-profile' && 'Brand & Founder Profile'}
+              {activeTab === 'contact-config' && 'Contact Config'}
               {activeTab === 'db-settings' && 'Cloud Database Settings'}
             </span>
           </div>
@@ -1252,6 +1355,205 @@ export default function Admin({ addToast, setActivePage }) {
                       {brandSaved ? <><Check size={16} /> Saved!</> : <><User size={16} /> Save Brand Profile</>}
                     </button>
                     <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: 0 }}>Changes appear on the About page immediately after saving.</p>
+                  </div>
+                </div>
+              )}
+
+              {/* ── Tab: FAQ Manager ─────────────────────────────── */}
+              {activeTab === 'faqs' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+
+                    {/* Add FAQ form */}
+                    <div className="glass-card cms-form-card">
+                      <h3 style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <Plus size={20} className="icon-neon" /> Add New FAQ
+                      </h3>
+                      <form onSubmit={handleAddFaq}>
+                        <div className="form-group">
+                          <label className="form-label">Question</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            placeholder="e.g. How long does setup take?"
+                            value={newFaq.question}
+                            onChange={e => setNewFaq(p => ({ ...p, question: e.target.value }))}
+                            required
+                          />
+                        </div>
+                        <div className="form-group">
+                          <label className="form-label">Answer</label>
+                          <textarea
+                            className="form-control"
+                            rows={5}
+                            placeholder="Write a clear, concise answer..."
+                            value={newFaq.answer}
+                            onChange={e => setNewFaq(p => ({ ...p, answer: e.target.value }))}
+                            style={{ resize: 'vertical', minHeight: 120 }}
+                            required
+                          />
+                        </div>
+                        <button
+                          type="submit"
+                          className="btn btn-primary w-full"
+                          disabled={savingFaq}
+                          style={{ marginTop: '8px' }}
+                        >
+                          {savingFaq ? 'Adding…' : <><Plus size={15} /> Add FAQ</>}
+                        </button>
+                      </form>
+
+                      <div style={{ marginTop: '28px', padding: '14px', background: 'rgba(199,255,61,0.03)', border: '1px solid rgba(199,255,61,0.08)', borderRadius: '10px' }}>
+                        <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', margin: 0, lineHeight: 1.5 }}>
+                          FAQs added here will appear on the <strong style={{ color: 'var(--accent-neon)' }}>Home page</strong> and <strong style={{ color: 'var(--accent-neon)' }}>Solutions page</strong> FAQ sections automatically. Changes are live immediately.
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* FAQ list */}
+                    <div className="glass-card cms-form-card" style={{ maxHeight: '600px', overflowY: 'auto' }}>
+                      <h3 style={{ marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'space-between' }}>
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <HelpCircle size={20} className="icon-neon" /> Live FAQs
+                        </span>
+                        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 400, background: 'rgba(199,255,61,0.08)', border: '1px solid rgba(199,255,61,0.15)', borderRadius: '100px', padding: '3px 10px' }}>
+                          {faqs.length} total
+                        </span>
+                      </h3>
+                      {faqs.length === 0 ? (
+                        <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+                          <HelpCircle size={36} style={{ margin: '0 auto 12px', display: 'block', opacity: 0.3 }} />
+                          No FAQs yet. Add your first FAQ using the form.
+                        </div>
+                      ) : (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                          {faqs.map((faq, idx) => (
+                            <div
+                              key={faq.id}
+                              style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-light)', borderRadius: '10px', padding: '14px 16px', position: 'relative' }}
+                            >
+                              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '8px' }}>
+                                <div style={{ flex: 1, minWidth: 0 }}>
+                                  <p style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--text-white)', margin: '0 0 6px 0', lineHeight: 1.4 }}>
+                                    <span style={{ color: 'var(--accent-neon)', marginRight: '6px' }}>Q{idx + 1}.</span>
+                                    {faq.question}
+                                  </p>
+                                  <p style={{ fontSize: '0.82rem', color: 'var(--text-gray)', margin: 0, lineHeight: 1.55 }}>
+                                    {faq.answer.length > 140 ? faq.answer.slice(0, 140) + '…' : faq.answer}
+                                  </p>
+                                </div>
+                                <button
+                                  onClick={() => handleDeleteFaq(faq.id)}
+                                  className="action-btn action-btn-delete"
+                                  style={{ flexShrink: 0, marginRight: 0 }}
+                                  title="Delete FAQ"
+                                >
+                                  <Trash2 size={13} />
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                  </div>
+                </div>
+              )}
+
+              {/* ── Tab: Contact Config ───────────────────────────── */}
+              {activeTab === 'contact-config' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', maxWidth: '780px' }}>
+
+                  {/* WhatsApp Config */}
+                  <div className="glass-card cms-form-card">
+                    <h3 style={{ marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <Phone size={20} className="icon-neon" /> WhatsApp Configuration
+                    </h3>
+                    <p style={{ fontSize: '0.83rem', color: 'var(--text-muted)', marginBottom: '24px' }}>
+                      Controls the WhatsApp "Chat Now" button on the Contact page.
+                    </p>
+                    <div className="form-group">
+                      <label className="form-label">WhatsApp Number <span style={{ color: 'var(--text-muted)', fontWeight: 400, textTransform: 'none' }}>(with country code, no spaces)</span></label>
+                      <input
+                        type="tel"
+                        className="form-control"
+                        placeholder="+14155552671"
+                        value={contactConfig.whatsapp_number || ''}
+                        onChange={e => setContactConfig(p => ({ ...p, whatsapp_number: e.target.value }))}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">Default Message (pre-filled for visitors)</label>
+                      <textarea
+                        className="form-control"
+                        rows={3}
+                        placeholder="Hi, I'd like to learn more about Noryvex's AI receptionist for my dental clinic."
+                        value={contactConfig.whatsapp_message || ''}
+                        onChange={e => setContactConfig(p => ({ ...p, whatsapp_message: e.target.value }))}
+                        style={{ resize: 'vertical' }}
+                      />
+                    </div>
+                    {contactConfig.whatsapp_number && (
+                      <a
+                        href={`https://wa.me/${(contactConfig.whatsapp_number || '').replace(/\D/g, '')}?text=${encodeURIComponent(contactConfig.whatsapp_message || '')}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', color: 'var(--accent-neon)', textDecoration: 'none', marginTop: '4px' }}
+                      >
+                        <Phone size={13} /> Preview WhatsApp link ↗
+                      </a>
+                    )}
+                  </div>
+
+                  {/* Slack Config */}
+                  <div className="glass-card cms-form-card">
+                    <h3 style={{ marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <Globe size={20} className="icon-neon" /> Slack & Social Config
+                    </h3>
+                    <p style={{ fontSize: '0.83rem', color: 'var(--text-muted)', marginBottom: '24px' }}>
+                      Direct join link for the Noryvex Slack workspace shown on the Contact page.
+                    </p>
+                    <div className="form-group">
+                      <label className="form-label">Slack Invite / Join Link</label>
+                      <input
+                        type="url"
+                        className="form-control"
+                        placeholder="https://join.slack.com/t/noryvex/shared_invite/..."
+                        value={contactConfig.slack_link || ''}
+                        onChange={e => setContactConfig(p => ({ ...p, slack_link: e.target.value }))}
+                      />
+                    </div>
+                    {contactConfig.slack_link && (
+                      <a
+                        href={contactConfig.slack_link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', color: 'var(--accent-neon)', textDecoration: 'none', marginTop: '4px' }}
+                      >
+                        <Globe size={13} /> Preview Slack link ↗
+                      </a>
+                    )}
+                  </div>
+
+                  {/* Save button */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                    <button
+                      onClick={handleSaveContactConfig}
+                      className="btn btn-primary"
+                      disabled={savingConfig}
+                      style={{ minWidth: '220px' }}
+                    >
+                      {savingConfig
+                        ? 'Saving…'
+                        : configSaved
+                          ? <><Check size={16} /> Saved!</>
+                          : <><Check size={16} /> Save Contact Config</>
+                      }
+                    </button>
+                    <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: 0 }}>
+                      Changes apply immediately on the Contact page.
+                    </p>
                   </div>
                 </div>
               )}
