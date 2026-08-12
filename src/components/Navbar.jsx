@@ -212,6 +212,7 @@ export default function Navbar({ activePage, setActivePage }) {
           padding: 8px 4px;
           position: relative;
           transition: var(--transition-fast);
+          white-space: nowrap;
         }
         
         .nav-link:hover {
