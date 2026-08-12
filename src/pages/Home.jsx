@@ -238,28 +238,39 @@ clinic: "",
   }, []);
 
   // Scroll-driven tagline word-by-word reveal progress
+  // Uses rAF throttle so it stays in sync with the browser paint cycle.
   useEffect(() => {
-    const handleScroll = () => {
+    const NAV_H = 80; // fixed navbar height in px
+    let ticking = false;
+
+    const compute = () => {
       const parent = taglineSectionRef.current;
-      if (!parent) return;
+      if (!parent) { ticking = false; return; }
 
-      const rect = parent.getBoundingClientRect();
-      const winHeight = window.innerHeight;
+      const rect   = parent.getBoundingClientRect();
+      const winH   = window.innerHeight;
 
-      // Total scrollable distance inside the sticky parent (parent height - viewport)
-      const totalDist = Math.max(1, rect.height - winHeight);
-      // How far we've scrolled into this section (negative rect.top = scrolled distance)
-      const scrolled = Math.max(0, -rect.top);
-      const pct = Math.min(1, scrolled / totalDist);
-      setTaglineProgress(pct);
+      // sticky wrapper is top:NAV_H so it starts sticking when rect.top === NAV_H
+      // totalDist = how far the parent travels while the wrapper is pinned
+      const totalDist = Math.max(1, rect.height - (winH - NAV_H));
+      const scrolled  = Math.max(0, NAV_H - rect.top); // 0 at start, totalDist at end
+      setTaglineProgress(Math.min(1, scrolled / totalDist));
+      ticking = false;
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', handleScroll);
-    handleScroll();
+    const onScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(compute);
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', compute);
+    compute(); // initial paint
     return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleScroll);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', compute);
     };
   }, []);
 
@@ -1931,14 +1942,14 @@ clinic: "",
         /* ── Kinetic Tagline Sticky Scroll ──────────────── */
         .nrx-tagline-sticky-parent {
           position: relative;
-          height: 300vh; /* generous scroll distance so all 3 words complete before unpinning */
+          height: 250vh; /* 250vh: ~170vh of travel + 80px nav offset breathing room */
           background: linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-pure) 100%);
           border-top: 1px solid var(--border-light);
         }
         .nrx-tagline-sticky-wrapper {
           position: sticky;
-          top: 0;
-          height: 100vh; /* full viewport pinned */
+          top: 80px;                    /* sit just below the fixed navbar */
+          height: calc(100vh - 80px);  /* fill the remaining viewport */
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -2038,14 +2049,19 @@ clinic: "",
 
         @media (max-width: 1024px) {
           .nrx-tagline-sticky-wrapper {
-            top: 0;
-            height: 100vh;
+            top: 66px;
+            height: calc(100vh - 66px);
           }
+          .nrx-tagline-sticky-parent { height: 240vh; }
         }
 
         @media (max-width: 768px) {
           .nrx-tagline-sticky-parent {
-            height: 280vh;
+            height: 230vh;
+          }
+          .nrx-tagline-sticky-wrapper {
+            top: 60px;
+            height: calc(100vh - 60px);
           }
           .nrx-kinetic-sub {
             flex-direction: column;
