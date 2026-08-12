@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, Lock, Mail, Calendar, LogOut, Check, Trash2, Eye, Plus, Star, Link, Image, Activity, Award, Settings, User, HelpCircle, MessageCircle, Phone, Edit3, Save, X, Slack, Globe, AlignLeft } from 'lucide-react';
+import { Shield, Lock, Mail, Calendar, LogOut, Check, Trash2, Eye, Plus, Star, Link, Image, Activity, Award, Settings, User, HelpCircle, MessageCircle, Phone, Edit3, Save, X, Globe } from 'lucide-react';
 import { 
   dbGetContacts, 
   dbGetMeetings, 
