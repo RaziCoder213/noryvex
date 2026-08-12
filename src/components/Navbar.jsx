@@ -1,9 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+
 import { Menu, X, ArrowUpRight, Sun, Moon } from 'lucide-react';
 
 export default function Navbar({ activePage, setActivePage }) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [gliderStyle, setGliderStyle] = useState({ left: 0, width: 0, opacity: 0 });
+  const navMenuRef = useRef(null);
+
   const [theme, setTheme] = useState(() => {
     const stored = localStorage.getItem('noryvex_theme');
     // Reject legacy 'auto' value — only accept 'dark' or 'light'
@@ -58,6 +62,33 @@ export default function Navbar({ activePage, setActivePage }) {
     { name: 'Contact',    id: 'contact'    },
   ];
 
+  // Move the glider to sit under the active link
+  const updateGlider = (pageId) => {
+    if (!navMenuRef.current) return;
+    const btn = navMenuRef.current.querySelector(`[data-navid="${pageId}"]`);
+    if (!btn) return;
+    const menuRect = navMenuRef.current.getBoundingClientRect();
+    const btnRect  = btn.getBoundingClientRect();
+    setGliderStyle({
+      left:    btnRect.left - menuRect.left,
+      width:   btnRect.width,
+      opacity: 1,
+    });
+  };
+
+  useEffect(() => {
+    // Slight delay so DOM is painted before we measure
+    const t = setTimeout(() => updateGlider(activePage), 60);
+    return () => clearTimeout(t);
+  }, [activePage]);
+
+  // Re-measure on resize (zoom changes element sizes)
+  useEffect(() => {
+    const onResize = () => updateGlider(activePage);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, [activePage]);
+
   const handleNavClick = (id, option = 'trial') => {
     setActivePage(id, option);
     setIsOpen(false);
@@ -73,10 +104,20 @@ export default function Navbar({ activePage, setActivePage }) {
         </a>
 
         {/* Desktop Navigation */}
-        <nav className="nav-menu">
+        <nav className="nav-menu" ref={navMenuRef}>
+          {/* Sliding glider pill — travels between active links */}
+          <div
+            className="nav-glider"
+            style={{
+              left:    gliderStyle.left,
+              width:   gliderStyle.width,
+              opacity: gliderStyle.opacity,
+            }}
+          />
           {navLinks.map((link) => (
             <button
               key={link.id}
+              data-navid={link.id}
               onClick={() => handleNavClick(link.id)}
               className={`nav-link ${activePage === link.id ? 'active' : ''}`}
             >
@@ -148,15 +189,16 @@ export default function Navbar({ activePage, setActivePage }) {
           left: 0;
           width: 100%;
           z-index: 1000;
-          padding: 16px 0;
-          transition: background 0.3s ease, border-color 0.3s ease, backdrop-filter 0.3s ease, padding 0.3s ease;
+          height: var(--navbar-height);
+          display: flex;
+          align-items: center;
+          transition: background 0.3s ease, border-color 0.3s ease, backdrop-filter 0.3s ease;
           border-bottom: 1px solid transparent;
           backdrop-filter: blur(4px);
           -webkit-backdrop-filter: blur(4px);
         }
 
         .navbar-wrapper.scrolled {
-          padding: 12px 0;
           background: rgba(5, 5, 8, 0.97);
           border-bottom: 1px solid rgba(255,255,255,0.07);
           backdrop-filter: blur(20px);
@@ -178,9 +220,10 @@ export default function Navbar({ activePage, setActivePage }) {
         }
         
         .nav-logo {
-          height: 40px;
-          width: 40px;
+          height: 36px;
+          width: 36px;
           object-fit: contain;
+          flex-shrink: 0;
         }
         
         .nav-title {
@@ -198,6 +241,7 @@ export default function Navbar({ activePage, setActivePage }) {
         }
         
         .nav-menu {
+          position: relative; /* needed for glider absolute positioning */
           display: flex;
           align-items: center;
           gap: 4px;
@@ -207,6 +251,20 @@ export default function Navbar({ activePage, setActivePage }) {
           border-radius: 100px;
           backdrop-filter: blur(12px);
           -webkit-backdrop-filter: blur(12px);
+        }
+
+        /* Sliding neon pill — moves between active nav links */
+        .nav-glider {
+          position: absolute;
+          top: 5px;
+          bottom: 5px;
+          background: var(--accent-neon);
+          border-radius: 100px;
+          transition: left 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+                      width 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+                      opacity 0.2s ease;
+          pointer-events: none;
+          z-index: 0;
         }
         
         .nav-link {
@@ -220,19 +278,19 @@ export default function Navbar({ activePage, setActivePage }) {
           padding: 7px 14px;
           border-radius: 100px;
           position: relative;
-          transition: color 0.2s ease, background 0.2s ease;
+          z-index: 1; /* sit above the glider */
+          transition: color 0.2s ease;
           white-space: nowrap;
         }
 
         .nav-link:hover {
           color: #fff;
-          background: rgba(255,255,255,0.05);
         }
 
         .nav-link.active {
           color: #000;
-          background: var(--accent-neon);
           font-weight: 700;
+          background: transparent; /* glider provides the background */
         }
 
         .nav-link.active::after { display: none; }
@@ -341,54 +399,27 @@ export default function Navbar({ activePage, setActivePage }) {
         }
         
         @media (max-width: 1280px) {
-          .nav-menu {
-            gap: 16px;
-            padding: 6px 18px;
-          }
-          .nav-link {
-            font-size: 0.9rem;
-          }
-          .theme-label {
-            display: none; /* Hide text to save space */
-          }
-          .theme-toggle-btn {
-            padding: 8px; /* Make icon button compact */
-          }
-          .nav-cta {
-            padding: 8px 14px;
-            font-size: 0.8rem;
-          }
+          :root { --navbar-height: 62px; }
+          .nav-menu { gap: 2px; }
+          .nav-link { font-size: 0.85rem; padding: 6px 10px; }
+          .theme-label { display: none; }
+          .theme-toggle-btn { padding: 8px; }
+          .nav-cta { padding: 8px 14px; font-size: 0.8rem; }
         }
 
         @media (max-width: 1120px) {
-          .nav-menu {
-            display: none;
-          }
-          .mobile-toggle {
-            display: block;
-          }
-          .mobile-nav {
-            display: flex;
-          }
-          .nav-cta {
-            display: none; /* Hide on small screens to save space */
-          }
-          .theme-toggle-btn {
-            display: none; /* Desktop toggle hidden, mobile drawer has its own */
-          }
+          :root { --navbar-height: 60px; }
+          .nav-menu { display: none; }
+          .mobile-toggle { display: block; }
+          .mobile-nav { display: flex; }
+          .nav-cta { display: none; }
+          .theme-toggle-btn { display: none; }
         }
-        
+
         @media (max-width: 480px) {
-          .navbar-wrapper {
-            padding: 16px 0;
-          }
-          .nav-title {
-            font-size: 1.15rem;
-          }
-          .nav-logo {
-            height: 32px;
-            width: 32px;
-          }
+          :root { --navbar-height: 56px; }
+          .nav-title { font-size: 1.1rem; }
+          .nav-logo { height: 28px; width: 28px; }
         }
       `}</style>
     </header>

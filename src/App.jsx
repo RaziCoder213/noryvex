@@ -264,7 +264,7 @@ export default function App() {
       </div>
 
       <style>{`
-        main:not(.under-construction-active) { margin-top: 80px; }
+        main:not(.under-construction-active) { margin-top: var(--navbar-height); }
         main.under-construction-active { margin-top: 0; }
 
         /* Floating Scroll Navigation */

@@ -113,6 +113,9 @@
   --card-padding-mobile: 22px;
   --card-gap-desktop: 24px;
   --card-gap-mobile: 16px;
+
+  /* Navbar height — single source of truth used by sticky offsets and main margin */
+  --navbar-height: 66px;
 }
 
 /* ─── Light Mode Token Overrides ────────────────────────── */
