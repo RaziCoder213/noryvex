@@ -148,15 +148,20 @@ export default function Navbar({ activePage, setActivePage }) {
           left: 0;
           width: 100%;
           z-index: 1000;
-          padding: 24px 0;
-          transition: background 0.25s ease, border-color 0.25s ease, padding 0.25s ease;
-          border-bottom: 1px solid transparent;
-        }
-        
-        .navbar-wrapper.scrolled {
           padding: 16px 0;
-          background: var(--bg-navbar);
-          border-bottom: 1px solid var(--border-light);
+          transition: background 0.3s ease, border-color 0.3s ease, backdrop-filter 0.3s ease, padding 0.3s ease;
+          border-bottom: 1px solid transparent;
+          backdrop-filter: blur(4px);
+          -webkit-backdrop-filter: blur(4px);
+        }
+
+        .navbar-wrapper.scrolled {
+          padding: 12px 0;
+          background: rgba(5, 5, 8, 0.97);
+          border-bottom: 1px solid rgba(255,255,255,0.07);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          box-shadow: 0 4px 32px rgba(0,0,0,0.6);
         }
         
         .nav-container {
@@ -194,44 +199,43 @@ export default function Navbar({ activePage, setActivePage }) {
         
         .nav-menu {
           display: flex;
-          gap: 32px;
-          background: var(--bg-glass);
-          border: 1px solid var(--border-light);
-          padding: 6px 24px;
+          align-items: center;
+          gap: 4px;
+          background: rgba(14, 14, 18, 0.85);
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          padding: 5px 8px;
           border-radius: 100px;
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
         }
         
         .nav-link {
           background: none;
           border: none;
-          color: var(--text-gray);
+          color: rgba(161,161,170,0.9);
           font-family: var(--font-sans);
           font-weight: 500;
-          font-size: 0.95rem;
+          font-size: 0.9rem;
           cursor: pointer;
-          padding: 8px 4px;
+          padding: 7px 14px;
+          border-radius: 100px;
           position: relative;
-          transition: var(--transition-fast);
+          transition: color 0.2s ease, background 0.2s ease;
           white-space: nowrap;
         }
-        
+
         .nav-link:hover {
-          color: var(--text-white);
+          color: #fff;
+          background: rgba(255,255,255,0.05);
         }
-        
+
         .nav-link.active {
-          color: var(--accent-neon);
-        }
-        
-        .nav-link.active::after {
-          content: '';
-          position: absolute;
-          bottom: 0;
-          left: 4px; right: 4px;
-          height: 2px;
+          color: #000;
           background: var(--accent-neon);
-          border-radius: 2px;
+          font-weight: 700;
         }
+
+        .nav-link.active::after { display: none; }
         
         .nav-actions {
           display: flex;
