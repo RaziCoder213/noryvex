@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, ArrowUpRight, Sun, Moon, Monitor } from 'lucide-react';
+import { Menu, X, ArrowUpRight, Sun, Moon } from 'lucide-react';
 
 export default function Navbar({ activePage, setActivePage }) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [theme, setTheme] = useState(localStorage.getItem('noryvex_theme') || 'auto');
+  const [theme, setTheme] = useState(() => {
+    const stored = localStorage.getItem('noryvex_theme');
+    // Reject legacy 'auto' value — only accept 'dark' or 'light'
+    return (stored === 'dark' || stored === 'light') ? stored : 'dark';
+  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -18,42 +22,19 @@ export default function Navbar({ activePage, setActivePage }) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Theme application and preference listeners
+  // Apply theme to document root
   useEffect(() => {
-    const applyTheme = () => {
-      const root = document.documentElement;
-      if (theme === 'dark') {
-        root.removeAttribute('data-theme');
-      } else if (theme === 'light') {
-        root.setAttribute('data-theme', 'light');
-      } else {
-        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        if (systemDark) {
-          root.removeAttribute('data-theme');
-        } else {
-          root.setAttribute('data-theme', 'light');
-        }
-      }
-    };
-    applyTheme();
-    localStorage.setItem('noryvex_theme', theme);
-
-    if (theme === 'auto') {
-      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-      const handleChange = () => applyTheme();
-      mediaQuery.addEventListener('change', handleChange);
-      return () => mediaQuery.removeEventListener('change', handleChange);
+    const root = document.documentElement;
+    if (theme === 'light') {
+      root.setAttribute('data-theme', 'light');
+    } else {
+      root.removeAttribute('data-theme');
     }
+    localStorage.setItem('noryvex_theme', theme);
   }, [theme]);
 
   const toggleTheme = () => {
-    if (theme === 'auto') {
-      setTheme('light');
-    } else if (theme === 'light') {
-      setTheme('dark');
-    } else {
-      setTheme('auto');
-    }
+    setTheme(t => t === 'dark' ? 'light' : 'dark');
   };
 
   // Prevent body scroll when mobile menu is open
@@ -109,13 +90,11 @@ export default function Navbar({ activePage, setActivePage }) {
           <button 
             onClick={toggleTheme} 
             className="theme-toggle-btn"
-            title={`Current theme: ${theme} (Click to change)`}
+            title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
             aria-label="Toggle color theme"
           >
-            {theme === 'auto' && <Monitor size={18} />}
-            {theme === 'light' && <Sun size={18} />}
-            {theme === 'dark' && <Moon size={18} />}
-            <span className="theme-label">{theme}</span>
+            {theme === 'dark' ? <Moon size={16} /> : <Sun size={16} />}
+            <span className="theme-label">{theme === 'dark' ? 'DARK' : 'LIGHT'}</span>
           </button>
 
           <button 
@@ -156,10 +135,8 @@ export default function Navbar({ activePage, setActivePage }) {
             className="btn btn-secondary mobile-cta-secondary theme-toggle-btn-mobile"
             style={{ width: '100%', background: 'transparent', border: '1px solid var(--border-light)', color: 'var(--text-white)', padding: '12px', borderRadius: '100px', fontSize: '0.9rem', fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
           >
-            {theme === 'auto' && <Monitor size={18} />}
-            {theme === 'light' && <Sun size={18} />}
-            {theme === 'dark' && <Moon size={18} />}
-            Theme: {theme}
+            {theme === 'dark' ? <Moon size={18} /> : <Sun size={18} />}
+            Switch to {theme === 'dark' ? 'Light' : 'Dark'} Mode
           </button>
         </div>
       </div>
