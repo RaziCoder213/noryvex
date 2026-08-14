@@ -225,7 +225,7 @@ app.get('/api/faqs', async (req, res) => {
 });
 
 // Admin — add a FAQ
-app.post('/api/admin/faqs', verifyToken, async (req, res) => {
+app.post('/api/admin/faqs', authenticateToken, async (req, res) => {
   try {
     const { question, answer } = req.body;
     if (!question || !answer) {
@@ -240,7 +240,7 @@ app.post('/api/admin/faqs', verifyToken, async (req, res) => {
 });
 
 // Admin — delete a FAQ
-app.delete('/api/admin/faqs/:id', verifyToken, async (req, res) => {
+app.delete('/api/admin/faqs/:id', authenticateToken, async (req, res) => {
   try {
     await deleteFaq(req.params.id);
     res.json({ success: true });
@@ -264,7 +264,7 @@ app.get('/api/settings/contact-config', async (req, res) => {
 });
 
 // Admin — save WhatsApp, Slack config
-app.post('/api/admin/settings/contact-config', verifyToken, async (req, res) => {
+app.post('/api/admin/settings/contact-config', authenticateToken, async (req, res) => {
   try {
     const { whatsapp_number, whatsapp_message, slack_link } = req.body;
     await setSetting('whatsapp_number', whatsapp_number || '');
