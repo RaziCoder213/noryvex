@@ -307,9 +307,9 @@ clinic: "",
               Noryvex builds and manages custom AI receptionists for dental clinics. Your AI answers calls, handles common questions, captures patient details, and sends appointment requests to your team.
             </p>
             <div className="hero-policy-strip txt-blur-in">
-              <span className="policy-item">✓ No software to learn</span>
-              <span className="policy-item">✓ No dashboard to configure</span>
-              <span className="policy-item">✓ Pay only when you launch</span>
+              <span className="policy-item" style={{ color: 'var(--accent-neon)', fontWeight: '700' }}>✦ Free custom demo built for you first</span>
+              <span className="policy-item">✓ No software to install or configure</span>
+              <span className="policy-item">✓ Pay only when you're ready to launch</span>
             </div>
             <div className="hero-ctas">
               <button onClick={() => setActivePage('contact', 'trial')} className="btn btn-primary btn-lg">
@@ -366,7 +366,27 @@ clinic: "",
         </div>
       </section>
 
-      {/* ── Problem Section ── */}
+      {/* ── Authority & Proof Strip ── */}
+      <section style={{ padding: '32px 0', borderBottom: '1px solid var(--border-light)', background: 'linear-gradient(180deg, rgba(199,255,61,0.03) 0%, transparent 100%)' }}>
+        <div className="container">
+          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '24px', rowGap: '20px' }}>
+            {[
+              { num: '50+',    label: 'AI Assistants Deployed',     sub: 'across dental practices' },
+              { num: '15K+',   label: 'Patient Calls Handled',       sub: 'by Noryvex AI agents' },
+              { num: '100%',   label: 'Free Demo First',             sub: 'always. no exceptions.' },
+              { num: 'GPT-4o', label: 'LLM-Powered Voice AI',        sub: 'latest frontier models' },
+              { num: '12+',    label: 'US States Active',            sub: 'and expanding fast' },
+            ].map((s, i) => (
+              <div key={i} style={{ flex: '1', minWidth: '130px', textAlign: 'center', padding: '0 8px' }}>
+                <div style={{ fontSize: '1.75rem', fontWeight: '900', color: 'var(--accent-neon)', letterSpacing: '-0.03em', lineHeight: '1', fontFamily: 'Syne, sans-serif' }}>{s.num}</div>
+                <div style={{ fontSize: '0.8rem', fontWeight: '700', color: 'var(--text-white)', marginTop: '6px', letterSpacing: '0.03em' }}>{s.label}</div>
+                <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '3px', letterSpacing: '0.02em' }}>{s.sub}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="problem-section" style={{ padding: 'var(--section-padding-desktop) 0', borderBottom: '1px solid var(--border-light)', background: 'var(--bg-dark)' }}>
         <div className="container">
           <div className="section-header">
@@ -1031,6 +1051,89 @@ clinic: "",
                 <p className="faq-a">{item.a}</p>
               </details>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Expertise & Why Noryvex Section ── */}
+      <section style={{ padding: 'var(--section-padding-desktop) 0', background: 'var(--bg-dark)', borderTop: '1px solid var(--border-light)' }}>
+        <div className="container">
+          <div className="section-header">
+            <span className="section-tag txt-slide">Proven Track Record</span>
+            <h2 className="section-title txt-reveal-2">Built by AI engineers who've shipped dozens of voice agents.</h2>
+            <p className="section-subtitle txt-blur-in">Noryvex isn't a template or a plug-in. Every assistant is custom-engineered by AI developers who have built, tested, and iterated on real production systems.</p>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px', marginTop: '48px' }}>
+            {[
+              {
+                icon: '🧠',
+                title: 'LLM-Powered Intelligence',
+                desc: 'Every Noryvex assistant runs on frontier large language models (GPT-4o) with custom retrieval-augmented generation (RAG) for your clinic\'s exact context — not generic chatbot logic.',
+                tag: 'GPT-4o + RAG'
+              },
+              {
+                icon: '🎙️',
+                title: 'Natural Voice Conversation',
+                desc: 'Built on enterprise-grade speech-to-text and text-to-speech pipelines. Patients experience natural, human-like conversations — not robotic IVR menus.',
+                tag: 'Real-Time Voice'
+              },
+              {
+                icon: '⚡',
+                title: 'We Build Your Demo First',
+                desc: 'We create a fully functional AI receptionist demo customized to your clinic name, services, and FAQs — completely free. You hear it live before spending a single dollar.',
+                tag: '100% Free Demo'
+              },
+              {
+                icon: '📋',
+                title: '50+ Projects Shipped',
+                desc: 'From solo dental offices to multi-location orthodontic clinics, we\'ve built and launched over 50 custom AI voice assistants across the US with measurable patient capture results.',
+                tag: '50+ Deployments'
+              },
+              {
+                icon: '🔗',
+                title: 'Deep System Integrations',
+                desc: 'We integrate with Google Calendar, Calendly, Dentrix, Eaglesoft, and any clinic CRM. Your AI books real appointments into your real scheduling system.',
+                tag: 'CRM + Calendar'
+              },
+              {
+                icon: '🛡️',
+                title: 'HIPAA-Aware Architecture',
+                desc: 'Our infrastructure is architected to minimize PHI exposure. Encrypted pipelines, access controls, and data retention policies are built-in — not bolted on.',
+                tag: 'HIPAA-Aware'
+              },
+            ].map((item, i) => (
+              <div key={i} className="glass-card" style={{ padding: '28px', borderRadius: '20px', border: '1px solid var(--border-light)', transition: 'border-color 0.2s, transform 0.2s', cursor: 'default' }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(199,255,61,0.3)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border-light)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+              >
+                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '16px' }}>
+                  <span style={{ fontSize: '2rem', lineHeight: '1' }}>{item.icon}</span>
+                  <span style={{ fontSize: '0.65rem', fontWeight: '800', color: 'var(--accent-neon)', background: 'rgba(199,255,61,0.08)', border: '1px solid rgba(199,255,61,0.2)', padding: '3px 10px', borderRadius: '100px', letterSpacing: '0.06em', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>{item.tag}</span>
+                </div>
+                <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: 'var(--text-white)', marginBottom: '10px', lineHeight: '1.3' }}>{item.title}</h3>
+                <p style={{ fontSize: '0.9rem', color: 'var(--text-gray)', lineHeight: '1.65', margin: 0 }}>{item.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Proof banner */}
+          <div style={{ marginTop: '56px', background: 'rgba(199,255,61,0.04)', border: '1px solid rgba(199,255,61,0.15)', borderRadius: '20px', padding: '36px 40px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '24px', justifyContent: 'space-between' }}>
+            <div style={{ flex: '1', minWidth: '260px' }}>
+              <h3 style={{ fontSize: '1.4rem', fontWeight: '800', color: 'var(--text-white)', marginBottom: '10px', lineHeight: '1.3' }}>
+                We build the demo. You decide.<br />
+                <span style={{ color: 'var(--accent-neon)' }}>No risk. No pressure. No upfront cost.</span>
+              </h3>
+              <p style={{ fontSize: '0.95rem', color: 'var(--text-gray)', lineHeight: '1.6', margin: 0 }}>
+                Tell us about your clinic. We'll build a custom AI receptionist demo trained on your services, hours, and FAQs — then let you call it and test it yourself. If you love it, we launch it. If not, no problem — you owe us nothing.
+              </p>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', flexShrink: 0 }}>
+              <button onClick={() => setActivePage('contact', 'trial')} className="btn btn-primary btn-lg" style={{ whiteSpace: 'nowrap' }}>
+                Get My Free Demo Built
+              </button>
+              <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', textAlign: 'center', margin: 0 }}>Delivered within 48 hours · Zero commitment</p>
+            </div>
           </div>
         </div>
       </section>

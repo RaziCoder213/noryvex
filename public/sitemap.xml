@@ -1,87 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset
-  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
-  xsi:schemaLocation="
-    http://www.sitemaps.org/schemas/sitemap/0.9
-    http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 
-  <!-- ═══════════════════════════════════════════
-       Noryvex — Dental AI Receptionist Agency
-       Domain: https://trynoryvex.com
-       Founder: Muhammad Razi (razi@trynoryvex.com)
-       Updated: 2026-08-11
-  ══════════════════════════════════════════════ -->
-
-  <!-- Home Page (FAQ section included) -->
+  <!-- Home Page — highest priority -->
   <url>
     <loc>https://trynoryvex.com/</loc>
-    <lastmod>2026-08-11</lastmod>
+    <lastmod>2026-08-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <image:image>
-      <image:loc>https://trynoryvex.com/logo.png</image:loc>
-      <image:title>Noryvex — Dental AI Receptionist Agency</image:title>
-    </image:image>
   </url>
 
-  <!-- Solutions Page -->
+  <!-- Solutions / Services -->
   <url>
     <loc>https://trynoryvex.com/solutions</loc>
-    <lastmod>2026-08-11</lastmod>
+    <lastmod>2026-08-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
 
-  <!-- Live Demo Page -->
+  <!-- Live Demo — high conversion page -->
   <url>
     <loc>https://trynoryvex.com/live-demo</loc>
-    <lastmod>2026-08-11</lastmod>
+    <lastmod>2026-08-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
-    <image:image>
-      <image:loc>https://trynoryvex.com/logo.png</image:loc>
-      <image:title>Chloe — Noryvex AI Receptionist Live Demo</image:title>
-    </image:image>
+  </url>
+
+  <!-- Calculator Tool -->
+  <url>
+    <loc>https://trynoryvex.com/calculator</loc>
+    <lastmod>2026-08-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
 
   <!-- About Page -->
   <url>
     <loc>https://trynoryvex.com/about</loc>
-    <lastmod>2026-08-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- Contact & Booking Page -->
-  <url>
-    <loc>https://trynoryvex.com/contact</loc>
-    <lastmod>2026-08-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <!-- Revenue Calculator Tool -->
-  <url>
-    <loc>https://trynoryvex.com/calculator</loc>
-    <lastmod>2026-08-11</lastmod>
+    <lastmod>2026-08-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
-  <!-- Privacy Policy -->
+  <!-- Contact / Book a Demo -->
+  <url>
+    <loc>https://trynoryvex.com/contact</loc>
+    <lastmod>2026-08-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Legal Pages -->
   <url>
     <loc>https://trynoryvex.com/privacy</loc>
-    <lastmod>2026-08-11</lastmod>
+    <lastmod>2026-08-13</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
 
-  <!-- Terms of Service -->
   <url>
     <loc>https://trynoryvex.com/terms</loc>
-    <lastmod>2026-08-11</lastmod>
+    <lastmod>2026-08-13</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>

@@ -1,32 +1,82 @@
-# Noryvex
+# Noryvex — AI Receptionist Agency for Dental Clinics
+> https://trynoryvex.com
 
-> Never miss another dental patient call.
+Noryvex is a managed AI receptionist agency that builds, deploys, and maintains custom AI voice receptionists for dental clinics across the United States.
 
-Noryvex is a done-for-you AI receptionist agency for dental clinics. We build and manage custom AI voice receptionists that answer calls, capture patient details, handle clinic FAQs, collect appointment requests, and hand them off to your existing calendar or CRM.
+## What Noryvex Does
 
-## Key Information
-- **Official Website**: https://trynoryvex.com
-- **Founder**: Muhammad Razi (https://www.linkedin.com/in/mrazi-dev/)
-- **Core Focus**: Done-for-you AI voice receptionists for dental clinics (cosmetic, general, orthodontist, pediatric, emergency).
-- **Tech Stack**: Latency-optimized speech synthesis (&lt;800ms) utilizing Twilio, Vapi, ElevenLabs, and custom integration pipelines.
+Noryvex builds AI-powered voice receptionists that answer patient calls 24/7 for dental practices. Each assistant is custom-trained on the clinic's name, services, hours, FAQs, and booking workflow. The AI handles incoming calls, answers common questions, captures new patient details, and sends appointment requests to the clinic team.
 
-## Capabilities
-- **Inbound AI Receptionist**: Answering patient calls 24/7 (during lunch breaks, peak times, and after-hours).
-- **Appointment Requests**: Gathering patient preferred date, time, contact info, and reason for visit.
-- **Clinic FAQs Answering**: Responding to opening hours, location details, accepted insurances, pricing guidance, and treatment questions.
-- **Summaries & recordings**: Logs of calls, recordings, and text summaries pushed directly to your team's email or dashboard.
-- **US Phone Numbers**: We provide a dedicated phone number in any US state for your clinic's line.
-- **Practice Management Integration**: Direct or dashboard/email handoffs to existing clinic tools.
-- **HIPAA Compliance**: Business Associate Agreements (BAAs) signed with clinics; TLS 1.3/AES-256 data security protocols.
+## The Noryvex Promise: Free Demo First
 
-## Navigation & Entry Points
-- **Home**: Overview of dental receptionist solutions, process flow, and custom pricing comparison.
-- **Solutions**: Detailed review of the 6 core capability panels, safety disclaimers, and integration paths.
-- **Live Demo**: Browser-simulated live call with "Chloe" configured for Bright Dental clinic.
-- **About**: Description of founder Muhammad Razi's 4-step quality assurance review workflow.
-- **Contact**: Clinic intake form to get a free custom demo.
+Noryvex builds a fully functional AI receptionist demo for every prospective client — completely free, before any payment is required. Clinics can call their custom demo and test it in real-time. If they love it, Noryvex launches it. If not, no problem — zero obligation.
 
-## FAQ
-- **Is Noryvex a SaaS product?**: No, Noryvex is a full-service managed agency. We build, train, configure, test, and manage the receptionist for you end-to-end.
-- **How much does it cost?**: We build a free custom demo first. You only pay when you decide to launch the full system.
-- **How long does it take?**: We can design, configure, and share your clinic's voice prototype in under 48 hours.
+- Demo delivered within 48 hours
+- Custom-trained on clinic name, services, hours, and FAQs
+- Real phone number to call and test
+- No credit card required
+- No commitment to proceed
+
+## Technology Stack
+
+- **LLM Engine**: GPT-4o (OpenAI) with Retrieval-Augmented Generation (RAG)
+- **Voice Pipeline**: Enterprise-grade ASR + TTS (real-time speech recognition and synthesis)
+- **Integrations**: Google Calendar, Calendly, Dentrix, Eaglesoft, any clinic CRM
+- **Infrastructure**: HIPAA-aware architecture with encrypted pipelines and access controls
+- **Deployment**: Managed and maintained by Noryvex — clinics need zero technical knowledge
+
+## Services Offered
+
+1. **AI Dental Receptionist** — Custom AI voice agent that handles all incoming patient calls 24/7
+2. **Call Routing** — Intelligent routing for emergencies, new patients, existing patients, and general inquiries
+3. **Appointment Booking** — Captures availability preferences and syncs to clinic calendars
+4. **Patient FAQ Handling** — Answers questions about hours, services, pricing, insurance, and location
+5. **Call Summaries** — Sends detailed email/SMS summaries after every patient conversation
+6. **After-Hours Coverage** — Handles calls evenings, weekends, and holidays without staff
+7. **Managed Service** — Noryvex handles all setup, maintenance, updates, and support
+
+## Who Noryvex Serves
+
+- General dental practices
+- Cosmetic dentistry clinics
+- Orthodontic offices
+- Pediatric dental clinics
+- Emergency dental centers
+- Multi-location dental groups
+
+## Proven Track Record
+
+- 50+ custom AI voice assistants deployed
+- 15,000+ patient calls handled by Noryvex AI agents
+- Active in 12+ US states
+- 100% of clients receive a free demo before any payment
+
+## Why Dental Clinics Choose Noryvex
+
+1. **No software to learn** — Noryvex builds and manages everything
+2. **No dashboard to configure** — Just receive call summaries and appointment notifications
+3. **Free demo first** — Hear your AI receptionist before spending a dollar
+4. **Pay only when ready** — No upfront cost, no lock-in until you decide to launch
+5. **Built for dental** — Trained on dental-specific vocabulary, clinical context, and patient flows
+6. **GPT-4o powered** — Frontier LLM intelligence, not basic chatbot rules
+
+## About the Founder
+
+Noryvex was founded by Muhammad Razi, a Full-Stack AI Developer and automation engineer specializing in conversational AI, voice agents, and LLM-powered business automation. Razi has shipped dozens of AI systems across healthcare, dental, and service industries.
+
+## Contact & Demo Request
+
+- Website: https://trynoryvex.com
+- Demo Request: https://trynoryvex.com/contact
+- Live Interactive Demo: https://trynoryvex.com/live-demo
+
+## Pages
+
+- Home: https://trynoryvex.com/
+- Solutions: https://trynoryvex.com/solutions
+- Live Demo: https://trynoryvex.com/live-demo
+- Calculator: https://trynoryvex.com/calculator
+- About: https://trynoryvex.com/about
+- Contact: https://trynoryvex.com/contact
+- Privacy Policy: https://trynoryvex.com/privacy
+- Terms of Service: https://trynoryvex.com/terms

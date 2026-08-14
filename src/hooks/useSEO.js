@@ -11,43 +11,43 @@ const SITE_NAME = 'Noryvex';
 
 const PAGE_META = {
   home: {
-    title: 'AI Receptionist for Dental Clinics | Noryvex',
-    description: 'Noryvex is a managed AI receptionist agency for dental clinics. We build, train, and run custom AI voice receptionists that answer patient calls 24/7, handle FAQs, and capture new bookings. 48-hour setup. Get a free clinic demo.',
+    title: 'AI Receptionist for Dental Clinics — Free Demo First | Noryvex',
+    description: 'Noryvex builds custom AI voice receptionists for dental clinics. GPT-4o powered. We build your demo free first — you only pay when you love it. 50+ AI assistants deployed, 15K+ patient calls handled. 24/7 call answering, appointment booking, and patient FAQ handling. No software to learn.',
     canonical: `${BASE_URL}/`,
   },
   solutions: {
-    title: 'AI Solutions & Services | Noryvex — AI Voice Agents, CRM Automation',
-    description: 'Explore Noryvex\'s full suite of AI solutions: Voice Agents, AI Receptionists, Workflow Automation, CRM Integration, Web Apps, Mobile Apps, SaaS Development, and API Integrations.',
+    title: 'AI Voice Agent Solutions for Dental Clinics | Noryvex',
+    description: 'Explore Noryvex\'s full AI service suite: Custom AI Voice Receptionists, 24/7 Call Handling, Appointment Booking Automation, Patient FAQ AI, CRM & Calendar Integration, HIPAA-aware Infrastructure. GPT-4o LLM-powered. Free demo built for every clinic before payment.',
     canonical: `${BASE_URL}/solutions`,
   },
   'live-demo': {
-    title: 'Live AI Receptionist Demo — Talk to Chloe | Noryvex',
-    description: 'Experience Noryvex AI live. Talk to Chloe — our interactive AI receptionist — and see how AI Voice Agents qualify leads, book meetings, and answer questions in real time.',
+    title: 'Live AI Dental Receptionist Demo — Talk to Chloe | Noryvex',
+    description: 'Experience a Noryvex AI dental receptionist live in your browser. Talk to Chloe — our GPT-4o powered AI voice agent — and hear how she handles patient calls, answers dental FAQs, and books appointments in real time. Free to try, no login required.',
     canonical: `${BASE_URL}/live-demo`,
   },
   about: {
-    title: 'About Noryvex & Founder Muhammad Razi | AI Automation Agency',
-    description: 'Learn about Noryvex and its founder Muhammad Razi — a Full-Stack AI Developer building the next generation of AI Voice Agents and business automation tools.',
+    title: 'About Noryvex | AI Voice Agent Agency Built for Dental Clinics',
+    description: 'Noryvex is founded by Muhammad Razi, a Full-Stack AI Developer specializing in LLM-powered voice agents and conversational AI. We\'ve shipped 50+ custom AI receptionists for dental clinics across 12+ US states. Learn why dental practices trust Noryvex.',
     canonical: `${BASE_URL}/about`,
   },
   contact: {
-    title: 'Book a Strategy Call | Chat on WhatsApp | Noryvex',
-    description: 'Connect with Noryvex. Book a free 30-minute strategy call, chat on WhatsApp, or join our Slack. Full calendar with timezone support and instant slot booking.',
+    title: 'Get Your Free AI Receptionist Demo | Book a Strategy Call | Noryvex',
+    description: 'Request a free custom AI receptionist demo for your dental clinic — built by Noryvex in 48 hours, zero commitment. Book a strategy call via calendar (full timezone support), chat on WhatsApp, or connect on Slack. No upfront cost. You only pay when you\'re ready.',
     canonical: `${BASE_URL}/contact`,
   },
   privacy: {
-    title: 'Privacy Policy | Noryvex',
-    description: 'Read the Noryvex Privacy Policy — how we collect, use, and protect your personal data in compliance with GDPR and applicable privacy regulations.',
+    title: 'Privacy Policy | Noryvex AI Receptionist Agency',
+    description: 'Read the Noryvex Privacy Policy — how we collect, use, and protect your personal data and clinic information in compliance with GDPR, HIPAA-aware standards, and applicable privacy regulations.',
     canonical: `${BASE_URL}/privacy`,
   },
   terms: {
-    title: 'Terms of Service | Noryvex',
-    description: 'Read the Noryvex Terms of Service — the rules governing use of our website, services, and AI automation solutions.',
+    title: 'Terms of Service | Noryvex AI Receptionist Agency',
+    description: 'Read the Noryvex Terms of Service — the rules governing use of our website, AI receptionist services, and automation solutions for dental clinics.',
     canonical: `${BASE_URL}/terms`,
   },
   calculator: {
-    title: 'Missed Call Revenue Calculator | Noryvex',
-    description: 'Find out exactly how much revenue your dental clinic loses every month from missed patient calls. Free calculator tool by Noryvex — takes 30 seconds.',
+    title: 'Dental Missed Call Revenue Calculator | How Much Are You Losing? | Noryvex',
+    description: 'Calculate exactly how much revenue your dental clinic loses every month from missed patient calls. Free tool by Noryvex — enter your call volume and conversion rate. Takes 30 seconds. Most dental practices lose $3,000–$15,000+ monthly from unanswered calls.',
     canonical: `${BASE_URL}/calculator`,
   },
 };
