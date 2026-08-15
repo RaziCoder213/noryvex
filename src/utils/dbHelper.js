@@ -1,24 +1,41 @@
 // dbHelper.js
 // Client-side Database Helper communicating directly with the Noryvex Express server (Neon Postgres database).
 
-// Helper to fetch live JSON data with zero caching
-export const fetchNoCacheJSON = async (url, options = {}) => {
+// Delays for exponential back-off: 600 ms, 1 200 ms, 2 400 ms
+const RETRY_DELAYS = [600, 1200, 2400];
+
+const isTransientNetworkError = (err) =>
+  err instanceof TypeError || // ERR_NETWORK_IO_SUSPENDED, Failed to fetch, etc.
+  err?.message?.includes('Network request failed') ||
+  err?.message?.includes('network');
+
+// Helper to fetch live JSON data with zero caching + retry on transient network errors
+export const fetchNoCacheJSON = async (url, options = {}, _attempt = 0) => {
   const cacheBustUrl = `${url}${url.includes('?') ? '&' : '?'}t=${Date.now()}`;
-  const response = await fetch(cacheBustUrl, {
-    cache: 'no-store',
-    ...options,
-    headers: {
-      'Cache-Control': 'no-cache, no-store, must-revalidate',
-      'Pragma': 'no-cache',
-      'Expires': '0',
-      ...(options.headers || {})
+  try {
+    const response = await fetch(cacheBustUrl, {
+      cache: 'no-store',
+      ...options,
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+        ...(options.headers || {})
+      }
+    });
+    checkAuthStatus(response);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch JSON from ${url}: ${response.statusText}`);
     }
-  });
-  checkAuthStatus(response);
-  if (!response.ok) {
-    throw new Error(`Failed to fetch JSON from ${url}: ${response.statusText}`);
+    return await response.json();
+  } catch (err) {
+    // Retry only on transient network-level errors, not on HTTP 4xx/5xx
+    if (isTransientNetworkError(err) && _attempt < RETRY_DELAYS.length) {
+      await new Promise(r => setTimeout(r, RETRY_DELAYS[_attempt]));
+      return fetchNoCacheJSON(url, options, _attempt + 1);
+    }
+    throw err;
   }
-  return await response.json();
 };
 
 // Helper to export/download live state as a JSON file
