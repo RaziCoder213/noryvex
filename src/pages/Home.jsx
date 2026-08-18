@@ -5,13 +5,23 @@ import {
   Volume2, FileText, Users, Calendar, BarChart2, Clock, HelpCircle, UserPlus
 } from 'lucide-react';
 import ParticleCanvas from '../components/ParticleCanvas';
-import { dbGetPartners } from '../utils/dbHelper';
+import { dbGetPartners, dbGetFaqs } from '../utils/dbHelper';
 
 export default function Home({ setActivePage }) {
   const [mousePos, setMousePos]       = useState({ x: 0.5, y: 0.5 });
   const [translateX, setTranslateX] = useState(0);
   const [taglineProgress, setTaglineProgress] = useState(0);
   const [partners, setPartners] = useState([]);
+  const [faqs, setFaqs] = useState([
+    { question: 'Will my patients know they\'re talking to an AI?', answer: 'Modern voice AI is indistinguishable from a human receptionist for routine calls. Noryvex builds custom voice models with natural speech patterns, appropriate pauses, and context-aware responses. That said, we follow best practices — the AI will never claim to be human if a patient directly asks.' },
+    { question: 'How long does setup take?', answer: 'Our standard turnaround is 48 hours from kickoff call to live deployment. We handle everything: voice prompt scripting, FAQ training, calendar integration, and sandbox testing. All you need to do is forward calls to the number we provision.' },
+    { question: 'Do we need to change our existing phone number?', answer: 'No. We provision a secondary number that receives forwarded calls. Your clinic\'s published phone number stays exactly the same — patients call the same number they always have; the AI handles it behind the scenes.' },
+    { question: 'What happens during a dental emergency?', answer: 'The AI is trained to recognize emergency language and immediately escalates those calls to your on-call staff or emergency line. You define the escalation logic during setup — we configure it exactly the way you\'d want your human receptionist to handle it.' },
+    { question: 'Is Noryvex HIPAA compliant?', answer: 'Yes. We sign a Business Associate Agreement (BAA) with every client, use US-based encrypted call infrastructure, and process all patient data in compliance with HIPAA regulations. Ask us for a copy of our BAA during your demo call.' },
+    { question: 'What if a patient asks something the AI doesn\'t know?', answer: 'The AI acknowledges the question politely, takes a message, and flags it for follow-up by your team. You can expand the FAQ training at any time — just send us updated information and we\'ll retrain within 24 hours at no extra charge.' },
+    { question: 'What does Noryvex cost?', answer: 'Pricing is based on call volume and the features your practice needs. We\'re transparent about costs — book a free 30-minute strategy call and we\'ll give you a custom quote with no pressure and no hidden fees.' },
+    { question: 'Can I try it before I pay anything?', answer: 'Yes. We build a short custom AI demo for your clinic — using your real services, hours, and FAQs — completely free. If you like what you hear, we deploy the full system. If not, there\'s no obligation and no charge.' },
+  ]);
   const heroRef    = useRef(null);
   const sliderRef  = useRef(null);
   const servicesSectionRef = useRef(null);
@@ -29,6 +39,13 @@ export default function Home({ setActivePage }) {
       }
     };
     loadPartners();
+  }, []);
+
+  // Load FAQs from DB (falls back to default state if API unreachable)
+  useEffect(() => {
+    dbGetFaqs().then(data => {
+      if (Array.isArray(data) && data.length > 0) setFaqs(data);
+    }).catch(() => {});
   }, []);
 
   // Mouse parallax for hero (normalised 0–1)
@@ -1033,22 +1050,13 @@ clinic: "",
             </p>
           </div>
           <div className="faq-list">
-            {[
-              { q: 'Will my patients know they\'re talking to an AI?', a: 'Modern voice AI is indistinguishable from a human receptionist for routine calls. Noryvex builds custom voice models with natural speech patterns, appropriate pauses, and context-aware responses. That said, we follow best practices — the AI will never claim to be human if a patient directly asks.' },
-              { q: 'How long does setup take?', a: 'Our standard turnaround is 48 hours from kickoff call to live deployment. We handle everything: voice prompt scripting, FAQ training, calendar integration, and sandbox testing. All you need to do is forward calls to the number we provision.' },
-              { q: 'Do we need to change our existing phone number?', a: 'No. We provision a secondary number that receives forwarded calls. Your clinic\'s published phone number stays exactly the same — patients call the same number they always have; the AI handles it behind the scenes.' },
-              { q: 'What happens during a dental emergency?', a: 'The AI is trained to recognize emergency language and immediately escalates those calls to your on-call staff or emergency line. You define the escalation logic during setup — we configure it exactly the way you\'d want your human receptionist to handle it.' },
-              { q: 'Is Noryvex HIPAA compliant?', a: 'Yes. We sign a Business Associate Agreement (BAA) with every client, use US-based encrypted call infrastructure, and process all patient data in compliance with HIPAA regulations. Ask us for a copy of our BAA during your demo call.' },
-              { q: 'What if a patient asks something the AI doesn\'t know?', a: 'The AI acknowledges the question politely, takes a message, and flags it for follow-up by your team. You can expand the FAQ training at any time — just send us updated information and we\'ll retrain within 24 hours at no extra charge.' },
-              { q: 'What does Noryvex cost?', a: 'Pricing is based on call volume and the features your practice needs. We\'re transparent about costs — book a free 30-minute strategy call and we\'ll give you a custom quote with no pressure and no hidden fees.' },
-              { q: 'Can I try it before I pay anything?', a: 'Yes. We build a short custom AI demo for your clinic — using your real services, hours, and FAQs — completely free. If you like what you hear, we deploy the full system. If not, there\'s no obligation and no charge.' },
-            ].map((item, idx) => (
-              <details key={idx} className="faq-item">
+            {faqs.map((item, idx) => (
+              <details key={item.id ?? idx} className="faq-item">
                 <summary className="faq-q" id={`faq-q-${idx}`}>
-                  <span>{item.q}</span>
+                  <span>{item.question ?? item.q}</span>
                   <span className="faq-chevron" aria-hidden="true">+</span>
                 </summary>
-                <p className="faq-a">{item.a}</p>
+                <p className="faq-a">{item.answer ?? item.a}</p>
               </details>
             ))}
           </div>

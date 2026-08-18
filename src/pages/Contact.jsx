@@ -4,7 +4,7 @@ import {
   ChevronLeft, Globe, ArrowRight, Zap, Shield, AlertCircle, Lock,
   Mail
 } from 'lucide-react';
-import { dbSaveMeeting } from '../utils/dbHelper';
+import { dbSaveMeeting, dbGetContactConfig } from '../utils/dbHelper';
 
 // ── Update these when ready ──────────────────────────────
 const WHATSAPP_NUMBER = '+13478884099'; // TODO: update with real number
@@ -142,6 +142,20 @@ export default function Contact({ addToast }) {
     setBookedMap(loadBooked());
   }, []);
 
+  // ── Dynamic contact config from DB ────────────────────
+  const [whatsappLink, setWhatsappLink] = useState(WHATSAPP_LINK);
+  const [slackLink,    setSlackLink]    = useState(SLACK_LINK);
+
+  useEffect(() => {
+    dbGetContactConfig().then(cfg => {
+      if (!cfg) return;
+      const num = cfg.whatsapp_number?.trim() || WHATSAPP_NUMBER;
+      const msg = cfg.whatsapp_message?.trim() || "Hi! I'm interested in Noryvex's AI receptionist for my dental clinic.";
+      setWhatsappLink(`https://wa.me/${num}?text=${encodeURIComponent(msg)}`);
+      if (cfg.slack_link?.trim()) setSlackLink(cfg.slack_link.trim());
+    }).catch(() => {});
+  }, []);
+
   // Pre-compute the 14 business days once
   const businessDays = useMemo(() => getBusinessDays(), []);
 
@@ -253,32 +267,38 @@ export default function Contact({ addToast }) {
       <section style={{ padding: '60px 0 40px', background: 'var(--bg-pure)' }}>
         <div className="container">
           <div className="contact-options-grid">
-            {CONTACT_OPTIONS.map((opt) => (
-              <button
-                key={opt.id}
-                id={`contact-option-${opt.id}`}
-                disabled={opt.soon}
-                onClick={() => {
-                  if (opt.href) { window.open(opt.href, '_blank', 'noopener,noreferrer'); return; }
-                  setOption(opt.id);
-                }}
-                className={`contact-opt-card glass-card ${opt.id === option && !opt.soon ? 'opt-active' : ''} ${opt.soon ? 'opt-soon' : ''}`}
-              >
-                <div className={`opt-icon-wrap ${opt.primary ? 'opt-icon-primary' : ''}`}>
-                  {opt.icon}
-                </div>
-                <div>
-                  <h3 className="opt-label">{opt.label}</h3>
-                  <p className="opt-desc">{opt.desc}</p>
-                </div>
-                <div className="opt-cta-row">
-                  {opt.soon
-                    ? <span className="badge-soon">Coming Soon</span>
-                    : <span className="opt-cta-link">{opt.cta} <ArrowRight size={14} /></span>
-                  }
-                </div>
-              </button>
-            ))}
+            {CONTACT_OPTIONS.map((opt) => {
+              // Inject live config hrefs from DB
+              const href = opt.id === 'whatsapp' ? whatsappLink
+                         : opt.id === 'slack'    ? slackLink
+                         : opt.href;
+              return (
+                <button
+                  key={opt.id}
+                  id={`contact-option-${opt.id}`}
+                  disabled={opt.soon}
+                  onClick={() => {
+                    if (href) { window.open(href, '_blank', 'noopener,noreferrer'); return; }
+                    setOption(opt.id);
+                  }}
+                  className={`contact-opt-card glass-card ${opt.id === option && !opt.soon ? 'opt-active' : ''} ${opt.soon ? 'opt-soon' : ''}`}
+                >
+                  <div className={`opt-icon-wrap ${opt.primary ? 'opt-icon-primary' : ''}`}>
+                    {opt.icon}
+                  </div>
+                  <div>
+                    <h3 className="opt-label">{opt.label}</h3>
+                    <p className="opt-desc">{opt.desc}</p>
+                  </div>
+                  <div className="opt-cta-row">
+                    {opt.soon
+                      ? <span className="badge-soon">Coming Soon</span>
+                      : <span className="opt-cta-link">{opt.cta} <ArrowRight size={14} /></span>
+                    }
+                  </div>
+                </button>
+              );
+            })}
           </div>
         </div>
       </section>
