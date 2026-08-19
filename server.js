@@ -407,7 +407,7 @@ app.post('/api/admin/login', (req, res) => {
   
   const cleanedEmail = (email || '').toLowerCase().trim();
   if (allowedEmails.includes(cleanedEmail) && password === adminPassword) {
-    const token = jwt.sign({ email: cleanedEmail }, JWT_SECRET, { expiresIn: '24h' });
+    const token = jwt.sign({ email: cleanedEmail }, JWT_SECRET, { expiresIn: '30d' });
     return res.json({ token });
   }
   
