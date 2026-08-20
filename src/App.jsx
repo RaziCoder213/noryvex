@@ -29,6 +29,24 @@ export default function App() {
   const [initialContactTab, setInitialContactTab] = useState('trial');
   const [isUnderConstruction, setIsUnderConstruction] = useState(false);
 
+  // ── Apollo Tracking ──────────────────────────────────
+  useEffect(() => {
+    const initApollo = () => {
+      const n = Math.random().toString(36).substring(7);
+      const o = document.createElement("script");
+      o.src = "https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache=" + n;
+      o.async = true;
+      o.defer = true;
+      o.onload = function() {
+        if (window.trackingFunctions && typeof window.trackingFunctions.onLoad === 'function') {
+          window.trackingFunctions.onLoad({ appId: "6a019c86bd851b001cd8c325" });
+        }
+      };
+      document.head.appendChild(o);
+    };
+    initApollo();
+  }, []);
+
   // ── Dynamic SEO per page ────────────────────────────
   useSEO(activePage);
 
