@@ -4,34 +4,33 @@ import { Phone, HelpCircle, Calendar, FileText, Link2, Cpu, CheckCircle2, Shield
 export default function Solutions({ setActivePage }) {
   const solutionsList = [
     {
-      title: "1. Voice receptionist for dental clinics",
-      desc: "Your AI receptionist answers calls in a natural voice, asks the right questions, and captures the details your team needs. We assign a phone number in any US state for your clinic's line.",
+      title: "CH.01: AI Voice Receptionists",
+      desc: "Our flagship conversational voice agents. We build custom-trained receptionists that handle patient inbound calls, capture caller details, qualify leads, and schedule appointments 24/7. Includes phone provisioning in any US state.",
       icon: <Phone size={24} />
     },
     {
-      title: "2. FAQ answering",
-      desc: "The AI can answer common questions about hours, location, services, insurance basics, pricing guidance, and appointment process.",
+      title: "CH.02: Clinic FAQ Answering",
+      desc: "Instant patient help. The voice agent answers common questions about opening hours, location/parking directions, insurance options, dental services, and pricing ranges, keeping your front desk free.",
       icon: <HelpCircle size={24} />
     },
     {
-      title: "3. Appointment request workflow",
-      desc: "The AI collects preferred time, reason for visit, caller details, and urgency. Your staff can confirm the appointment safely.",
+      title: "CH.03: Booking & Appointment Intake",
+      desc: "Seamless calendar integration. The AI captures preferred dates and times, reasons for the visit, and client contact details, pushing scheduling requests instantly to your team.",
       icon: <Calendar size={24} />
     },
     {
-      title: "4. Dashboard and handoff",
-      desc: "Every call can be sent to email, Google Sheets, Airtable, calendar, CRM, or a simple dashboard depending on your workflow.",
+      title: "CH.04: CRM & Workflow Automation",
+      desc: "Fully automated handoffs. We sync call transcripts, lead records, and client booking requests directly to your existing EHR, CRM, Google Sheets, or dashboard email triggers.",
       icon: <FileText size={24} />
     },
     {
-      title: "5. CRM and calendar integrations",
-      desc: "We can connect to your existing tools when possible. If direct integration is not available, we start with email notifications and a simple dashboard.",
-      icon: <Link2 size={24} />,
-      disclaimer: "Direct CRM or calendar integration depends on the tools your clinic uses. If direct integration is not available, we start with email notifications and a simple dashboard."
+      title: "CH.05: Websites & Web Applications",
+      desc: "Modern web experiences. From lightning-fast marketing landing pages to interactive patient portals, intake forms, and clinic admin dashboards built to convert traffic and scale operations.",
+      icon: <Link2 size={24} />
     },
     {
-      title: "6. Monthly management",
-      desc: "We review calls, update FAQs, improve prompts, and keep the receptionist aligned with your clinic.",
+      title: "CH.06: Custom Software & Apps",
+      desc: "Bespoke digital architecture. We build specialized database tools, internal client management panels, API integrations, and customized software systems mapped to your exact practice workflows.",
       icon: <Cpu size={24} />
     }
   ];

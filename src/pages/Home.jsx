@@ -60,34 +60,29 @@ export default function Home({ setActivePage }) {
 
   const services = [
     {
-      title: "New patient calls",
-      desc: "Answers questions, captures patient details, and sends appointment requests to your team.",
-      icon: <UserPlus className="svc-icon" />
+      title: "AI Voice Agents & Receptionists",
+      tag: "CH.01",
+      desc: "Our flagship service. We build and manage custom, natural-sounding voice receptionists that handle incoming patient calls, answer practice FAQs, qualify callers, and book appointments 24/7. Fully integrated with your calendar and built for your clinic.",
+      icon: <Phone className="svc-icon" />,
+      highlight: true
     },
     {
-      title: "Appointment requests",
-      desc: "Collects preferred date, time, reason for visit, and contact details so your staff can confirm.",
-      icon: <Calendar className="svc-icon" />
+      title: "Business Automation",
+      tag: "CH.02",
+      desc: "Connect your software systems. We design custom workflow automations, CRM pipelines, database integrations, and email notification paths to eliminate repetitive admin tasks and save hours.",
+      icon: <Layers className="svc-icon" />
     },
     {
-      title: "FAQs and clinic info",
-      desc: "Handles opening hours, location, services, pricing guidance, insurance basics, and common questions.",
-      icon: <HelpCircle className="svc-icon" />
+      title: "Websites & Web Applications",
+      tag: "CH.03",
+      desc: "High-converting, responsive web presences. From custom medical practice marketing websites to interactive portals and administrative panels, we build lightning-fast web applications optimized for growth.",
+      icon: <Globe className="svc-icon" />
     },
     {
-      title: "Missed and after-hours calls",
-      desc: "Covers calls when your front desk is busy, closed, or unavailable.",
-      icon: <Phone className="svc-icon" />
-    },
-    {
-      title: "Call summaries",
-      desc: "Every call can include a transcript, recording, summary, caller details, and next action.",
-      icon: <FileText className="svc-icon" />
-    },
-    {
-      title: "CRM or email handoff",
-      desc: "We send details to your email, dashboard, Google Sheet, calendar, CRM, or workflow tool when possible.",
-      icon: <Link2 className="svc-icon" />
+      title: "Custom Software & Apps",
+      tag: "CH.04",
+      desc: "Tailored full-stack digital products. We build custom dashboards, specialized business tools, client intake systems, and API integrations modeled precisely around your clinic's workflows.",
+      icon: <Database className="svc-icon" />
     }
   ];
 
@@ -337,7 +332,7 @@ clinic: "",
               </button>
             </div>
             <p className="trust-note" style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '16px', lineHeight: '1.4' }}>
-              No software to learn. No dashboard to configure. We build and manage everything for you.
+              No setup fee. First month free — you only pay once it's live on your real calls.
             </p>
             <div className="trust-strip nrx-reveal" style={{ transitionDelay: '0.12s', marginTop: '32px' }}>
               <p className="trust-tagline" style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '12px', fontWeight: '500' }}>
@@ -434,24 +429,36 @@ clinic: "",
         <div className="container">
           <div className="section-header">
             <span className="section-tag txt-slide">CAPABILITIES</span>
-            <h2 className="section-title txt-reveal-2">What your dental AI receptionist can handle</h2>
-            <p className="section-subtitle txt-blur-in">A custom AI receptionist built around your clinic’s calls, services, hours, and booking workflow.</p>
+            <h2 className="section-title txt-reveal-2">Our Core Services</h2>
+            <p className="section-subtitle txt-blur-in">Fully managed, custom-designed AI voice agents, workflow automation, and custom software systems for your business.</p>
           </div>
 
           <div className="services-grid">
             {services.map((svc, i) => (
               <div
                 key={i}
-                className="glass-card service-card nrx-reveal"
-                style={{ transitionDelay: `${i * 0.1}s`, opacity: 1 }}
+                className={`glass-card service-card nrx-reveal ${svc.highlight ? 'service-card-featured' : ''}`}
+                style={{ 
+                  transitionDelay: `${i * 0.1}s`, 
+                  opacity: 1,
+                  gridColumn: svc.highlight ? 'span 3' : 'auto'
+                }}
               >
-                <div className="service-icon-wrapper">
-                  {svc.icon}
-                  <div className="icon-glow"></div>
+                {svc.highlight && (
+                  <span className="service-featured-badge">FLAGSHIP SERVICE</span>
+                )}
+                <div className="service-header-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', width: '100%' }}>
+                  <div className="service-icon-wrapper" style={{ margin: 0 }}>
+                    {svc.icon}
+                    <div className="icon-glow"></div>
+                  </div>
+                  <span className="service-tag-mono" style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.85rem', color: 'var(--accent-neon)', fontWeight: '700', letterSpacing: '0.05em' }}>
+                    {svc.tag}
+                  </span>
                 </div>
                 <h3 className="service-card-title">{svc.title}</h3>
                 <p className="service-card-desc">{svc.desc}</p>
-                <div className="service-card-footer">
+                <div className="service-card-footer" style={{ marginTop: 'auto' }}>
                   <span className="learn-more" onClick={() => setActivePage('solutions')}>
                     Explore Solution <ChevronRight size={16} />
                   </span>
@@ -1182,21 +1189,46 @@ clinic: "",
           opacity: 0.85;
           transform: scale(0.98);
           transition: opacity 0.3s, transform 0.3s, border-color 0.25s;
+          position: relative;
         }
         .services-grid .service-card:hover {
           opacity: 1;
           border-color: rgba(199,255,61,0.35) !important;
           transform: scale(1.02) translateY(-4px) !important;
         }
+        .service-card-featured {
+          grid-column: span 3;
+          border-color: rgba(199,255,61,0.2) !important;
+          background: radial-gradient(circle at top left, rgba(199,255,61,0.03), transparent 60%) !important;
+        }
+        .service-featured-badge {
+          position: absolute;
+          top: -12px;
+          left: 24px;
+          background: var(--accent-neon);
+          color: #000;
+          font-family: var(--font-mono, monospace);
+          font-size: 0.68rem;
+          font-weight: 800;
+          padding: 3px 10px;
+          border-radius: 100px;
+          letter-spacing: 0.05em;
+          box-shadow: 0 0 12px rgba(199,255,61,0.3);
+        }
         @media (max-width: 1024px) {
           .services-grid {
             grid-template-columns: repeat(2, 1fr);
+          }
+          .service-card-featured {
+            grid-column: span 2;
           }
         }
         @media (max-width: 640px) {
           .services-grid {
             grid-template-columns: 1fr;
           }
+          .service-card-featured {
+            grid-column: span 1;
         }
 
         /* ── 48-Hour Trial Section ──────────────── */

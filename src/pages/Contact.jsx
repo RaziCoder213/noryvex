@@ -260,6 +260,9 @@ export default function Contact({ addToast }) {
           }}>
             Choose how you'd like to reach us. All paths lead to the same result — an AI receptionist that answers every dental patient call.
           </p>
+          <p className="txt-blur-in" style={{ fontSize: '0.9rem', color: 'var(--accent-neon)', marginTop: '14px', fontWeight: '700', letterSpacing: '0.02em' }}>
+            No setup fee. First month free — you only pay once it's live on your real calls.
+          </p>
         </div>
       </section>
 

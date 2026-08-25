@@ -11,23 +11,23 @@ const SITE_NAME = 'Noryvex';
 
 const PAGE_META = {
   home: {
-    title: 'AI Receptionist for Dental Clinics — Free Demo First | Noryvex',
-    description: 'Noryvex builds custom AI voice receptionists for dental clinics. GPT-4o powered. We build your demo free first — you only pay when you love it. 50+ AI assistants deployed, 15K+ patient calls handled. 24/7 call answering, appointment booking, and patient FAQ handling. No software to learn.',
+    title: 'Noryvex — AI Automation, Voice & Custom Software',
+    description: 'Noryvex builds AI voice agents, business automation, websites, and custom software — fully managed, not a self-serve platform. Based in Karachi, working with clients globally.',
     canonical: `${BASE_URL}/`,
   },
   solutions: {
-    title: 'AI Voice Agent Solutions for Dental Clinics | Noryvex',
-    description: 'Explore Noryvex\'s full AI service suite: Custom AI Voice Receptionists, 24/7 Call Handling, Appointment Booking Automation, Patient FAQ AI, CRM & Calendar Integration, HIPAA-aware Infrastructure. GPT-4o LLM-powered. Free demo built for every clinic before payment.',
+    title: 'Noryvex Solutions — Voice, Automation & Custom Software',
+    description: 'Explore Noryvex\'s core services: AI voice agents and receptionists, workflow and CRM automation, custom websites, and software builds — each designed and deployed end-to-end by our team.',
     canonical: `${BASE_URL}/solutions`,
   },
   'live-demo': {
-    title: 'Live AI Dental Receptionist Demo — Talk to Chloe | Noryvex',
-    description: 'Experience a Noryvex AI dental receptionist live in your browser. Talk to Chloe — our GPT-4o powered AI voice agent — and hear how she handles patient calls, answers dental FAQs, and books appointments in real time. Free to try, no login required.',
+    title: 'Live Demo — Noryvex AI Voice Receptionist',
+    description: 'Hear how Noryvex\'s AI voice agent handles a real call — answers questions, checks availability, and books appointments in real time.',
     canonical: `${BASE_URL}/live-demo`,
   },
   about: {
-    title: 'About Noryvex | AI Voice Agent Agency Built for Dental Clinics',
-    description: 'Noryvex is founded by Muhammad Razi, a Full-Stack AI Developer specializing in LLM-powered voice agents and conversational AI. We\'ve shipped 50+ custom AI receptionists for dental clinics across 12+ US states. Learn why dental practices trust Noryvex.',
+    title: 'About Noryvex & Founder Muhammad Razi',
+    description: 'Noryvex is an AI automation agency founded by Muhammad Razi, based in Karachi, Pakistan — building AI voice agents and custom automation systems for businesses worldwide.',
     canonical: `${BASE_URL}/about`,
   },
   contact: {

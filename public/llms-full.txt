@@ -20,7 +20,7 @@ This file contains the complete textual content of Noryvex Dental AI Receptionis
 "Never miss another dental patient call."
 Noryvex builds and runs a custom AI receptionist for your dental clinic — answering calls, qualifying patients, and booking appointments 24/7. Live in 48 hours.
 - Done-For-You (DFY) service agency, not a self-serve software platform.
-- Latency-optimized natural sounding speech synthesis under 800ms.
+- Low-latency, natural sounding speech synthesis optimized for fast response times.
 - We assign a phone number in any US state for your clinic's demo.
 
 ---
@@ -58,7 +58,7 @@ Syncs patient details and appointment requests into your existing practice tools
 
 ## SECTION 5: Solutions Details
 Detailed review of Noryvex's 6 core capability panels, safety disclaimers, and integration paths.
-- **Voice Receptionist**: Custom conversational voice flows with sub-800ms API response latency.
+- **Voice Receptionist**: Custom conversational voice flows optimized for fast, natural response times.
 - **FAQ Answering**: Natural responses to common questions about your clinic services and hours.
 - **Appointment Requests**: Gathering patient time/date preferences for front-desk handoff.
 - **Dashboard & Handoff**: Email summaries and logs pushed directly to your team.

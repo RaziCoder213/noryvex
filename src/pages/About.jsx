@@ -103,7 +103,7 @@ export default function About() {
             Stop losing patients to missed calls
           </h1>
           <p className="about-subtitle txt-blur-in" style={{ maxWidth: '700px', margin: '0 auto', fontSize: '1.1rem', color: 'var(--text-gray)', lineHeight: '1.6' }}>
-            Noryvex is a managed AI receptionist agency built specifically for US dental clinics. We build, train, test, and monitor custom voice agents so your front desk never loses another patient call.
+            Noryvex is an AI-first automation agency — we build voice agents, automation systems, websites, and custom software. We manage the entire process end-to-end so you get results without complexity.
           </p>
         </div>
       </section>

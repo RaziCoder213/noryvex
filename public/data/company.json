@@ -24,7 +24,7 @@
       "agentsDeployed": "150+",
       "clientRetention": "98%",
       "systemUptime": "99.9%",
-      "targetLatency": "<800ms"
+      "targetLatency": "optimized for fast response"
     }
   }
 }
