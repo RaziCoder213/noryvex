@@ -440,21 +440,35 @@ clinic: "",
                 className={`glass-card service-card nrx-reveal ${svc.highlight ? 'service-card-featured' : ''}`}
                 style={{ 
                   transitionDelay: `${i * 0.1}s`, 
-                  opacity: 1,
-                  gridColumn: svc.highlight ? 'span 3' : 'auto'
+                  opacity: 1
                 }}
               >
-                {svc.highlight && (
-                  <span className="service-featured-badge">FLAGSHIP SERVICE</span>
-                )}
                 <div className="service-header-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', width: '100%' }}>
                   <div className="service-icon-wrapper" style={{ margin: 0 }}>
                     {svc.icon}
                     <div className="icon-glow"></div>
                   </div>
-                  <span className="service-tag-mono" style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.85rem', color: 'var(--accent-neon)', fontWeight: '700', letterSpacing: '0.05em' }}>
-                    {svc.tag}
-                  </span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    {svc.highlight && (
+                      <span style={{ 
+                        background: 'rgba(199, 255, 61, 0.08)', 
+                        color: 'var(--accent-neon)', 
+                        border: '1px solid var(--accent-neon-border)', 
+                        fontSize: '0.65rem', 
+                        fontWeight: '800', 
+                        padding: '2px 8px', 
+                        borderRadius: '4px', 
+                        textTransform: 'uppercase', 
+                        letterSpacing: '0.05em',
+                        fontFamily: 'var(--font-mono, monospace)'
+                      }}>
+                        Flagship
+                      </span>
+                    )}
+                    <span className="service-tag-mono" style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.85rem', color: 'var(--accent-neon)', fontWeight: '700', letterSpacing: '0.05em' }}>
+                      {svc.tag}
+                    </span>
+                  </div>
                 </div>
                 <h3 className="service-card-title">{svc.title}</h3>
                 <p className="service-card-desc">{svc.desc}</p>
@@ -1070,88 +1084,7 @@ clinic: "",
         </div>
       </section>
 
-      {/* ── Expertise & Why Noryvex Section ── */}
-      <section style={{ padding: 'var(--section-padding-desktop) 0', background: 'var(--bg-dark)', borderTop: '1px solid var(--border-light)' }}>
-        <div className="container">
-          <div className="section-header">
-            <span className="section-tag txt-slide">Proven Track Record</span>
-            <h2 className="section-title txt-reveal-2">Built by AI engineers who've shipped dozens of voice agents.</h2>
-            <p className="section-subtitle txt-blur-in">Noryvex isn't a template or a plug-in. Every assistant is custom-engineered by AI developers who have built, tested, and iterated on real production systems.</p>
-          </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px', marginTop: '48px' }}>
-            {[
-              {
-                icon: '🧠',
-                title: 'LLM-Powered Intelligence',
-                desc: 'Every Noryvex assistant runs on frontier large language models (GPT-4o) with custom retrieval-augmented generation (RAG) for your clinic\'s exact context — not generic chatbot logic.',
-                tag: 'GPT-4o + RAG'
-              },
-              {
-                icon: '🎙️',
-                title: 'Natural Voice Conversation',
-                desc: 'Built on enterprise-grade speech-to-text and text-to-speech pipelines. Patients experience natural, human-like conversations — not robotic IVR menus.',
-                tag: 'Real-Time Voice'
-              },
-              {
-                icon: '⚡',
-                title: 'We Build Your Demo First',
-                desc: 'We create a fully functional AI receptionist demo customized to your clinic name, services, and FAQs — completely free. You hear it live before spending a single dollar.',
-                tag: '100% Free Demo'
-              },
-              {
-                icon: '📋',
-                title: '50+ Projects Shipped',
-                desc: 'From solo dental offices to multi-location orthodontic clinics, we\'ve built and launched over 50 custom AI voice assistants across the US with measurable patient capture results.',
-                tag: '50+ Deployments'
-              },
-              {
-                icon: '🔗',
-                title: 'Deep System Integrations',
-                desc: 'We integrate with Google Calendar, Calendly, Dentrix, Eaglesoft, and any clinic CRM. Your AI books real appointments into your real scheduling system.',
-                tag: 'CRM + Calendar'
-              },
-              {
-                icon: '🛡️',
-                title: 'HIPAA-Aware Architecture',
-                desc: 'Our infrastructure is architected to minimize PHI exposure. Encrypted pipelines, access controls, and data retention policies are built-in — not bolted on.',
-                tag: 'HIPAA-Aware'
-              },
-            ].map((item, i) => (
-              <div key={i} className="glass-card" style={{ padding: '28px', borderRadius: '20px', border: '1px solid var(--border-light)', transition: 'border-color 0.2s, transform 0.2s', cursor: 'default' }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(199,255,61,0.3)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border-light)'; e.currentTarget.style.transform = 'translateY(0)'; }}
-              >
-                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '16px' }}>
-                  <span style={{ fontSize: '2rem', lineHeight: '1' }}>{item.icon}</span>
-                  <span style={{ fontSize: '0.65rem', fontWeight: '800', color: 'var(--accent-neon)', background: 'rgba(199,255,61,0.08)', border: '1px solid rgba(199,255,61,0.2)', padding: '3px 10px', borderRadius: '100px', letterSpacing: '0.06em', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>{item.tag}</span>
-                </div>
-                <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: 'var(--text-white)', marginBottom: '10px', lineHeight: '1.3' }}>{item.title}</h3>
-                <p style={{ fontSize: '0.9rem', color: 'var(--text-gray)', lineHeight: '1.65', margin: 0 }}>{item.desc}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* Proof banner */}
-          <div style={{ marginTop: '56px', background: 'rgba(199,255,61,0.04)', border: '1px solid rgba(199,255,61,0.15)', borderRadius: '20px', padding: '36px 40px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '24px', justifyContent: 'space-between' }}>
-            <div style={{ flex: '1', minWidth: '260px' }}>
-              <h3 style={{ fontSize: '1.4rem', fontWeight: '800', color: 'var(--text-white)', marginBottom: '10px', lineHeight: '1.3' }}>
-                We build the demo. You decide.<br />
-                <span style={{ color: 'var(--accent-neon)' }}>No risk. No pressure. No upfront cost.</span>
-              </h3>
-              <p style={{ fontSize: '0.95rem', color: 'var(--text-gray)', lineHeight: '1.6', margin: 0 }}>
-                Tell us about your clinic. We'll build a custom AI receptionist demo trained on your services, hours, and FAQs — then let you call it and test it yourself. If you love it, we launch it. If not, no problem — you owe us nothing.
-              </p>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', flexShrink: 0 }}>
-              <button onClick={() => setActivePage('contact', 'trial')} className="btn btn-primary btn-lg" style={{ whiteSpace: 'nowrap' }}>
-                Get My Free Demo Built
-              </button>
-              <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', textAlign: 'center', margin: 0 }}>Delivered within 48 hours · Zero commitment</p>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* ── Closing CTA Band ── */}
       <section className="closing-cta-section" style={{ padding: 'var(--section-padding-desktop) 0', background: 'var(--bg-pure)', borderTop: '1px solid var(--border-light)' }}>
@@ -1180,7 +1113,7 @@ clinic: "",
         }
         .services-grid {
           display: grid;
-          grid-template-columns: repeat(3, 1fr);
+          grid-template-columns: repeat(2, 1fr);
           gap: var(--card-gap-desktop);
           margin-top: 48px;
         }
@@ -1197,38 +1130,17 @@ clinic: "",
           transform: scale(1.02) translateY(-4px) !important;
         }
         .service-card-featured {
-          grid-column: span 3;
-          border-color: rgba(199,255,61,0.2) !important;
+          border-color: rgba(199,255,61,0.25) !important;
           background: radial-gradient(circle at top left, rgba(199,255,61,0.03), transparent 60%) !important;
-        }
-        .service-featured-badge {
-          position: absolute;
-          top: -12px;
-          left: 24px;
-          background: var(--accent-neon);
-          color: #000;
-          font-family: var(--font-mono, monospace);
-          font-size: 0.68rem;
-          font-weight: 800;
-          padding: 3px 10px;
-          border-radius: 100px;
-          letter-spacing: 0.05em;
-          box-shadow: 0 0 12px rgba(199,255,61,0.3);
         }
         @media (max-width: 1024px) {
           .services-grid {
             grid-template-columns: repeat(2, 1fr);
           }
-          .service-card-featured {
-            grid-column: span 2;
-          }
         }
         @media (max-width: 640px) {
           .services-grid {
             grid-template-columns: 1fr;
-          }
-          .service-card-featured {
-            grid-column: span 1;
           }
         }
 
