@@ -1229,6 +1229,7 @@ clinic: "",
           }
           .service-card-featured {
             grid-column: span 1;
+          }
         }
 
         /* ── 48-Hour Trial Section ──────────────── */
