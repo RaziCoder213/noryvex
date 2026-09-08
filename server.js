@@ -683,16 +683,16 @@ app.post('/api/admin/settings/under-construction', authenticateToken, async (req
 const distPath = path.resolve(__dirname, 'dist');
 app.use(express.static(distPath));
 
-// Fallback for hashed JS bundles requested by clients with stale cache
+// Fallback for ANY hashed JS bundle requested by clients with stale cache
 app.use((req, res, next) => {
-  if (req.path.startsWith('/assets/index-') && req.path.endsWith('.js')) {
+  if (req.path.startsWith('/assets/') && req.path.endsWith('.js')) {
     try {
       const assetsDir = path.join(distPath, 'assets');
       if (fs.existsSync(assetsDir)) {
         const files = fs.readdirSync(assetsDir);
         const activeBundle = files.find(f => f.startsWith('index-') && f.endsWith('.js') && !f.endsWith('.map'));
         if (activeBundle) {
-          return res.sendFile(path.join(assetsDir, activeBundle));
+          return res.type('application/javascript').sendFile(path.join(assetsDir, activeBundle));
         }
       }
     } catch (e) {
@@ -700,6 +700,11 @@ app.use((req, res, next) => {
     }
   }
   next();
+});
+
+// Mock Vercel analytics & speed-insights routes so they never 404 or return HTML
+app.use('/_vercel', (req, res) => {
+  res.type('application/javascript').send('/* vercel analytics mock */');
 });
 
 // For any other static asset that was NOT found, return 404 (never return HTML index for .js/.css)
