@@ -5,6 +5,10 @@ import jwt from 'jsonwebtoken';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import nodemailer from 'nodemailer';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
+import bcrypt from 'bcrypt';
+import { z } from 'zod';
 import { 
   ensureDbConnected, 
   saveContact, 
@@ -31,7 +35,9 @@ import {
   deleteFaq,
   getContactConfig,
   getSetting,
-  setSetting
+  setSetting,
+  getMetrics,
+  saveMetrics
 } from './database.js';
 
 dotenv.config();
@@ -40,11 +46,83 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
+
+// Security headers
+app.use(helmet({
+  contentSecurityPolicy: false, // Let Vite handle CSP in dev
+  crossOriginEmbedderPolicy: false,
+}));
+
 const PORT = process.env.PORT || 5000;
 const JWT_SECRET = process.env.JWT_SECRET || 'noryvex-jwt-fallback-secret-2026';
 
-app.use(cors());
+const allowedOrigins = [
+  'https://trynoryvex.com',
+  'https://www.trynoryvex.com',
+  process.env.NODE_ENV !== 'production' && 'http://localhost:5173',
+  process.env.NODE_ENV !== 'production' && 'http://localhost:3000',
+].filter(Boolean);
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
+
+// Rate limiters
+const generalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests. Please try again later.' }
+});
+
+const contactLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  message: { error: 'Too many submissions. Please try again in 15 minutes.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  message: { error: 'Too many login attempts. Please try again in 15 minutes.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+app.use('/api', generalLimiter);
+
+// Zod schemas
+const contactSchema = z.object({
+  name: z.string().trim().min(2).max(100),
+  email: z.string().trim().email(),
+  phone: z.string().trim().max(30).optional().default(''),
+  company: z.string().trim().max(120).optional().default(''),
+  service: z.string().trim().max(100).optional().default(''),
+  message: z.string().trim().max(2000).optional().default(''),
+});
+
+const meetingSchema = z.object({
+  name: z.string().trim().min(2).max(100),
+  email: z.string().trim().email(),
+  company: z.string().trim().max(120).optional().default(''),
+  phone: z.string().trim().max(30).optional().default(''),
+  date: z.string().trim().min(1),
+  time: z.string().trim().min(1),
+  notes: z.string().trim().max(2000).optional().default(''),
+});
 
 // Initialize Database (non-blocking background init on start)
 ensureDbConnected().catch(err => {
@@ -124,12 +202,13 @@ async function sendEmailNotification(subject, htmlContent) {
 // PUBLIC ENDPOINTS
 
 // Submit contact form
-app.post('/api/contact', async (req, res) => {
+app.post('/api/contact', contactLimiter, async (req, res) => {
   try {
-    const { name, company, email, phone, service, message } = req.body;
-    if (!name || !email) {
-      return res.status(400).json({ error: 'Name and Email are required fields.' });
+    const result = contactSchema.safeParse(req.body);
+    if (!result.success) {
+      return res.status(400).json({ error: 'Invalid input', details: result.error.flatten() });
     }
+    const { name, company, email, phone, service, message } = result.data;
     
     await saveContact(name, company, email, phone, service, message);
 
@@ -158,12 +237,13 @@ app.post('/api/contact', async (req, res) => {
 });
 
 // Book a meeting
-app.post('/api/meeting', async (req, res) => {
+app.post('/api/meeting', contactLimiter, async (req, res) => {
   try {
-    const { name, email, company, phone, date, time, notes } = req.body;
-    if (!name || !email || !date || !time) {
-      return res.status(400).json({ error: 'Name, Email, Date, and Time are required fields.' });
+    const result = meetingSchema.safeParse(req.body);
+    if (!result.success) {
+      return res.status(400).json({ error: 'Invalid input', details: result.error.flatten() });
     }
+    const { name, email, company, phone, date, time, notes } = result.data;
     
     await saveMeeting(name, email, company, phone, date, time, notes);
 
@@ -274,6 +354,31 @@ app.post('/api/admin/settings/contact-config', authenticateToken, async (req, re
   } catch (error) {
     console.error('[/api/admin/settings/contact-config POST]', error.message);
     res.status(500).json({ error: 'Failed to save contact config.' });
+  }
+});
+
+// ── Metrics & Stats Routes ──────────────────────────────────────────────────
+
+// Public — get performance metrics
+app.get('/api/settings/metrics', async (req, res) => {
+  try {
+    const metrics = await getMetrics();
+    res.json(metrics);
+  } catch (error) {
+    console.error('[/api/settings/metrics GET]', error.message);
+    res.status(500).json({ error: 'Failed to fetch metrics config.' });
+  }
+});
+
+// Admin — update performance metrics
+app.post('/api/admin/settings/metrics', authenticateToken, async (req, res) => {
+  try {
+    const { stat1_value, stat1_label, stat2_value, stat2_label, stat3_value, stat3_label } = req.body;
+    await saveMetrics({ stat1_value, stat1_label, stat2_value, stat2_label, stat3_value, stat3_label });
+    res.json({ success: true });
+  } catch (error) {
+    console.error('[/api/admin/settings/metrics POST]', error.message);
+    res.status(500).json({ error: 'Failed to save metrics config.' });
   }
 });
 
@@ -400,15 +505,22 @@ app.get('/api/settings/under-construction', async (req, res) => {
 
 
 // Admin Authentication Login
-app.post('/api/admin/login', (req, res) => {
+app.post('/api/admin/login', loginLimiter, async (req, res) => {
   const { email, password } = req.body;
   const allowedEmails = ['razi@trynoryvex.com', 'razi@noryvex.com', 'codingwithrazi@gmail.com'];
   const adminPassword = process.env.ADMIN_PASSWORD || 'RaziNoryvex2026!';
   
   const cleanedEmail = (email || '').toLowerCase().trim();
-  if (allowedEmails.includes(cleanedEmail) && password === adminPassword) {
-    const token = jwt.sign({ email: cleanedEmail }, JWT_SECRET, { expiresIn: '30d' });
-    return res.json({ token });
+  
+  if (allowedEmails.includes(cleanedEmail)) {
+    const isMatch = adminPassword.startsWith('$2') 
+      ? await bcrypt.compare(password, adminPassword) 
+      : password === adminPassword;
+
+    if (isMatch) {
+      const token = jwt.sign({ email: cleanedEmail }, JWT_SECRET, { expiresIn: '30d' });
+      return res.json({ token });
+    }
   }
   
   res.status(401).json({ error: 'Invalid admin email or password.' });

@@ -1,140 +1,168 @@
 import React from 'react';
-import { Phone, HelpCircle, Calendar, FileText, Link2, Cpu, CheckCircle2, ShieldAlert, ArrowRight } from 'lucide-react';
+import { 
+  Phone, Clock, RefreshCw, MessageSquare, Shield, ShieldAlert,
+  ArrowUpRight, CheckCircle2, UserCheck, Stethoscope, HelpCircle, Calendar, FileText, Link2, Cpu
+} from 'lucide-react';
+import MovingGrills from '../components/MovingGrills';
+import ToolsTicker from '../components/ToolsTicker';
 
 export default function Solutions({ setActivePage }) {
-  const solutionsList = [
+  const services = [
     {
-      title: "CH.01: AI Voice Receptionists",
-      desc: "Our flagship conversational voice agents. We build custom-trained receptionists that handle patient inbound calls, capture caller details, qualify leads, and schedule appointments 24/7. Includes phone provisioning in any US state.",
-      icon: <Phone size={24} />
+      title: 'AI Voice Receptionists',
+      desc: 'Custom-trained voice agents that handle patient inbound calls, capture caller details, qualify leads, and schedule appointments 24/7. Includes phone provisioning in any US state.',
+      icon: <Phone size={24} />,
     },
     {
-      title: "CH.02: Clinic FAQ Answering",
-      desc: "Instant patient help. The voice agent answers common questions about opening hours, location/parking directions, insurance options, dental services, and pricing ranges, keeping your front desk free.",
-      icon: <HelpCircle size={24} />
+      title: 'Clinic FAQ Answering',
+      desc: 'Instant patient help — the voice agent answers common questions about hours, location, insurance options, dental services, and pricing, keeping your front desk free.',
+      icon: <HelpCircle size={24} />,
     },
     {
-      title: "CH.03: Booking & Appointment Intake",
-      desc: "Seamless calendar integration. The AI captures preferred dates and times, reasons for the visit, and client contact details, pushing scheduling requests instantly to your team.",
-      icon: <Calendar size={24} />
+      title: 'Booking & Appointment Intake',
+      desc: 'Seamless calendar integration. The AI captures preferred dates, times, reasons for the visit, and contact details, pushing scheduling requests instantly to your team.',
+      icon: <Calendar size={24} />,
     },
     {
-      title: "CH.04: CRM & Workflow Automation",
-      desc: "Fully automated handoffs. We sync call transcripts, lead records, and client booking requests directly to your existing EHR, CRM, Google Sheets, or dashboard email triggers.",
-      icon: <FileText size={24} />
+      title: 'CRM & Workflow Automation',
+      desc: 'Automated handoffs — call transcripts, lead records, and booking requests sync directly to your EHR, CRM, Google Sheets, or dashboard.',
+      icon: <FileText size={24} />,
     },
     {
-      title: "CH.05: Websites & Web Applications",
-      desc: "Modern web experiences. From lightning-fast marketing landing pages to interactive patient portals, intake forms, and clinic admin dashboards built to convert traffic and scale operations.",
-      icon: <Link2 size={24} />
+      title: 'Websites & Web Applications',
+      desc: 'Modern web experiences — from marketing landing pages to patient portals, intake forms, and clinic admin dashboards built to convert and scale.',
+      icon: <Link2 size={24} />,
     },
     {
-      title: "CH.06: Custom Software & Apps",
-      desc: "Bespoke digital architecture. We build specialized database tools, internal client management panels, API integrations, and customized software systems mapped to your exact practice workflows.",
-      icon: <Cpu size={24} />
-    }
+      title: 'Custom Software & Apps',
+      desc: 'Bespoke digital tools — internal management panels, API integrations, and customized software systems mapped to your exact practice workflows.',
+      icon: <Cpu size={24} />,
+    },
+  ];
+
+  const securityPoints = [
+    {
+      title: 'HIPAA Compliance & BAAs',
+      desc: 'All call logs, transcripts, and patient details are handled through secure, HIPAA-compliant pipelines. We sign Business Associate Agreements (BAAs) with all healthcare clients.',
+    },
+    {
+      title: 'AI Safety & Medical Disclaimer',
+      desc: 'Our AI receptionists do not give clinical or medical advice. They are configured to answer pre-approved FAQs, collect contact details, schedule appointments, and route emergency calls to your live staff.',
+    },
+    {
+      title: 'Secure US Infrastructure',
+      desc: 'All telephone routing, speech synthesis, and database servers run on encrypted US-based cloud infrastructure with TLS 1.3 in-transit and AES-256 at-rest encryption.',
+    },
   ];
 
   return (
-    <div className="solutions-page page-enter">
-      {/* Solutions Hero */}
-      <section className="solutions-hero" style={{ padding: 'var(--hero-padding-top-desktop) 0 var(--hero-padding-bottom-desktop) 0', background: 'linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-pure) 100%)', borderBottom: '1px solid var(--border-light)' }}>
-        <div className="container" style={{ textAlign: 'center' }}>
-          <span className="section-tag txt-slide" style={{ margin: '0 auto 16px auto' }}>SOLUTIONS</span>
-          <h1 className="solutions-title txt-reveal" style={{ fontSize: '3rem', fontWeight: '800', marginBottom: '16px' }}>Dental AI Receptionist Solutions</h1>
-          <p className="solutions-subtitle txt-blur-in" style={{ maxWidth: '700px', margin: '0 auto', fontSize: '1.1rem', color: 'var(--text-gray)', lineHeight: '1.6' }}>
-            Done-for-you AI call handling for dental clinics. We help answer missed calls, capture patient details, handle FAQs, and send appointment requests to your team.
+    <div className="home-page-container">
+
+      {/* Hero */}
+      <section className="framer-hero">
+        <div className="framer-hero-glow" />
+        <div className="container framer-hero-content">
+          <div className="framer-pill-badge">
+            <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--accent-neon)', boxShadow: '0 0 8px var(--accent-neon)' }} />
+            <span>Solutions</span>
+          </div>
+          <h1 className="framer-hero-title" style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)' }}>
+            Everything your practice needs.<br />Nothing it doesn't.
+          </h1>
+          <p className="framer-hero-desc">
+            Done-for-you AI call handling, workflow automation, and custom software for dental clinics. We manage the entire process end-to-end.
           </p>
         </div>
       </section>
 
-      {/* Solutions Details Grid */}
-      <section className="solutions-details" style={{ padding: 'var(--section-padding-desktop) 0', background: 'var(--bg-pure)' }}>
-        <div className="container">
-          <div className="sol-grid">
-            {solutionsList.map((sol, index) => (
-              <div key={index} className="glass-card sol-card" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-                <div className="sol-icon-bg" style={{ width: '48px', height: '48px', background: 'rgba(199, 255, 61, 0.08)', border: '1px solid var(--accent-neon-border)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent-neon)', marginBottom: '20px' }}>
-                  {sol.icon}
-                </div>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: '800', color: 'var(--text-white)', marginBottom: '12px' }}>{sol.title}</h3>
-                <p style={{ color: 'var(--text-gray)', fontSize: '0.95rem', lineHeight: '1.5', flexGrow: 1, margin: 0 }}>{sol.desc}</p>
-                
-                {sol.disclaimer && (
-                  <div style={{ marginTop: '16px', padding: '10px 12px', background: 'rgba(255, 255, 255, 0.03)', borderRadius: '6px', borderLeft: '3px solid var(--accent-neon)' }}>
-                    <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', lineHeight: '1.4', margin: 0 }}>
-                      <strong>Disclaimer:</strong> {sol.disclaimer}
-                    </p>
-                  </div>
-                )}
-              </div>
-            ))}
+      {/* Services Grid */}
+      <section className="container" style={{ padding: 'var(--section-padding) 0' }}>
+        <div className="framer-section-header">
+          <div className="framer-eyebrow">
+            <span className="dot" />
+            <span>Our Services</span>
           </div>
+          <h2 className="framer-section-title">What we build and manage for you.</h2>
+        </div>
 
-          {/* HIPAA & Patient Data Security Section */}
-          <div className="security-compliance-box glass-card" style={{ marginTop: '48px', padding: '32px', background: 'rgba(255, 255, 255, 0.01)', border: '1px solid var(--border-light)', borderRadius: '12px' }}>
-            <h3 style={{ fontSize: '1.4rem', fontWeight: '800', color: 'var(--text-white)', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <ShieldAlert style={{ color: 'var(--accent-neon)' }} size={26} /> HIPAA Compliance &amp; Patient Data Security
-            </h3>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
-              <div>
-                <h4 style={{ fontSize: '1rem', fontWeight: '700', color: 'var(--text-white)', marginBottom: '8px' }}>🔐 HIPAA Compliance &amp; BAAs</h4>
-                <p style={{ color: 'var(--text-gray)', fontSize: '0.88rem', lineHeight: '1.55', margin: 0 }}>
-                  We understand the importance of patient privacy. Noryvex signs standard Business Associate Agreements (BAAs) and ensures all call logs, transcripts, and patient details are handled through secure, HIPAA-compliant speech and database pipelines.
-                </p>
-              </div>
-              <div>
-                <h4 style={{ fontSize: '1rem', fontWeight: '700', color: 'var(--text-white)', marginBottom: '8px' }}>🛡️ AI Safety &amp; Medical Disclaimer</h4>
-                <p style={{ color: 'var(--text-gray)', fontSize: '0.88rem', lineHeight: '1.55', margin: 0 }}>
-                  Our AI receptionists do not give clinical or medical advice. They are strictly configured to answer pre-approved practice FAQs, collect contact details, schedule appointment slots, and route emergency calls directly to your live clinical staff.
-                </p>
-              </div>
-              <div>
-                <h4 style={{ fontSize: '1rem', fontWeight: '700', color: 'var(--text-white)', marginBottom: '8px' }}>💻 Secure US Infrastructure</h4>
-                <p style={{ color: 'var(--text-gray)', fontSize: '0.88rem', lineHeight: '1.55', margin: 0 }}>
-                  All customer telephone line routing, speech synthesis services, and database servers run on highly secure, encrypted US-based cloud infrastructure (TLS 1.3 in-transit and AES-256 at-rest encryption).
-                </p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: 'var(--card-gap)' }}>
+          {services.map((svc, i) => (
+            <div key={i} className="framer-bento-card" style={{ display: 'flex', flexDirection: 'column' }}>
+              <div className="framer-bento-content">
+                <div className="framer-bento-icon-wrap">
+                  {svc.icon}
+                </div>
+                <h3 className="framer-bento-title">{svc.title}</h3>
+                <p className="framer-bento-desc">{svc.desc}</p>
               </div>
             </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Security & Compliance */}
+      <section style={{ padding: 'var(--section-padding) 0', background: 'transparent' }}>
+        <div className="container">
+          <div className="framer-section-header">
+            <div className="framer-eyebrow">
+              <span className="dot" />
+              <span>Security</span>
+            </div>
+            <h2 className="framer-section-title">
+              <ShieldAlert size={28} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '10px', color: 'var(--accent-neon)' }} />
+              HIPAA Compliance & Patient Data Security
+            </h2>
           </div>
 
-          {/* CTA Box */}
-          <div style={{ textAlign: 'center', marginTop: '64px' }}>
-            <button 
-              onClick={() => setActivePage('contact', 'trial')} 
-              className="btn btn-primary btn-lg"
-            >
-              Get Free Clinic Demo <ArrowRight size={18} />
-            </button>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
+            {securityPoints.map((sp, i) => (
+              <div key={i} style={{
+                background: 'var(--bg-charcoal)',
+                border: '1px solid var(--border-light)',
+                borderRadius: '16px',
+                padding: 'var(--card-padding)',
+              }}>
+                <div style={{
+                  display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px'
+                }}>
+                  <CheckCircle2 size={18} style={{ color: 'var(--accent-neon)', flexShrink: 0 }} />
+                  <h4 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-white)', margin: 0 }}>{sp.title}</h4>
+                </div>
+                <p style={{ color: 'var(--text-gray)', fontSize: '0.9rem', lineHeight: 1.6, margin: 0 }}>
+                  {sp.desc}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      <style>{`
-        .sol-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: var(--card-gap-desktop);
-        }
-        @media (max-width: 992px) {
-          .sol-grid {
-            grid-template-columns: repeat(2, 1fr);
-          }
-        }
-        @media (max-width: 768px) {
-          .sol-grid {
-            grid-template-columns: 1fr;
-            gap: var(--card-gap-mobile);
-          }
-          .solutions-hero {
-            padding-top: var(--hero-padding-top-mobile) !important;
-            padding-bottom: var(--hero-padding-bottom-mobile) !important;
-          }
-          .solutions-title {
-            font-size: clamp(2rem, 8vw, 2.6rem) !important;
-          }
-        }
-      `}</style>
+      {/* Integrations */}
+      <ToolsTicker setActivePage={setActivePage} />
+
+      {/* CTA */}
+      <section className="container nrx-reveal" style={{ padding: 'var(--section-padding) 0' }}>
+        <div className="framer-cta-banner">
+          <div className="framer-cta-inner">
+            <h2>Ready to upgrade your front desk?</h2>
+            <p>We'll build a free AI receptionist demo customized to your practice — hear it before you commit.</p>
+            <div className="framer-cta-actions">
+              <button onClick={() => setActivePage('contact')} className="btn-framer-primary">
+                Claim Your Free Clinic Demo <ArrowUpRight size={17} />
+              </button>
+            </div>
+            <div className="framer-cta-perks">
+              <span>✓ HIPAA BAA Signed</span>
+              <span>✓ 48-Hour Setup</span>
+              <span>✓ No Long-Term Contracts</span>
+            </div>
+          </div>
+
+          <div className="cta-moving-grills">
+            <MovingGrills color="#C7FF3D" mode="cta" />
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

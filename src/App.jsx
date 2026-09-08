@@ -24,6 +24,11 @@ import Calculator from './pages/Calculator';
 import { dbGetUnderConstruction } from './utils/dbHelper';
 
 export default function App() {
+  // Ensure light theme is completely removed on load
+  useEffect(() => {
+    document.documentElement.removeAttribute('data-theme');
+  }, []);
+
   const [activePage, setActivePage] = useState('home');
   const [toasts, setToasts] = useState([]);
   const [initialContactTab, setInitialContactTab] = useState('trial');
@@ -84,16 +89,18 @@ export default function App() {
     window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
   };
 
-  // ── Reveal on scroll (toggles both ways) ──────────────
+  // ── Reveal on scroll (smooth one-time entrance) ──────────────
   useEffect(() => {
     const els = document.querySelectorAll('.nrx-reveal');
     if (!els.length) return;
     const io = new IntersectionObserver((entries) => {
       entries.forEach(e => {
-        // Add on enter, REMOVE on exit — fully reversible
-        e.target.classList.toggle('visible', e.isIntersecting);
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          io.unobserve(e.target);
+        }
       });
-    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
     els.forEach(el => io.observe(el));
     return () => io.disconnect();
   }, [activePage]);
@@ -206,8 +213,8 @@ export default function App() {
       case 'home':       return <Home setActivePage={changePage} />;
       case 'solutions':  return <Solutions setActivePage={changePage} />;
       case 'live-demo':  return <LiveDemo setActivePage={changePage} />;
-      case 'about':      return <About />;
-      case 'contact':    return <Contact addToast={addToast} initialTab={initialContactTab} />;
+      case 'about':      return <About setActivePage={changePage} />;
+      case 'contact':    return <Contact addToast={addToast} initialTab={initialContactTab} setActivePage={changePage} />;
       case 'calculator': return <Calculator setActivePage={changePage} />;
       case 'admin':      return <Admin addToast={addToast} setActivePage={changePage} />;
       case 'privacy':    return <Privacy setActivePage={changePage} />;

@@ -11,45 +11,40 @@ const SITE_NAME = 'Noryvex';
 
 const PAGE_META = {
   home: {
-    title: 'Noryvex — AI Automation, Voice & Custom Software',
-    description: 'Noryvex builds AI voice agents, business automation, websites, and custom software — fully managed, not a self-serve platform. Based in Karachi, working with clients globally.',
+    title: 'Noryvex — 24/7 AI Voice Receptionist for Dental Clinics',
+    description: 'Never lose another patient to voicemail. Custom AI receptionists that answer calls, handle FAQs, and book appointments 24/7.',
     canonical: `${BASE_URL}/`,
   },
   solutions: {
-    title: 'Noryvex Solutions — Voice, Automation & Custom Software',
-    description: 'Explore Noryvex\'s core services: AI voice agents and receptionists, workflow and CRM automation, custom websites, and software builds — each designed and deployed end-to-end by our team.',
+    title: 'Solutions — Noryvex',
+    description: 'Explore how Noryvex automates patient call handling, appointment booking, and clinic communication.',
     canonical: `${BASE_URL}/solutions`,
   },
   'live-demo': {
-    title: 'Live Demo — Noryvex AI Voice Receptionist',
-    description: 'Hear how Noryvex\'s AI voice agent handles a real call — answers questions, checks availability, and books appointments in real time.',
+    title: 'Live Demo — Noryvex',
+    description: 'Hear our AI dental receptionist handle real patient scenarios in real-time.',
     canonical: `${BASE_URL}/live-demo`,
   },
   about: {
-    title: 'About Noryvex & Founder Muhammad Razi',
-    description: 'Noryvex is an AI automation agency founded by Muhammad Razi, based in Karachi, Pakistan — building AI voice agents and custom automation systems for businesses worldwide.',
+    title: 'About — Noryvex',
+    description: 'Meet the team behind Noryvex and learn why dental clinics trust us with their patient communication.',
     canonical: `${BASE_URL}/about`,
   },
   contact: {
-    title: 'Get Your Free AI Receptionist Demo | Book a Strategy Call | Noryvex',
-    description: 'Request a free custom AI receptionist demo for your dental clinic — built by Noryvex in 48 hours, zero commitment. Book a strategy call via calendar (full timezone support), chat on WhatsApp, or connect on Slack. No upfront cost. You only pay when you\'re ready.',
+    title: 'Contact — Noryvex',
+    description: 'Get your free custom clinic demo. Talk directly with our AI architect.',
     canonical: `${BASE_URL}/contact`,
   },
   privacy: {
-    title: 'Privacy Policy | Noryvex AI Receptionist Agency',
+    title: 'Privacy Policy — Noryvex',
     description: 'Read the Noryvex Privacy Policy — how we collect, use, and protect your personal data and clinic information in compliance with GDPR, HIPAA-aware standards, and applicable privacy regulations.',
     canonical: `${BASE_URL}/privacy`,
   },
   terms: {
-    title: 'Terms of Service | Noryvex AI Receptionist Agency',
+    title: 'Terms of Service — Noryvex',
     description: 'Read the Noryvex Terms of Service — the rules governing use of our website, AI receptionist services, and automation solutions for dental clinics.',
     canonical: `${BASE_URL}/terms`,
-  },
-  calculator: {
-    title: 'Dental Missed Call Revenue Calculator | How Much Are You Losing? | Noryvex',
-    description: 'Calculate exactly how much revenue your dental clinic loses every month from missed patient calls. Free tool by Noryvex — enter your call volume and conversion rate. Takes 30 seconds. Most dental practices lose $3,000–$15,000+ monthly from unanswered calls.',
-    canonical: `${BASE_URL}/calculator`,
-  },
+  }
 };
 
 function setMeta(name, content, attr = 'name') {

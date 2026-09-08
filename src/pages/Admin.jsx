@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, Lock, Mail, Calendar, LogOut, Check, Trash2, Eye, Plus, Star, Link, Image, Activity, Award, Settings, User, HelpCircle, MessageCircle, Phone, Edit3, Save, X, Globe } from 'lucide-react';
+import { Shield, Lock, Mail, Calendar, LogOut, Check, Trash2, Eye, Plus, Star, Link, Image, Activity, Award, Settings, User, HelpCircle, MessageCircle, Phone, Edit3, Save, X, Globe, BarChart3, RotateCcw } from 'lucide-react';
 import { 
   dbGetContacts, 
   dbGetMeetings, 
@@ -22,7 +22,9 @@ import {
   dbAdminSaveFaq,
   dbAdminDeleteFaq,
   dbGetContactConfig,
-  dbAdminSetContactConfig
+  dbAdminSetContactConfig,
+  dbGetMetrics,
+  dbAdminSetMetrics
 } from '../utils/dbHelper';
 
 export default function Admin({ addToast, setActivePage }) {
@@ -67,6 +69,18 @@ export default function Admin({ addToast, setActivePage }) {
   const [contactConfig, setContactConfig] = useState({ whatsapp_number: '', whatsapp_message: '', slack_link: '' });
   const [savingConfig, setSavingConfig] = useState(false);
   const [configSaved, setConfigSaved] = useState(false);
+
+  // Performance Metrics state (24/7, <500ms, 48 hrs)
+  const [metrics, setMetrics] = useState({
+    stat1_value: '24/7',
+    stat1_label: 'Call coverage',
+    stat2_value: '<500ms',
+    stat2_label: 'Voice response time',
+    stat3_value: '48 hrs',
+    stat3_label: 'Setup to live',
+  });
+  const [savingMetrics, setSavingMetrics] = useState(false);
+  const [metricsSaved, setMetricsSaved] = useState(false);
 
   // Brand & Founder profile (persisted to localStorage, read by About page)
   const BRAND_PROFILE_KEY = 'noryvex_brand_profile';
@@ -116,6 +130,7 @@ export default function Admin({ addToast, setActivePage }) {
       const ucStatus = await dbGetUnderConstruction();
       const faqsData = await dbGetFaqs();
       const configData = await dbGetContactConfig();
+      const metricsData = await dbGetMetrics();
       
       setContacts(contactsData);
       setMeetings(meetingsData);
@@ -125,6 +140,7 @@ export default function Admin({ addToast, setActivePage }) {
       setUnderConstruction(ucStatus);
       setFaqs(faqsData);
       setContactConfig(prev => ({ ...prev, ...configData }));
+      if (metricsData) setMetrics(prev => ({ ...prev, ...metricsData }));
     } catch (err) {
       console.error(err);
       addToast('Error fetching dashboard records.', 'error');
@@ -278,6 +294,39 @@ export default function Admin({ addToast, setActivePage }) {
     } finally {
       setSavingConfig(false);
     }
+  };
+
+  // ── Metrics & Stats Handlers ───────────────────────────────────────────────
+  const handleSaveMetrics = async (e) => {
+    if (e) e.preventDefault();
+    setSavingMetrics(true);
+    try {
+      const result = await dbAdminSetMetrics(metrics);
+      if (result.success) {
+        setMetricsSaved(true);
+        addToast('Performance metrics saved! Website updated.', 'success');
+        setTimeout(() => setMetricsSaved(false), 3000);
+      } else {
+        addToast('Failed to save metrics.', 'error');
+      }
+    } catch (err) {
+      console.error(err);
+      addToast('Failed to save metrics.', 'error');
+    } finally {
+      setSavingMetrics(false);
+    }
+  };
+
+  const handleResetMetricsDefaults = () => {
+    setMetrics({
+      stat1_value: '24/7',
+      stat1_label: 'Call coverage',
+      stat2_value: '<500ms',
+      stat2_label: 'Voice response time',
+      stat3_value: '48 hrs',
+      stat3_label: 'Setup to live',
+    });
+    addToast('Metrics reset to defaults. Click "Save Metrics" to apply.', 'info');
   };
 
   // Contact actions
@@ -566,8 +615,8 @@ export default function Admin({ addToast, setActivePage }) {
       {/* Sidebar Navigation */}
       <aside className="admin-sidebar">
         <div className="sidebar-brand">
-          <span className="sidebar-logo-symbol">Z</span>
-          <span className="sidebar-logo-text">NORYVEX ADMIN</span>
+          <img src="/logo.png" alt="Noryvex" style={{ width: '28px', height: '28px', borderRadius: '8px' }} />
+          <span className="sidebar-logo-text">Noryvex <span style={{ fontWeight: 500, opacity: 0.6 }}>Admin</span></span>
         </div>
         
         <div className="sidebar-profile">
@@ -641,6 +690,14 @@ export default function Admin({ addToast, setActivePage }) {
             <span>Brand &amp; Profile</span>
           </button>
 
+          <button 
+            onClick={() => setActiveTab('metrics')} 
+            className={`nav-item ${activeTab === 'metrics' ? 'active' : ''}`}
+          >
+            <BarChart3 size={18} />
+            <span>Metrics &amp; Stats</span>
+          </button>
+
           <div className="nav-divider">CONNECTIONS</div>
 
           <button 
@@ -683,12 +740,34 @@ export default function Admin({ addToast, setActivePage }) {
               {activeTab === 'cms-partners' && 'CMS Trust Badges'}
               {activeTab === 'faqs' && 'FAQ Manager'}
               {activeTab === 'brand-profile' && 'Brand & Founder Profile'}
+              {activeTab === 'metrics' && 'Performance Metrics & Stats'}
               {activeTab === 'contact-config' && 'Contact Config'}
               {activeTab === 'db-settings' && 'Cloud Database Settings'}
             </span>
           </div>
           
-
+          {setActivePage && (
+            <button 
+              onClick={() => setActivePage('home')}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '8px 16px',
+                borderRadius: '8px',
+                background: 'rgba(255, 255, 255, 0.05)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                color: '#FAFAFA',
+                fontSize: '0.85rem',
+                fontWeight: 500,
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              <Globe size={15} style={{ color: 'var(--accent-neon)' }} />
+              <span>View Live Site</span>
+            </button>
+          )}
         </header>
 
         <div className="pane-body">
@@ -1558,6 +1637,207 @@ export default function Admin({ addToast, setActivePage }) {
                 </div>
               )}
 
+              {/* ── Tab: Performance Metrics & Stats ──────────────── */}
+              {activeTab === 'metrics' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '28px', maxWidth: '880px' }}>
+
+                  {/* Overview Card */}
+                  <div className="glass-card cms-form-card" style={{ borderLeft: '3px solid var(--accent-neon)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', marginBottom: '8px' }}>
+                      <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <BarChart3 size={20} className="icon-neon" /> Website Performance Stats &amp; Metrics
+                      </h3>
+                      <span style={{ 
+                        fontSize: '0.75rem', 
+                        padding: '4px 10px', 
+                        borderRadius: '999px', 
+                        background: 'rgba(199, 255, 61, 0.1)', 
+                        border: '1px solid rgba(199, 255, 61, 0.3)', 
+                        color: 'var(--accent-neon)', 
+                        fontWeight: 600,
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '6px'
+                      }}>
+                        <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--accent-neon)' }} />
+                        Live Synchronized
+                      </span>
+                    </div>
+                    <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0, lineHeight: 1.5 }}>
+                      Customize the key proof metrics displayed in the results section on your Homepage and About page. Changes update in real-time for all site visitors.
+                    </p>
+                  </div>
+
+                  {/* Live Visual Preview */}
+                  <div className="glass-card" style={{ padding: '24px' }}>
+                    <div style={{ fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-muted)', fontWeight: 600, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <Eye size={14} style={{ color: 'var(--accent-neon)' }} /> Real-Time Homepage Preview
+                    </div>
+                    <div style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                      gap: '16px',
+                      background: 'rgba(0, 0, 0, 0.35)',
+                      padding: '24px',
+                      borderRadius: '16px',
+                      border: '1px solid rgba(255, 255, 255, 0.05)'
+                    }}>
+                      <div style={{ textAlign: 'center', padding: '16px', borderRadius: '12px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255, 255, 255, 0.04)' }}>
+                        <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--accent-neon)', fontFamily: 'var(--font-display)', lineHeight: 1.1 }}>
+                          {metrics.stat1_value || '24/7'}
+                        </div>
+                        <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '6px' }}>
+                          {metrics.stat1_label || 'Call coverage'}
+                        </div>
+                      </div>
+                      <div style={{ textAlign: 'center', padding: '16px', borderRadius: '12px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255, 255, 255, 0.04)' }}>
+                        <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--accent-neon)', fontFamily: 'var(--font-display)', lineHeight: 1.1 }}>
+                          {metrics.stat2_value || '<500ms'}
+                        </div>
+                        <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '6px' }}>
+                          {metrics.stat2_label || 'Voice response time'}
+                        </div>
+                      </div>
+                      <div style={{ textAlign: 'center', padding: '16px', borderRadius: '12px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255, 255, 255, 0.04)' }}>
+                        <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--accent-neon)', fontFamily: 'var(--font-display)', lineHeight: 1.1 }}>
+                          {metrics.stat3_value || '48 hrs'}
+                        </div>
+                        <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '6px' }}>
+                          {metrics.stat3_label || 'Setup to live'}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Metric 1 Form Card */}
+                  <div className="glass-card cms-form-card">
+                    <h4 style={{ margin: '0 0 16px 0', display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-white)' }}>
+                      <span style={{ width: '22px', height: '22px', borderRadius: '6px', background: 'rgba(199, 255, 61, 0.15)', color: 'var(--accent-neon)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 700 }}>1</span>
+                      Primary Stat — Availability
+                    </h4>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
+                      <div className="form-group" style={{ margin: 0 }}>
+                        <label className="form-label">Stat Value / Metric</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholder="24/7"
+                          value={metrics.stat1_value}
+                          onChange={e => setMetrics(p => ({ ...p, stat1_value: e.target.value }))}
+                        />
+                        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px', display: 'block' }}>e.g. 24/7, 99.9%, 100%</span>
+                      </div>
+                      <div className="form-group" style={{ margin: 0 }}>
+                        <label className="form-label">Label Description</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholder="Call coverage"
+                          value={metrics.stat1_label}
+                          onChange={e => setMetrics(p => ({ ...p, stat1_label: e.target.value }))}
+                        />
+                        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px', display: 'block' }}>e.g. Call coverage, Always available</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Metric 2 Form Card */}
+                  <div className="glass-card cms-form-card">
+                    <h4 style={{ margin: '0 0 16px 0', display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-white)' }}>
+                      <span style={{ width: '22px', height: '22px', borderRadius: '6px', background: 'rgba(199, 255, 61, 0.15)', color: 'var(--accent-neon)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 700 }}>2</span>
+                      Secondary Stat — Speed / Latency
+                    </h4>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
+                      <div className="form-group" style={{ margin: 0 }}>
+                        <label className="form-label">Stat Value / Metric</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholder="<500ms"
+                          value={metrics.stat2_value}
+                          onChange={e => setMetrics(p => ({ ...p, stat2_value: e.target.value }))}
+                        />
+                        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px', display: 'block' }}>e.g. &lt;500ms, &lt;400ms, Instant</span>
+                      </div>
+                      <div className="form-group" style={{ margin: 0 }}>
+                        <label className="form-label">Label Description</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholder="Voice response time"
+                          value={metrics.stat2_label}
+                          onChange={e => setMetrics(p => ({ ...p, stat2_label: e.target.value }))}
+                        />
+                        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px', display: 'block' }}>e.g. Voice response time, Sub-second delay</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Metric 3 Form Card */}
+                  <div className="glass-card cms-form-card">
+                    <h4 style={{ margin: '0 0 16px 0', display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-white)' }}>
+                      <span style={{ width: '22px', height: '22px', borderRadius: '6px', background: 'rgba(199, 255, 61, 0.15)', color: 'var(--accent-neon)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 700 }}>3</span>
+                      Tertiary Stat — Deployment Speed
+                    </h4>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
+                      <div className="form-group" style={{ margin: 0 }}>
+                        <label className="form-label">Stat Value / Metric</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholder="48 hrs"
+                          value={metrics.stat3_value}
+                          onChange={e => setMetrics(p => ({ ...p, stat3_value: e.target.value }))}
+                        />
+                        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px', display: 'block' }}>e.g. 48 hrs, 24-48h, 2 Days</span>
+                      </div>
+                      <div className="form-group" style={{ margin: 0 }}>
+                        <label className="form-label">Label Description</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholder="Setup to live"
+                          value={metrics.stat3_label}
+                          onChange={e => setMetrics(p => ({ ...p, stat3_label: e.target.value }))}
+                        />
+                        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px', display: 'block' }}>e.g. Setup to live, Turnaround time</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
+                    <button
+                      onClick={handleSaveMetrics}
+                      className="btn btn-primary"
+                      disabled={savingMetrics}
+                      style={{ minWidth: '220px' }}
+                    >
+                      {savingMetrics
+                        ? 'Saving…'
+                        : metricsSaved
+                          ? <><Check size={16} /> Saved Successfully!</>
+                          : <><Check size={16} /> Save Metrics &amp; Stats</>
+                      }
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={handleResetMetricsDefaults}
+                      className="btn btn-secondary"
+                      style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                    >
+                      <RotateCcw size={15} /> Reset to Defaults
+                    </button>
+
+                    <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: 0 }}>
+                      Updates Home &amp; About pages across the site.
+                    </p>
+                  </div>
+
+                </div>
+              )}
+
               </>
           )}
 
@@ -2219,9 +2499,9 @@ export default function Admin({ addToast, setActivePage }) {
         }
 
         .badge-status-pill.status-requested {
-          background: rgba(59, 130, 246, 0.15);
-          color: #60a5fa;
-          border: 1px solid rgba(59, 130, 246, 0.3);
+          background: rgba(199, 255, 61, 0.12);
+          color: var(--accent-neon);
+          border: 1px solid var(--accent-neon-border);
         }
 
         .badge-status-pill.status-active {

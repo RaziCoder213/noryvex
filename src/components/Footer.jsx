@@ -4,36 +4,9 @@ import { dbSaveContact } from '../utils/dbHelper';
 
 export default function Footer({ setActivePage, addToast }) {
   const currentYear = new Date().getFullYear();
-  const [emailInput, setEmailInput] = useState('');
-  const [subscribing, setSubscribing] = useState(false);
-
   const handleNavClick = (id, option = 'trial') => {
     setActivePage(id, option);
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const handleSubscribe = async (e) => {
-    e.preventDefault();
-    if (!emailInput.trim()) return;
-    setSubscribing(true);
-    try {
-      await dbSaveContact({
-        name: 'Newsletter Subscriber',
-        email: emailInput,
-        phone: 'N/A',
-        message: 'Subscribed to mailing list from footer form.'
-      });
-      setEmailInput('');
-      if (addToast) {
-        addToast('Subscribed successfully! Welcome to Noryvex.', 'success');
-      } else {
-        alert('Thank you for subscribing!');
-      }
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setSubscribing(false);
-    }
   };
 
   return (
@@ -42,7 +15,7 @@ export default function Footer({ setActivePage, addToast }) {
         <div className="footer-brand-section">
           <div className="footer-logo-title" onClick={() => handleNavClick('home')}>
             <img src="/logo.png" alt="Noryvex Logo" className="footer-logo" />
-            <span className="footer-title">NORYVE<span className="footer-title-x">X</span></span>
+            <span className="footer-title" style={{ textTransform: 'none', letterSpacing: 'normal' }}>Noryvex</span>
           </div>
           <p className="footer-tagline">Never miss another dental patient call.</p>
           <p className="footer-desc">Building custom AI receptionists for dental clinics to answer missed calls, collect patient details, and send appointment requests.</p>
@@ -53,28 +26,27 @@ export default function Footer({ setActivePage, addToast }) {
             <span className="group-title">Company</span>
             <button onClick={() => handleNavClick('home')} className="footer-btn-link">Home</button>
             <button onClick={() => handleNavClick('solutions')} className="footer-btn-link">Solutions</button>
-            <button onClick={() => handleNavClick('calculator')} className="footer-btn-link">Revenue Calculator</button>
-            <button onClick={() => handleNavClick('about')} className="footer-btn-link">About Us</button>
-            <button onClick={() => handleNavClick('contact', 'trial')} className="footer-btn-link">Get Free Clinic Demo</button>
+            <button onClick={() => handleNavClick('live-demo')} className="footer-btn-link">Live Demo</button>
+            <button onClick={() => handleNavClick('calculator')} className="footer-btn-link">Calculator</button>
+            <button onClick={() => handleNavClick('about')} className="footer-btn-link">About</button>
+            <button onClick={() => handleNavClick('contact')} className="footer-btn-link">Contact</button>
           </div>
 
           <div className="footer-link-group">
             <span className="group-title">Connect</span>
             <a href="mailto:hello@trynoryvex.com" className="footer-link">
-              Email Us <ArrowUpRight size={14} />
+              hello@trynoryvex.com <ArrowUpRight size={14} />
             </a>
             <a href="https://www.linkedin.com/company/noryvex" target="_blank" rel="noopener noreferrer" className="footer-link">
-              Company LinkedIn <ArrowUpRight size={14} />
-            </a>
-            <a href="https://www.linkedin.com/in/mrazi-dev/" target="_blank" rel="noopener noreferrer" className="footer-link">
-              Founder LinkedIn <ArrowUpRight size={14} />
+              LinkedIn <ArrowUpRight size={14} />
             </a>
           </div>
 
           <div className="footer-link-group">
-            <span className="group-title">Legal</span>
+            <span className="group-title">Platform & Legal</span>
             <button onClick={() => handleNavClick('privacy')} className="footer-btn-link">Privacy Policy</button>
             <button onClick={() => handleNavClick('terms')} className="footer-btn-link">Terms of Service</button>
+            <button onClick={() => handleNavClick('admin')} className="footer-btn-link" style={{ color: 'var(--accent-neon)', opacity: 0.85 }}>Admin Console</button>
           </div>
         </div>
       </div>
@@ -85,13 +57,14 @@ export default function Footer({ setActivePage, addToast }) {
           <div className="legal-links">
             <button className="legal-link" onClick={() => handleNavClick('privacy')}>Privacy Policy</button>
             <button className="legal-link" onClick={() => handleNavClick('terms')}>Terms of Service</button>
+            <button className="legal-link" onClick={() => handleNavClick('admin')}>Admin</button>
           </div>
         </div>
       </div>
 
       <style>{`
         .footer-wrapper {
-          border-top: 1px solid var(--border-light);
+          border-top: 1px solid rgba(255, 255, 255, 0.04);
           background-color: var(--bg-pure);
           padding: 80px 0 40px 0;
           position: relative;
@@ -126,12 +99,11 @@ export default function Footer({ setActivePage, addToast }) {
         }
         
         .footer-title {
-          font-family: 'Syne', sans-serif;
-          font-weight: 800;
-          font-size: 1.3rem;
+          font-family: var(--font-headline);
+          font-weight: 700;
+          font-size: 1.35rem;
           color: var(--text-white);
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
+          letter-spacing: -0.02em;
         }
         
         .footer-title-x {
@@ -288,53 +260,6 @@ export default function Footer({ setActivePage, addToast }) {
           }
         }
 
-        /* Newsletter form styling */
-        .footer-newsletter {
-          margin-top: 24px;
-          width: 100%;
-          max-width: 320px;
-          text-align: left;
-        }
-        @media (max-width: 1024px) {
-          .footer-newsletter {
-            margin: 24px auto 0 auto;
-          }
-        }
-        .newsletter-label {
-          display: block;
-          font-family: var(--font-display);
-          font-size: 0.72rem;
-          font-weight: 700;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-          color: var(--text-white);
-          margin-bottom: 8px;
-        }
-        .newsletter-form {
-          display: flex;
-          gap: 8px;
-          width: 100%;
-        }
-        .newsletter-input {
-          flex-grow: 1;
-          background: rgba(255, 255, 255, 0.03);
-          border: 1px solid var(--border-light);
-          border-radius: 100px;
-          padding: 8px 16px;
-          font-size: 0.85rem;
-          color: var(--text-white);
-          font-family: var(--font-sans);
-          outline: none;
-          transition: border-color 0.2s;
-        }
-        .newsletter-input:focus {
-          border-color: var(--accent-neon);
-        }
-        .newsletter-btn {
-          font-size: 0.75rem;
-          padding: 8px 16px;
-          flex-shrink: 0;
-          border-radius: 100px;
         }
       `}</style>
     </footer>

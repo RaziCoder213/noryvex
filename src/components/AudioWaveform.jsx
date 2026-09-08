@@ -1,77 +1,43 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 
-export default function AudioWaveform({ active = true, barCount = 15 }) {
-  const bars = Array.from({ length: barCount }, (_, i) => i);
-  
+/**
+ * AudioWaveform — CSS-only animated waveform visual
+ * inspired by the Framer reference site's hero and CTA sections.
+ *
+ * @param {number}  bars      Number of bars (default 60)
+ * @param {string}  variant   'hero' | 'cta' (controls layout class)
+ * @param {string}  className Extra classes
+ */
+export default function AudioWaveform({ bars = 60, variant = 'hero', className = '' }) {
+  const barData = useMemo(() => {
+    return Array.from({ length: bars }, (_, i) => {
+      // Create a wave pattern — taller in the middle, shorter at edges
+      const center = bars / 2;
+      const dist = Math.abs(i - center) / center; // 0 at center, 1 at edges
+      const baseHeight = 30 + (1 - dist) * 70; // 30% to 100%
+      const randomOffset = Math.random() * 20 - 10;
+      const height = Math.max(15, Math.min(100, baseHeight + randomOffset));
+      const delay = (i * 0.04) + (Math.random() * 0.3);
+      const duration = 1.4 + Math.random() * 1.2;
+      return { height, delay, duration };
+    });
+  }, [bars]);
+
+  const cls = `nrx-waveform ${variant === 'cta' ? 'nrx-waveform--cta' : 'nrx-waveform--hero'} ${className}`;
+
   return (
-    <div className="waveform-container">
-      {bars.map((bar) => {
-        // Calculate random height multipliers for variance
-        const heightMultiplier = Math.sin((bar / barCount) * Math.PI) * 0.8 + 0.2;
-        // Unique animation delays for fluid movement
-        const delay = `${(bar * 0.1) - (barCount * 0.05)}s`;
-        const duration = active ? `${0.5 + Math.random() * 0.4}s` : '1.8s';
-
-        return (
-          <div
-            key={bar}
-            className={`waveform-bar ${active ? 'active' : 'idle'}`}
-            style={{
-              '--height-mult': heightMultiplier,
-              animationDelay: delay,
-              animationDuration: duration,
-            }}
-          />
-        );
-      })}
-
-      <style>{`
-        .waveform-container {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 4px;
-          height: 60px;
-          padding: 0 16px;
-        }
-
-        .waveform-bar {
-          width: 4px;
-          height: 8px;
-          background-color: var(--accent-neon);
-          border-radius: 4px;
-          box-shadow: 0 0 8px var(--accent-neon-glow);
-          transition: height 0.3s ease, background-color 0.3s ease;
-        }
-
-        .waveform-bar.active {
-          animation: wave-active infinite ease-in-out alternate;
-        }
-
-        .waveform-bar.idle {
-          animation: wave-idle infinite ease-in-out alternate;
-          background-color: var(--text-muted);
-          box-shadow: none;
-        }
-
-        @keyframes wave-active {
-          0% {
-            height: 6px;
-          }
-          100% {
-            height: calc(50px * var(--height-mult, 1));
-          }
-        }
-
-        @keyframes wave-idle {
-          0% {
-            height: 6px;
-          }
-          100% {
-            height: calc(14px * var(--height-mult, 1));
-          }
-        }
-      `}</style>
+    <div className={cls}>
+      {barData.map((bar, i) => (
+        <div
+          key={i}
+          className="nrx-waveform-bar"
+          style={{
+            height: `${bar.height}%`,
+            animationDelay: `${bar.delay}s`,
+            animationDuration: `${bar.duration}s`,
+          }}
+        />
+      ))}
     </div>
   );
 }

@@ -437,13 +437,24 @@ export default function LiveDemo({ setActivePage }) {
           </div>
 
           {/* Trial banner under the phone demo */}
-          <div className="ld-trial-banner glass-card nrx-reveal" style={{ marginTop: '48px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '24px', border: '1px solid var(--accent-neon-border)' }}>
+          <div className="ld-trial-banner nrx-reveal" style={{ 
+            marginTop: '48px', 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'space-between', 
+            flexWrap: 'wrap', 
+            gap: '24px', 
+            background: 'rgba(255, 255, 255, 0.02)', 
+            border: '1px solid rgba(255, 255, 255, 0.06)', 
+            borderRadius: '20px', 
+            padding: '28px 32px' 
+          }}>
             <div className="ld-trial-banner-content" style={{ textAlign: 'left', flex: '1 1 400px' }}>
-              <h3 style={{ fontSize: '1.25rem', marginBottom: '4px', color: 'var(--text-white)' }}>Want a custom demo for your clinic?</h3>
-              <p style={{ fontSize: '0.95rem', color: 'var(--text-gray)', margin: 0 }}>We build a short demo using your clinic name, services, hours, and FAQs. Hear how it sounds before paying.</p>
+              <h3 style={{ fontSize: '1.25rem', marginBottom: '6px', color: 'var(--text-white)', fontWeight: 600 }}>Want a custom demo for your clinic?</h3>
+              <p style={{ fontSize: '0.95rem', color: 'var(--text-gray)', margin: 0, lineHeight: 1.5 }}>We build a short demo using your clinic name, services, hours, and FAQs. Hear how it sounds before paying.</p>
             </div>
-             <button 
-              className="btn btn-primary btn-lg" 
+            <button 
+              className="btn-framer-primary" 
               onClick={() => setActivePage('contact', 'trial')}
               style={{ flexShrink: 0 }}
             >
@@ -463,7 +474,7 @@ export default function LiveDemo({ setActivePage }) {
         /* ── Hero ─────────────────────────────────────── */
         .ld-hero {
           position: relative;
-          padding: 100px 0 80px;
+          padding: clamp(72px, 7vw, 90px) 0 48px;
           overflow: hidden;
         }
         .ld-hero-bg {

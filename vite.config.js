@@ -5,20 +5,6 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   base: '/',
   plugins: [react()],
-  build: {
-    rollupOptions: {
-      input: {
-        main: './index.html',
-        about: './about/index.html',
-        contact: './contact/index.html',
-        solutions: './solutions/index.html',
-        liveDemo: './live-demo/index.html',
-        privacy: './privacy/index.html',
-        admin: './admin/index.html',
-        notFound: './404.html',
-      }
-    }
-  },
   server: {
     proxy: {
       '/api': {

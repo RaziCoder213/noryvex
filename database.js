@@ -1,14 +1,28 @@
+import dotenv from 'dotenv';
+dotenv.config();
 import pg from 'pg';
 const { Pool } = pg;
 
 // Connection string from environment variable or user fallback
-const connectionString = process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_JGY3PNIXWe2D@ep-orange-water-ayb9mumo-pooler.c-5.us-east-2.aws.neon.tech/neondb?sslmode=require';
+const connectionString = process.env.DATABASE_URL;
+if (!connectionString) {
+  console.error('[Database] FATAL: DATABASE_URL environment variable is not set.');
+  console.error('[Database] Please set DATABASE_URL in your .env file.');
+}
 
 const pool = new Pool({
   connectionString,
   ssl: {
     rejectUnauthorized: false // Required for Neon Postgres connections over SSL
-  }
+  },
+  max: 10,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 5000,
+});
+
+// Prevent unhandled ECONNRESET on idle clients from crashing the server
+pool.on('error', (err) => {
+  console.warn('[Postgres Pool Warning] Idle client connection reset/dropped:', err.message);
 });
 
 export async function initDb() {
@@ -169,6 +183,25 @@ export async function initDb() {
       ['slack_link', 'https://join.slack.com/t/noryvex/shared_invite/placeholder'],
     ];
     for (const [key, def] of contactConfigKeys) {
+      const exists = await client.query('SELECT 1 FROM noryvex_settings WHERE key = $1', [key]);
+      if (exists.rows.length === 0) {
+        await client.query(
+          'INSERT INTO noryvex_settings (key, value) VALUES ($1, $2)',
+          [key, def]
+        );
+      }
+    }
+
+    // Seed metrics settings if missing
+    const metricsDefaults = [
+      ['stat1_value', '24/7'],
+      ['stat1_label', 'Call coverage'],
+      ['stat2_value', '<500ms'],
+      ['stat2_label', 'Voice response time'],
+      ['stat3_value', '48 hrs'],
+      ['stat3_label', 'Setup to live'],
+    ];
+    for (const [key, def] of metricsDefaults) {
       const exists = await client.query('SELECT 1 FROM noryvex_settings WHERE key = $1', [key]);
       if (exists.rows.length === 0) {
         await client.query(
@@ -406,3 +439,36 @@ export async function getContactConfig() {
   for (const row of res.rows) config[row.key] = row.value;
   return config;
 }
+
+// ── Metrics & Stats Operations ─────────────────────────────────────────────
+
+export async function getMetrics() {
+  const keys = ['stat1_value', 'stat1_label', 'stat2_value', 'stat2_label', 'stat3_value', 'stat3_label'];
+  const res = await pool.query(
+    "SELECT key, value FROM noryvex_settings WHERE key = ANY($1::text[])",
+    [keys]
+  );
+  const map = {};
+  for (const row of res.rows) {
+    map[row.key] = row.value;
+  }
+  return {
+    stat1_value: map['stat1_value'] || '24/7',
+    stat1_label: map['stat1_label'] || 'Call coverage',
+    stat2_value: map['stat2_value'] || '<500ms',
+    stat2_label: map['stat2_label'] || 'Voice response time',
+    stat3_value: map['stat3_value'] || '48 hrs',
+    stat3_label: map['stat3_label'] || 'Setup to live',
+  };
+}
+
+export async function saveMetrics(metrics) {
+  const keys = ['stat1_value', 'stat1_label', 'stat2_value', 'stat2_label', 'stat3_value', 'stat3_label'];
+  for (const k of keys) {
+    if (metrics[k] !== undefined) {
+      await setSetting(k, String(metrics[k]));
+    }
+  }
+  return { success: true };
+}
+

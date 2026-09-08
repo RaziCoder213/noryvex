@@ -1,18 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-import { Menu, X, ArrowUpRight, Sun, Moon } from 'lucide-react';
+import { Menu, X, ArrowUpRight } from 'lucide-react';
 
 export default function Navbar({ activePage, setActivePage }) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [gliderStyle, setGliderStyle] = useState({ left: 0, width: 0, opacity: 0 });
   const navMenuRef = useRef(null);
-
-  const [theme, setTheme] = useState(() => {
-    const stored = localStorage.getItem('noryvex_theme');
-    // Reject legacy 'auto' value — only accept 'dark' or 'light'
-    return (stored === 'dark' || stored === 'light') ? stored : 'dark';
-  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,21 +19,6 @@ export default function Navbar({ activePage, setActivePage }) {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  // Apply theme to document root
-  useEffect(() => {
-    const root = document.documentElement;
-    if (theme === 'light') {
-      root.setAttribute('data-theme', 'light');
-    } else {
-      root.removeAttribute('data-theme');
-    }
-    localStorage.setItem('noryvex_theme', theme);
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme(t => t === 'dark' ? 'light' : 'dark');
-  };
 
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
@@ -54,12 +33,11 @@ export default function Navbar({ activePage, setActivePage }) {
   }, [isOpen]);
 
   const navLinks = [
-    { name: 'Home',       id: 'home'       },
-    { name: 'Solutions',  id: 'solutions'  },
-    { name: 'Live Demo',  id: 'live-demo'  },
-    { name: 'Calculator', id: 'calculator' },
-    { name: 'About',      id: 'about'      },
-    { name: 'Contact',    id: 'contact'    },
+    { name: 'Solutions',   id: 'solutions'  },
+    { name: 'Live Demo',   id: 'live-demo'  },
+    { name: 'Calculator',  id: 'calculator' },
+    { name: 'About',       id: 'about'      },
+    { name: 'Contact',     id: 'contact'    },
   ];
 
   // Move the glider to sit under the active link
@@ -100,7 +78,7 @@ export default function Navbar({ activePage, setActivePage }) {
       <div className="container nav-container">
         <a href="/" className="nav-brand" onClick={(e) => { e.preventDefault(); handleNavClick('home'); }}>
           <img src="/logo.png" alt="Noryvex" className="nav-logo" />
-          <span className="nav-title">NORYVE<span className="nav-title-x">X</span></span>
+          <span className="nav-title">Noryvex</span>
         </a>
 
         {/* Desktop Navigation */}
@@ -127,17 +105,6 @@ export default function Navbar({ activePage, setActivePage }) {
         </nav>
 
         <div className="nav-actions">
-          {/* Theme Toggle Button */}
-          <button 
-            onClick={toggleTheme} 
-            className="theme-toggle-btn"
-            title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-            aria-label="Toggle color theme"
-          >
-            {theme === 'dark' ? <Moon size={16} /> : <Sun size={16} />}
-            <span className="theme-label">{theme === 'dark' ? 'DARK' : 'LIGHT'}</span>
-          </button>
-
           <button 
             onClick={() => handleNavClick('contact', 'trial')} 
             className="btn btn-outline-neon btn-sm nav-cta"
@@ -171,14 +138,6 @@ export default function Navbar({ activePage, setActivePage }) {
           >
             Get Free Clinic Demo <ArrowUpRight size={16} />
           </button>
-          <button
-            onClick={toggleTheme}
-            className="btn btn-secondary mobile-cta-secondary theme-toggle-btn-mobile"
-            style={{ width: '100%', background: 'transparent', border: '1px solid var(--border-light)', color: 'var(--text-white)', padding: '12px', borderRadius: '100px', fontSize: '0.9rem', fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
-          >
-            {theme === 'dark' ? <Moon size={18} /> : <Sun size={18} />}
-            Switch to {theme === 'dark' ? 'Light' : 'Dark'} Mode
-          </button>
         </div>
       </div>
       
@@ -192,20 +151,20 @@ export default function Navbar({ activePage, setActivePage }) {
           height: var(--navbar-height);
           display: flex;
           align-items: center;
-          transition: background 0.3s ease, border-color 0.3s ease, backdrop-filter 0.3s ease;
-          border-bottom: 1px solid transparent;
-          backdrop-filter: blur(4px);
-          -webkit-backdrop-filter: blur(4px);
+          background: rgba(7, 7, 9, 0.72);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
+          transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         .navbar-wrapper.scrolled {
-          background: rgba(5, 5, 8, 0.97);
-          border-bottom: 1px solid rgba(255,255,255,0.07);
-          backdrop-filter: blur(20px);
-          -webkit-backdrop-filter: blur(20px);
-          box-shadow: 0 4px 32px rgba(0,0,0,0.6);
+          background: rgba(5, 5, 8, 0.92);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
         }
-        
+
+
         .nav-container {
           display: flex;
           align-items: center;
@@ -215,53 +174,49 @@ export default function Navbar({ activePage, setActivePage }) {
         .nav-brand {
           display: flex;
           align-items: center;
-          gap: 12px;
+          gap: 10px;
           text-decoration: none;
         }
         
         .nav-logo {
-          height: 36px;
-          width: 36px;
+          height: 28px;
+          width: 28px;
+          border-radius: 6px;
           object-fit: contain;
           flex-shrink: 0;
         }
         
         .nav-title {
-          font-family: 'Syne', sans-serif;
-          font-weight: 800;
-          font-size: 1.4rem;
+          font-family: var(--font-display);
+          font-weight: 700;
+          font-size: 1.15rem;
           color: var(--text-white);
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-        }
-        
-        .nav-title-x {
-          color: var(--accent-neon);
-          text-shadow: 0 0 12px rgba(199,255,61,0.5);
+          letter-spacing: -0.02em;
         }
         
         .nav-menu {
-          position: relative; /* needed for glider absolute positioning */
+          position: relative;
           display: flex;
           align-items: center;
           gap: 4px;
-          background: rgba(14, 14, 18, 0.85);
-          border: 1px solid rgba(255, 255, 255, 0.12);
-          padding: 5px 8px;
+          background: rgba(255, 255, 255, 0.04);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          padding: 4px 6px;
           border-radius: 100px;
           backdrop-filter: blur(12px);
           -webkit-backdrop-filter: blur(12px);
         }
 
-        /* Sliding neon pill — moves between active nav links */
         .nav-glider {
           position: absolute;
-          top: 5px;
-          bottom: 5px;
-          background: var(--accent-neon);
+          top: 3px;
+          bottom: 3px;
+          background: rgba(255, 255, 255, 0.08);
+          border: 1px solid rgba(255, 255, 255, 0.12);
           border-radius: 100px;
-          transition: left 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
-                      width 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+          transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                      width 0.3s cubic-bezier(0.16, 1, 0.3, 1),
                       opacity 0.2s ease;
           pointer-events: none;
           z-index: 0;
@@ -270,72 +225,56 @@ export default function Navbar({ activePage, setActivePage }) {
         .nav-link {
           background: none;
           border: none;
-          color: rgba(161,161,170,0.9);
+          color: #94A3B8;
           font-family: var(--font-sans);
           font-weight: 500;
-          font-size: 0.9rem;
+          font-size: 0.86rem;
           cursor: pointer;
-          padding: 7px 14px;
+          padding: 6px 14px;
           border-radius: 100px;
           position: relative;
-          z-index: 1; /* sit above the glider */
+          z-index: 1;
           transition: color 0.2s ease;
           white-space: nowrap;
         }
 
         .nav-link:hover {
-          color: #fff;
+          color: #FFFFFF;
         }
 
         .nav-link.active {
-          color: #000;
-          font-weight: 700;
-          background: transparent; /* glider provides the background */
+          color: #FFFFFF;
+          font-weight: 600;
+          background: transparent;
         }
-
-        .nav-link.active::after { display: none; }
         
         .nav-actions {
           display: flex;
           align-items: center;
-          gap: 16px;
-        }
-
-        .theme-toggle-btn {
-          background: var(--bg-preview-card);
-          border: 1px solid var(--border-light);
-          color: var(--text-light);
-          padding: 6px 12px;
-          border-radius: 8px;
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          cursor: pointer;
-          font-family: var(--font-sans);
-          font-size: 0.75rem;
-          font-weight: 700;
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
-          transition: border-color 0.2s, background 0.2s, color 0.2s;
-        }
-
-        .theme-toggle-btn:hover {
-          border-color: var(--accent-neon);
-          background: var(--bg-glass);
-          color: var(--text-white);
-        }
-
-        .theme-toggle-btn svg {
-          color: var(--accent-neon);
-        }
-
-        .theme-label {
-          font-weight: 700;
+          gap: 14px;
         }
         
         .nav-cta {
-          padding: 8px 20px;
-          font-size: 0.85rem;
+          padding: 8px 18px;
+          font-size: 0.84rem;
+          border-radius: 9999px;
+          background: rgba(255, 255, 255, 0.06);
+          color: #F8FAFC;
+          border: 1px solid rgba(255, 255, 255, 0.16);
+          font-weight: 600;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          cursor: pointer;
+          font-family: var(--font-sans);
+          transition: all 0.2s var(--ease-out);
+        }
+        .nav-cta:hover {
+          background: #FFFFFF;
+          color: #08080a;
+          border-color: #FFFFFF;
+          transform: translateY(-1px);
+          box-shadow: 0 4px 16px rgba(255, 255, 255, 0.15);
         }
         
         .mobile-toggle {

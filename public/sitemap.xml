@@ -4,65 +4,51 @@
         xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 
-  <!-- Home Page — highest priority -->
   <url>
     <loc>https://trynoryvex.com/</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
 
-  <!-- Solutions / Services -->
   <url>
     <loc>https://trynoryvex.com/solutions</loc>
-    <lastmod>2026-08-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <!-- Live Demo — high conversion page -->
-  <url>
-    <loc>https://trynoryvex.com/live-demo</loc>
-    <lastmod>2026-08-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <!-- Calculator Tool -->
-  <url>
-    <loc>https://trynoryvex.com/calculator</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
-  <!-- About Page -->
+  <url>
+    <loc>https://trynoryvex.com/live-demo</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
   <url>
     <loc>https://trynoryvex.com/about</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
-  <!-- Contact / Book a Demo -->
   <url>
     <loc>https://trynoryvex.com/contact</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
 
-  <!-- Legal Pages -->
   <url>
     <loc>https://trynoryvex.com/privacy</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
 
   <url>
     <loc>https://trynoryvex.com/terms</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>

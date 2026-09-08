@@ -563,3 +563,40 @@ export const dbAdminSetContactConfig = async (config) => {
   }
 };
 
+/** Get performance metrics (24/7, <500ms, 48 hrs, etc.) */
+export const dbGetMetrics = async () => {
+  try {
+    return await fetchNoCacheJSON('/api/settings/metrics');
+  } catch (e) {
+    console.error('Failed to fetch metrics:', e);
+    return {
+      stat1_value: '24/7',
+      stat1_label: 'Call coverage',
+      stat2_value: '<500ms',
+      stat2_label: 'Voice response time',
+      stat3_value: '48 hrs',
+      stat3_label: 'Setup to live',
+    };
+  }
+};
+
+/** Admin: save performance metrics */
+export const dbAdminSetMetrics = async (metrics) => {
+  const token = getAdminToken();
+  try {
+    const res = await fetch(`/api/admin/settings/metrics?t=${Date.now()}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(metrics)
+    });
+    checkAuthStatus(res);
+    return { success: res.ok };
+  } catch (e) {
+    console.error('Failed to save metrics:', e);
+    return { success: false };
+  }
+};
+
