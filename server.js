@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 import nodemailer from 'nodemailer';
 import helmet from 'helmet';
@@ -682,10 +683,40 @@ app.post('/api/admin/settings/under-construction', authenticateToken, async (req
 const distPath = path.resolve(__dirname, 'dist');
 app.use(express.static(distPath));
 
+// Fallback for hashed JS bundles requested by clients with stale cache
+app.use((req, res, next) => {
+  if (req.path.startsWith('/assets/index-') && req.path.endsWith('.js')) {
+    try {
+      const assetsDir = path.join(distPath, 'assets');
+      if (fs.existsSync(assetsDir)) {
+        const files = fs.readdirSync(assetsDir);
+        const activeBundle = files.find(f => f.startsWith('index-') && f.endsWith('.js') && !f.endsWith('.map'));
+        if (activeBundle) {
+          return res.sendFile(path.join(assetsDir, activeBundle));
+        }
+      }
+    } catch (e) {
+      console.error('Error serving active JS bundle fallback:', e);
+    }
+  }
+  next();
+});
+
+// For any other static asset that was NOT found, return 404 (never return HTML index for .js/.css)
 app.use((req, res, next) => {
   if (req.path.startsWith('/api')) {
     return next();
   }
+  if (req.path.startsWith('/assets/') || req.path.startsWith('/src/') || /\.[a-zA-Z0-9]+$/.test(req.path)) {
+    return res.status(404).type('text/plain').send('Resource not found');
+  }
+
+  // SPA Route handler: serve index.html with no-cache so browsers always fetch current bundle tags
+  res.set({
+    'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+    'Pragma': 'no-cache',
+    'Expires': '0',
+  });
   res.sendFile(path.join(distPath, 'index.html'));
 });
 
