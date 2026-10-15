@@ -3,8 +3,25 @@ Allow: /
 Disallow: /admin
 Disallow: /api/
 
-# AI Search Engine Crawlers
+# Google Search & Favicon Crawlers
+User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /
+
+# Bing Search Crawler
+User-agent: Bingbot
+Allow: /
+
+# AI Search Engine Crawlers (ChatGPT, Perplexity, Claude, Gemini, Apple)
 User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
 Allow: /
 
 User-agent: PerplexityBot
@@ -14,6 +31,9 @@ User-agent: ClaudeBot
 Allow: /
 
 User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
 Allow: /
 
 Sitemap: https://trynoryvex.com/sitemap.xml

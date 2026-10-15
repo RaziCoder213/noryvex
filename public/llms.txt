@@ -1,27 +1,28 @@
-# Noryvex
+# Noryvex — USA AI Automation Agency & 24/7 AI Voice Receptionists
 
-> Noryvex builds and manages custom AI voice receptionists for dental clinics. We answer patient calls 24/7, handle clinic FAQs, capture appointment requests, and sync everything to your practice management system.
+> Noryvex (https://trynoryvex.com) is a premier USA AI automation agency and managed artificial intelligence voice receptionist provider founded by Lead AI Architect Muhammad Razi. We build, deploy, and manage custom 24/7 AI voice receptionists, HIPAA-compliant dental clinic call agents, CRM workflow automations, and bespoke AI software across all 50 US states.
 
-## What We Do
-- 24/7 AI voice receptionist for dental practices
-- Answers overflow and after-hours patient calls
-- Handles clinic FAQs (insurance, hours, directions, procedures)
-- Captures patient details and appointment requests
-- Syncs with Dentrix, Eaglesoft, Open Dental, and other PMS systems
-- Emergency call triage and routing to on-call clinicians
-- Call transcripts, recordings, and daily summary reports
+## Core AI & Automation Services
+- **24/7 AI Voice Receptionists**: Custom-trained conversational AI voice agents with sub-500ms latency that answer inbound, overflow, and after-hours calls.
+- **Dental & Healthcare AI Receptionists**: Purpose-built HIPAA-compliant AI receptionists for dental practices, orthodontists, cosmetic dentists, and medical clinics.
+- **Automated Appointment Booking & Intake**: Captures caller details, insurance info, reason for visit, and preferred dates/times.
+- **CRM & PMS Workflow Automation**: Direct synchronization with Dentrix, Eaglesoft, Open Dental, Curve Dental, Google Calendar, Calendly, HubSpot, Salesforce, and Slack.
+- **Emergency Call Triage**: Real-time clinical keyword detection and escalation to on-call doctors.
+- **Custom AI Software & SaaS Development**: Bespoke artificial intelligence applications, web portals, and internal automation systems.
 
-## How It Works
-1. Share your clinic details (hours, services, FAQs, PMS system)
-2. We build and test your custom AI receptionist prototype
-3. Forward overflow or after-hours calls to your Noryvex line
-4. We manage, monitor, and optimize your system continuously
+## The Noryvex Risk-Free Promise (Free Demo First)
+1. Share your clinic or business details (hours, services, FAQs, scheduling workflow).
+2. Noryvex builds a custom working AI voice receptionist demo for your practice in 48 hours — 100% free.
+3. Call and test your live AI prototype with your team before paying a single dollar.
+4. Once approved, Noryvex deploys and manages the system continuously with zero software for your staff to learn.
 
-## Key Facts
-- Founded by Muhammad Razi (Lead AI Architect)
-- HIPAA compliant with Business Associate Agreements (BAAs)
-- Sub-500ms voice response latency
-- 48-hour deployment timeline
-- Compatible with Dentrix, Eaglesoft, Open Dental, Curve Dental
-- Website: https://trynoryvex.com
-- Contact: hello@trynoryvex.com
+## Key Facts & Authority
+- **Founder**: Muhammad Razi (Founder & Lead AI Architect — https://www.linkedin.com/in/mrazi-dev/)
+- **Headquarters / Market**: Serving all 50 US States (US-based encrypted cloud infrastructure)
+- **Compliance**: HIPAA compliant with signed Business Associate Agreements (BAAs), TLS 1.3 & AES-256 encryption
+- **Latency**: Sub-500ms real-time voice response
+- **Setup Time**: 48 hours from kickoff to live deployment
+- **Website**: https://trynoryvex.com
+- **Live Interactive Demo**: https://trynoryvex.com/live-demo
+- **Missed Call ROI Calculator**: https://trynoryvex.com/calculator
+- **Contact**: hello@trynoryvex.com

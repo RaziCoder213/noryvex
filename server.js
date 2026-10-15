@@ -707,6 +707,62 @@ app.use('/_vercel', (req, res) => {
   res.type('application/javascript').send('/* vercel analytics mock */');
 });
 
+// Serve /favicon.ico directly from logo.png so Googlebot and browsers never hit 404
+app.get('/favicon.ico', (req, res) => {
+  const distLogo = path.join(distPath, 'logo.png');
+  const publicLogo = path.resolve(__dirname, 'public', 'logo.png');
+  const iconFile = fs.existsSync(distLogo) ? distLogo : publicLogo;
+  if (fs.existsSync(iconFile)) {
+    res.set('Cache-Control', 'public, max-age=86400');
+    return res.type('image/png').sendFile(iconFile);
+  }
+  res.status(404).end();
+});
+
+// Server-side SEO metadata map for crawlers hitting sub-routes directly
+const SSR_ROUTE_META = {
+  '/': {
+    title: 'Noryvex — AI Automation Agency USA & 24/7 AI Voice Receptionists',
+    description: 'Noryvex is a premier USA AI automation agency building custom 24/7 AI voice receptionists, dental clinic AI answering agents, and intelligent workflow automation. Free custom demo built in 48 hours.',
+    canonical: 'https://trynoryvex.com/',
+  },
+  '/solutions': {
+    title: 'AI Automation Solutions & Custom Voice AI Agents | Noryvex USA',
+    description: 'Explore Noryvex artificial intelligence solutions: 24/7 AI Voice Receptionists, Dental Clinic Call Automation, CRM & PMS Workflow Sync (Dentrix, Eaglesoft, Open Dental), and Custom AI Software Development.',
+    canonical: 'https://trynoryvex.com/solutions',
+  },
+  '/live-demo': {
+    title: 'Live AI Voice Receptionist Demo — Hear Noryvex AI in Action',
+    description: 'Experience our sub-500ms latency AI voice receptionist live in your browser. Hear how Noryvex AI answers calls, handles clinic FAQs, triages emergencies, and books appointments in real time.',
+    canonical: 'https://trynoryvex.com/live-demo',
+  },
+  '/calculator': {
+    title: 'Missed Call Revenue Calculator for Dental Clinics & Businesses | Noryvex',
+    description: 'Calculate how much monthly revenue your dental practice or business loses to unanswered calls and voicemail. Free instant ROI calculator by Noryvex AI Automation Agency.',
+    canonical: 'https://trynoryvex.com/calculator',
+  },
+  '/about': {
+    title: 'About Noryvex & Founder Muhammad Razi | USA AI Automation Agency',
+    description: 'Meet Muhammad Razi, Founder & Lead AI Architect at Noryvex. Learn how our USA AI automation agency engineers founder-reviewed, HIPAA-compliant 24/7 AI voice receptionists in 48 hours.',
+    canonical: 'https://trynoryvex.com/about',
+  },
+  '/contact': {
+    title: 'Claim Your Free Custom AI Demo | Contact Noryvex AI Agency',
+    description: 'Get a free custom AI voice receptionist demo built specifically for your clinic or business in 48 hours. Book a strategy call with Noryvex or request your risk-free prototype today.',
+    canonical: 'https://trynoryvex.com/contact',
+  },
+  '/privacy': {
+    title: 'Privacy Policy & HIPAA Data Security | Noryvex AI',
+    description: 'Read the Noryvex Privacy Policy — how we protect patient and business data using TLS 1.3 encryption, AES-256 storage, signed HIPAA BAAs, and zero public model training.',
+    canonical: 'https://trynoryvex.com/privacy',
+  },
+  '/terms': {
+    title: 'Terms of Service | Noryvex AI Automation Agency',
+    description: 'Read the Noryvex Terms of Service governing the use of our AI voice receptionists, workflow automation systems, and custom software services.',
+    canonical: 'https://trynoryvex.com/terms',
+  },
+};
+
 // For any other static asset that was NOT found, return 404 (never return HTML index for .js/.css)
 app.use((req, res, next) => {
   if (req.path.startsWith('/api')) {
@@ -716,13 +772,37 @@ app.use((req, res, next) => {
     return res.status(404).type('text/plain').send('Resource not found');
   }
 
-  // SPA Route handler: serve index.html with no-cache so browsers always fetch current bundle tags
+  // SPA Route handler: serve index.html with route-specific SEO tags injected for crawlers
   res.set({
     'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
     'Pragma': 'no-cache',
     'Expires': '0',
   });
-  res.sendFile(path.join(distPath, 'index.html'));
+
+  const indexFile = path.join(distPath, 'index.html');
+  const cleanPath = req.path === '/' ? '/' : req.path.replace(/\/$/, '').toLowerCase();
+  const routeMeta = SSR_ROUTE_META[cleanPath];
+
+  if (routeMeta && fs.existsSync(indexFile)) {
+    try {
+      let html = fs.readFileSync(indexFile, 'utf8');
+      html = html
+        .replace(/<title>[\s\S]*?<\/title>/, `<title>${routeMeta.title}</title>`)
+        .replace(/<link rel="canonical" href="[^"]*"\s*\/?>/, `<link rel="canonical" href="${routeMeta.canonical}" />`)
+        .replace(/<meta name="description" content="[^"]*"\s*\/?>/, `<meta name="description" content="${routeMeta.description}" />`)
+        .replace(/<meta property="og:url" content="[^"]*"\s*\/?>/, `<meta property="og:url" content="${routeMeta.canonical}" />`)
+        .replace(/<meta property="og:title" content="[^"]*"\s*\/?>/, `<meta property="og:title" content="${routeMeta.title}" />`)
+        .replace(/<meta property="og:description" content="[^"]*"\s*\/?>/, `<meta property="og:description" content="${routeMeta.description}" />`)
+        .replace(/<meta name="twitter:url" content="[^"]*"\s*\/?>/, `<meta name="twitter:url" content="${routeMeta.canonical}" />`)
+        .replace(/<meta name="twitter:title" content="[^"]*"\s*\/?>/, `<meta name="twitter:title" content="${routeMeta.title}" />`)
+        .replace(/<meta name="twitter:description" content="[^"]*"\s*\/?>/, `<meta name="twitter:description" content="${routeMeta.description}" />`);
+      return res.type('html').send(html);
+    } catch (e) {
+      console.error('Error injecting SSR meta tags:', e);
+    }
+  }
+
+  res.sendFile(indexFile);
 });
 
 if (!process.env.VERCEL) {

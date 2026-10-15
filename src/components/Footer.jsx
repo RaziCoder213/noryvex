@@ -18,7 +18,7 @@ export default function Footer({ setActivePage, addToast }) {
             <span className="footer-title" style={{ textTransform: 'none', letterSpacing: 'normal' }}>Noryvex</span>
           </div>
           <p className="footer-tagline">Never miss another dental patient call.</p>
-          <p className="footer-desc">Building custom AI receptionists for dental clinics to answer missed calls, collect patient details, and send appointment requests.</p>
+          <p className="footer-desc">USA AI automation agency building custom 24/7 AI voice receptionists, dental clinic call automation, and intelligent CRM workflows across all 50 states.</p>
         </div>
 
         <div className="footer-links-grid">
@@ -27,9 +27,18 @@ export default function Footer({ setActivePage, addToast }) {
             <button onClick={() => handleNavClick('home')} className="footer-btn-link">Home</button>
             <button onClick={() => handleNavClick('solutions')} className="footer-btn-link">Solutions</button>
             <button onClick={() => handleNavClick('live-demo')} className="footer-btn-link">Live Demo</button>
-            <button onClick={() => handleNavClick('calculator')} className="footer-btn-link">Calculator</button>
-            <button onClick={() => handleNavClick('about')} className="footer-btn-link">About</button>
+            <button onClick={() => handleNavClick('calculator')} className="footer-btn-link">ROI Calculator</button>
+            <button onClick={() => handleNavClick('about')} className="footer-btn-link">About Us</button>
             <button onClick={() => handleNavClick('contact')} className="footer-btn-link">Contact</button>
+          </div>
+
+          <div className="footer-link-group">
+            <span className="group-title">AI Solutions</span>
+            <button onClick={() => handleNavClick('solutions')} className="footer-btn-link">AI Voice Receptionists</button>
+            <button onClick={() => handleNavClick('solutions')} className="footer-btn-link">Dental Call Automation</button>
+            <button onClick={() => handleNavClick('solutions')} className="footer-btn-link">AI Workflow &amp; CRM Sync</button>
+            <button onClick={() => handleNavClick('solutions')} className="footer-btn-link">Custom AI Software</button>
+            <button onClick={() => handleNavClick('live-demo')} className="footer-btn-link">Interactive Voice Demo</button>
           </div>
 
           <div className="footer-link-group">
@@ -40,10 +49,13 @@ export default function Footer({ setActivePage, addToast }) {
             <a href="https://www.linkedin.com/company/noryvex" target="_blank" rel="noopener noreferrer" className="footer-link">
               LinkedIn <ArrowUpRight size={14} />
             </a>
+            <a href="https://www.linkedin.com/in/mrazi-dev/" target="_blank" rel="noopener noreferrer" className="footer-link">
+              Founder LinkedIn <ArrowUpRight size={14} />
+            </a>
           </div>
 
           <div className="footer-link-group">
-            <span className="group-title">Platform & Legal</span>
+            <span className="group-title">Platform &amp; Legal</span>
             <button onClick={() => handleNavClick('privacy')} className="footer-btn-link">Privacy Policy</button>
             <button onClick={() => handleNavClick('terms')} className="footer-btn-link">Terms of Service</button>
             <button onClick={() => handleNavClick('admin')} className="footer-btn-link" style={{ color: 'var(--accent-neon)', opacity: 0.85 }}>Admin Console</button>
@@ -53,7 +65,7 @@ export default function Footer({ setActivePage, addToast }) {
 
       <div className="footer-bottom">
         <div className="container footer-bottom-container">
-          <span className="copyright">© {currentYear} Noryvex. All rights reserved.</span>
+          <span className="copyright">© {currentYear} Noryvex AI Automation Agency. All rights reserved.</span>
           <div className="legal-links">
             <button className="legal-link" onClick={() => handleNavClick('privacy')}>Privacy Policy</button>
             <button className="legal-link" onClick={() => handleNavClick('terms')}>Terms of Service</button>
@@ -158,6 +170,7 @@ export default function Footer({ setActivePage, addToast }) {
           text-align: left;
           width: fit-content;
           transition: var(--transition-fast);
+          padding: 0;
         }
         
         .footer-btn-link:hover {
@@ -202,7 +215,7 @@ export default function Footer({ setActivePage, addToast }) {
           gap: 24px;
         }
         
-        .legal-link {
+        .legal-links .legal-link {
           background: none;
           border: none;
           color: var(--text-muted);
@@ -258,8 +271,6 @@ export default function Footer({ setActivePage, addToast }) {
             gap: 12px;
             align-items: flex-start;
           }
-        }
-
         }
       `}</style>
     </footer>

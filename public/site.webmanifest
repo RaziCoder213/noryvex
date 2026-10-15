@@ -1,0 +1,29 @@
+{
+  "name": "Noryvex — AI Automation Agency & 24/7 AI Voice Receptionists",
+  "short_name": "Noryvex",
+  "description": "USA AI Automation Agency building custom 24/7 AI voice receptionists, dental clinic AI agents, and intelligent workflow automation.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#070709",
+  "theme_color": "#C7FF3D",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

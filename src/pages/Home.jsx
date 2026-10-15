@@ -146,7 +146,7 @@ export default function Home({ setActivePage }) {
           
           <div className="framer-pill-badge">
             <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#C7FF3D', boxShadow: '0 0 8px #C7FF3D' }} />
-            <span>HIPAA-Compliant AI Receptionist</span>
+            <span>USA AI Automation Agency · HIPAA-Compliant Voice AI</span>
           </div>
 
           <h1 className="framer-hero-title">
@@ -154,7 +154,7 @@ export default function Home({ setActivePage }) {
           </h1>
 
           <p className="framer-hero-desc">
-            Noryvex builds and manages custom AI receptionists that answer calls, capture patient details, handle clinic FAQs, and collect appointment requests.
+            Noryvex is a done-for-you AI automation agency that builds and manages custom 24/7 AI voice receptionists — answering calls, handling clinic FAQs, capturing patient details, and booking appointments across all 50 US states.
           </p>
 
           <div className="framer-hero-actions">
@@ -183,8 +183,9 @@ export default function Home({ setActivePage }) {
             flexWrap: 'wrap',
             justifyContent: 'center'
           }}>
-            <span>✓ No credit card</span>
-            <span>✓ Custom demo in 48 hrs</span>
+            <span style={{ color: '#C7FF3D', fontWeight: 600 }}>✦ We build your custom demo free first</span>
+            <span>✓ Ready in 48 hrs</span>
+            <span>✓ Pay only if you love it</span>
             <span>✓ Zero phone number changes</span>
           </div>
 
@@ -584,7 +585,96 @@ export default function Home({ setActivePage }) {
         </div>
       </section>
 
-      {/* ── 10. FINAL CTA ──────────────────────────────────────── */}
+      {/* ── 10B. RISK-FREE CUSTOM DEMO GUARANTEE & AI AUTHORITY ── */}
+      <section className="container nrx-reveal" style={{ paddingBottom: 'var(--section-padding)' }}>
+        <div style={{
+          background: 'linear-gradient(145deg, rgba(199, 255, 61, 0.06) 0%, rgba(16, 17, 22, 0.92) 100%)',
+          border: '1px solid rgba(199, 255, 61, 0.22)',
+          borderRadius: '24px',
+          padding: 'clamp(28px, 4vw, 48px)',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+          gap: '32px',
+          alignItems: 'center',
+        }}>
+          <div>
+            <div className="framer-eyebrow" style={{ justifyContent: 'flex-start', marginBottom: '14px' }}>
+              <span className="dot" />
+              <span>Zero-Risk Guarantee</span>
+            </div>
+            <h2 style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(1.6rem, 3vw, 2.25rem)',
+              fontWeight: 700,
+              color: 'var(--text-white)',
+              letterSpacing: '-0.03em',
+              lineHeight: 1.2,
+              marginBottom: '14px',
+            }}>
+              We build your exact AI demo first. <span style={{ color: '#C7FF3D' }}>Keep it if you love it — walk away if you don't.</span>
+            </h2>
+            <p style={{ fontSize: '0.96rem', color: 'var(--text-gray)', lineHeight: 1.65, marginBottom: '20px' }}>
+              Share your clinic name, services, opening hours, and FAQs. Within 48 hours, our AI architects build a working voice receptionist tailored to your exact practice. Call it and test it live with your team — zero upfront cost, zero obligation.
+            </p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+              {[
+                'AI Automation Agency USA',
+                '24/7 AI Voice Receptionist',
+                'Dental & Healthcare AI',
+                'Dentrix / Eaglesoft / Open Dental Sync',
+                'HIPAA BAA Included',
+                'Sub-500ms Voice AI',
+              ].map((tag, i) => (
+                <span key={i} style={{
+                  fontSize: '0.75rem',
+                  fontWeight: 600,
+                  padding: '6px 12px',
+                  borderRadius: '100px',
+                  background: 'rgba(255, 255, 255, 0.04)',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  color: 'var(--text-light)',
+                }}>
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div style={{
+            background: 'rgba(7, 7, 9, 0.75)',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+            borderRadius: '18px',
+            padding: '28px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '14px',
+          }}>
+            <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#C7FF3D', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+              Included in Your Free 48-Hr Prototype
+            </div>
+            {[
+              'Custom greeting with your exact clinic or business name',
+              'Trained on your real treatments, pricing & insurance FAQs',
+              'Live US phone number for you and your staff to call & test',
+              'Sample appointment intake & instant call summary report',
+            ].map((item, idx) => (
+              <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '0.9rem', color: 'var(--text-light)' }}>
+                <CheckCircle2 size={18} style={{ color: '#C7FF3D', flexShrink: 0, marginTop: '2px' }} />
+                <span>{item}</span>
+              </div>
+            ))}
+            <button
+              onClick={() => setActivePage('contact')}
+              className="btn-framer-primary"
+              style={{ marginTop: '8px', width: '100%', justifyContent: 'center' }}
+            >
+              Get My Free Custom Demo <ArrowUpRight size={17} />
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 11. FINAL CTA ──────────────────────────────────────── */}
       <section className="container nrx-reveal" style={{ paddingBottom: 'var(--section-padding)' }}>
         <div className="framer-cta-banner">
           <div className="framer-cta-inner">
