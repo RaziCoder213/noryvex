@@ -173,20 +173,11 @@ export default function Home({ setActivePage }) {
           </div>
 
           {/* Trust microcopy */}
-          <div style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '16px', 
-            marginTop: '20px', 
-            fontSize: '0.82rem', 
-            color: 'var(--text-muted)',
-            flexWrap: 'wrap',
-            justifyContent: 'center'
-          }}>
-            <span style={{ color: '#C7FF3D', fontWeight: 600 }}>✦ We build your custom demo free first</span>
+          <div className="hero-trust-strip">
+            <span style={{ color: '#C7FF3D', fontWeight: 600 }}>✦ Free custom demo first</span>
             <span>✓ Ready in 48 hrs</span>
             <span>✓ Pay only if you love it</span>
-            <span>✓ Zero phone number changes</span>
+            <span>✓ Zero number changes</span>
           </div>
 
         </div>
@@ -347,17 +338,7 @@ export default function Home({ setActivePage }) {
               ))}
             </div>
           </div>
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '48px 32px',
-            background: 'rgba(199, 255, 61, 0.04)',
-            border: '1px solid rgba(199, 255, 61, 0.12)',
-            borderRadius: '16px',
-            textAlign: 'center',
-          }}>
+          <div className="framer-tab-demo-cta">
             <Phone size={40} style={{ color: 'var(--accent-neon)', marginBottom: '16px' }} />
             <p style={{ fontSize: '1rem', color: 'var(--text-gray)', lineHeight: 1.6, maxWidth: '280px' }}>
               Want to hear this in action? Try our live demo and experience the call yourself.
@@ -587,16 +568,7 @@ export default function Home({ setActivePage }) {
 
       {/* ── 10B. RISK-FREE CUSTOM DEMO GUARANTEE & AI AUTHORITY ── */}
       <section className="container nrx-reveal" style={{ paddingBottom: 'var(--section-padding)' }}>
-        <div style={{
-          background: 'linear-gradient(145deg, rgba(199, 255, 61, 0.06) 0%, rgba(16, 17, 22, 0.92) 100%)',
-          border: '1px solid rgba(199, 255, 61, 0.22)',
-          borderRadius: '24px',
-          padding: 'clamp(28px, 4vw, 48px)',
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-          gap: '32px',
-          alignItems: 'center',
-        }}>
+        <div className="nrx-guarantee-card">
           <div>
             <div className="framer-eyebrow" style={{ justifyContent: 'flex-start', marginBottom: '14px' }}>
               <span className="dot" />
@@ -604,7 +576,7 @@ export default function Home({ setActivePage }) {
             </div>
             <h2 style={{
               fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(1.6rem, 3vw, 2.25rem)',
+              fontSize: 'clamp(1.45rem, 3vw, 2.25rem)',
               fontWeight: 700,
               color: 'var(--text-white)',
               letterSpacing: '-0.03em',
@@ -613,7 +585,7 @@ export default function Home({ setActivePage }) {
             }}>
               We build your exact AI demo first. <span style={{ color: '#C7FF3D' }}>Keep it if you love it — walk away if you don't.</span>
             </h2>
-            <p style={{ fontSize: '0.96rem', color: 'var(--text-gray)', lineHeight: 1.65, marginBottom: '20px' }}>
+            <p style={{ fontSize: '0.92rem', color: 'var(--text-gray)', lineHeight: 1.6, marginBottom: '18px' }}>
               Share your clinic name, services, opening hours, and FAQs. Within 48 hours, our AI architects build a working voice receptionist tailored to your exact practice. Call it and test it live with your team — zero upfront cost, zero obligation.
             </p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
@@ -626,9 +598,9 @@ export default function Home({ setActivePage }) {
                 'Sub-500ms Voice AI',
               ].map((tag, i) => (
                 <span key={i} style={{
-                  fontSize: '0.75rem',
+                  fontSize: '0.73rem',
                   fontWeight: 600,
-                  padding: '6px 12px',
+                  padding: '5px 11px',
                   borderRadius: '100px',
                   background: 'rgba(255, 255, 255, 0.04)',
                   border: '1px solid rgba(255, 255, 255, 0.1)',
@@ -640,16 +612,8 @@ export default function Home({ setActivePage }) {
             </div>
           </div>
 
-          <div style={{
-            background: 'rgba(7, 7, 9, 0.75)',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
-            borderRadius: '18px',
-            padding: '28px',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '14px',
-          }}>
-            <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#C7FF3D', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+          <div className="nrx-guarantee-box">
+            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#C7FF3D', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
               Included in Your Free 48-Hr Prototype
             </div>
             {[
@@ -658,7 +622,7 @@ export default function Home({ setActivePage }) {
               'Live US phone number for you and your staff to call & test',
               'Sample appointment intake & instant call summary report',
             ].map((item, idx) => (
-              <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '0.9rem', color: 'var(--text-light)' }}>
+              <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '0.88rem', color: 'var(--text-light)' }}>
                 <CheckCircle2 size={18} style={{ color: '#C7FF3D', flexShrink: 0, marginTop: '2px' }} />
                 <span>{item}</span>
               </div>
@@ -666,7 +630,7 @@ export default function Home({ setActivePage }) {
             <button
               onClick={() => setActivePage('contact')}
               className="btn-framer-primary"
-              style={{ marginTop: '8px', width: '100%', justifyContent: 'center' }}
+              style={{ marginTop: '6px', width: '100%', justifyContent: 'center' }}
             >
               Get My Free Custom Demo <ArrowUpRight size={17} />
             </button>

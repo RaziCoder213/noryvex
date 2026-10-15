@@ -90,13 +90,15 @@
   --border-light: rgba(255, 255, 255, 0.08);
   --border-hover: rgba(199, 255, 61, 0.35);
 
-  --font-sans:    'Onest', 'Onest Placeholder', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-display: 'Onest', 'Onest Placeholder', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-sans:     'Onest', 'Onest Placeholder', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display:  'Onest', 'Onest Placeholder', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-headline: 'Onest', 'Onest Placeholder', -apple-system, BlinkMacSystemFont, sans-serif;
   --framer-font-family: 'Onest', 'Onest Placeholder', sans-serif;
   --framer-font-family-bold: 'Onest', 'Onest Placeholder', sans-serif;
-  --font-mono:    'IBM Plex Mono', monospace;
+  --font-mono:     'IBM Plex Mono', monospace;
 
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-fast: 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 
   /* Shadows */
   --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.55);
@@ -104,14 +106,17 @@
 
   /* Spacing & Layout Tokens */
   --section-padding: clamp(56px, 7vw, 84px);
-  --section-padding-mobile: 44px;
+  --section-padding-desktop: 72px;
+  --section-padding-mobile: 40px;
   --hero-padding-top: clamp(48px, 6vw, 68px);
   --hero-padding-bottom: clamp(24px, 4vw, 40px);
   --footer-padding-top: 64px;
   --footer-padding-bottom: 32px;
   
   --card-padding: clamp(20px, 3vw, 32px);
-  --card-gap: clamp(16px, 2vw, 24px);
+  --card-padding-desktop: 32px;
+  --card-padding-mobile: 20px;
+  --card-gap: clamp(14px, 2vw, 24px);
 
   /* Navbar height — single source of truth */
   --navbar-height: 64px;
@@ -1728,10 +1733,16 @@ table { width: 100%; }
 @media (max-width: 991px) {
   .framer-tools-section {
     grid-template-columns: 1fr;
-    gap: 40px;
+    gap: 32px;
   }
   .framer-tools-left {
     max-width: 100%;
+    align-items: center;
+    text-align: center;
+  }
+  .framer-tools-cta {
+    width: 100%;
+    justify-content: center;
   }
   .tools-card {
     width: 96px;
@@ -1742,5 +1753,521 @@ table { width: 100%; }
     height: 34px;
   }
 }
+
+/* ───────────────────────────────────────────────────────────
+   DEDICATED MOBILE-PHASED ARCHITECTURE (<= 768px & <= 480px)
+   Transforms tall desktop stacks into compact, native-feeling
+   horizontal cards, 2x3 bento grids, 3-col stat strips, and
+   swipeable carousels on mobile devices.
+   ─────────────────────────────────────────────────────────── */
+
+/* Desktop helper classes for Home / Solutions / Contact */
+.hero-trust-strip {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 20px;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.framer-tab-demo-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 32px;
+  background: rgba(199, 255, 61, 0.04);
+  border: 1px solid rgba(199, 255, 61, 0.12);
+  border-radius: 16px;
+  text-align: center;
+}
+
+.nrx-guarantee-card {
+  background: linear-gradient(145deg, rgba(199, 255, 61, 0.06) 0%, rgba(16, 17, 22, 0.92) 100%);
+  border: 1px solid rgba(199, 255, 61, 0.22);
+  border-radius: 24px;
+  padding: clamp(28px, 4vw, 48px);
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 32px;
+  align-items: center;
+}
+
+.nrx-guarantee-box {
+  background: rgba(7, 7, 9, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.solutions-services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--card-gap);
+}
+
+.solutions-security-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 992px) {
+  .nrx-guarantee-card {
+    grid-template-columns: 1fr;
+  }
+  .solutions-services-grid,
+  .solutions-security-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --section-padding: 38px;
+    --hero-padding-top: 30px;
+    --hero-padding-bottom: 20px;
+  }
+
+  .container {
+    padding: 0 16px;
+  }
+
+  /* 1. Section headers — compact & punchy on mobile */
+  .framer-section-header {
+    margin-bottom: 22px;
+  }
+  .framer-eyebrow {
+    padding: 4px 11px;
+    font-size: 0.7rem;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .framer-section-title {
+    font-size: clamp(1.55rem, 6.4vw, 2rem);
+    line-height: 1.14;
+    margin-bottom: 10px;
+  }
+  .framer-section-desc {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  /* 2. Hero — native mobile proportion & 2x2 trust grid */
+  .framer-pill-badge {
+    font-size: 0.72rem;
+    padding: 5px 12px;
+    gap: 7px;
+    margin-bottom: 16px;
+    max-width: 100%;
+    text-align: center;
+  }
+  .framer-hero-title {
+    font-size: clamp(2.05rem, 8.8vw, 2.65rem);
+    line-height: 1.08;
+    margin-bottom: 14px;
+  }
+  .framer-hero-desc {
+    font-size: 0.92rem;
+    line-height: 1.55;
+    max-width: 100%;
+    margin-bottom: 20px;
+  }
+  .framer-hero-actions {
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .framer-hero-actions .btn-framer-primary,
+  .framer-hero-actions .btn-framer-secondary {
+    width: 100%;
+    padding: 13px 20px;
+    font-size: 0.94rem;
+  }
+  .hero-trust-strip {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+    margin-top: 8px;
+    font-size: 0.74rem;
+  }
+  .hero-trust-strip > span {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 10px;
+    padding: 8px 10px;
+    text-align: center;
+    line-height: 1.3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .hero-moving-grills {
+    height: 260px;
+  }
+
+  /* 3. Partner marquee — slimmer on mobile */
+  .framer-partner-item {
+    font-size: 0.86rem;
+    padding: 6px 14px;
+    gap: 7px;
+  }
+  .framer-marquee-track {
+    gap: 14px;
+  }
+
+  /* 4. Bento Feature Cards — horizontal icon-left layout on mobile */
+  .framer-bento-grid,
+  .solutions-services-grid,
+  .solutions-security-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 12px;
+  }
+  .framer-bento-card {
+    border-radius: 16px;
+  }
+  .framer-bento-content {
+    display: grid;
+    grid-template-columns: 42px 1fr;
+    column-gap: 14px;
+    row-gap: 4px;
+    align-items: start;
+    padding: 18px 16px;
+    text-align: left;
+  }
+  .framer-bento-icon-wrap {
+    grid-row: 1 / span 2;
+    width: 42px;
+    height: 42px;
+    border-radius: 11px;
+    margin-bottom: 0;
+  }
+  .framer-bento-icon-wrap svg {
+    width: 20px;
+    height: 20px;
+  }
+  .framer-bento-title {
+    font-size: 1.05rem;
+    margin-bottom: 2px;
+    line-height: 1.25;
+  }
+  .framer-bento-desc {
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+
+  /* 5. How It Works Phases — sleek left-accent timeline cards on mobile */
+  .framer-phases-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .framer-phase-card {
+    padding: 18px 16px 18px 18px;
+    border-radius: 16px;
+    border-left: 3px solid var(--accent-neon);
+    text-align: left;
+  }
+  .framer-phase-badge {
+    margin-bottom: 8px;
+    font-size: 0.68rem;
+    padding: 3px 9px;
+  }
+  .framer-phase-title {
+    font-size: 1.08rem;
+    margin-bottom: 6px;
+  }
+  .framer-phase-desc {
+    font-size: 0.86rem;
+    line-height: 1.5;
+  }
+
+  /* 6. Interactive Use-Case Tabs — horizontal swipeable pill bar + compact panel */
+  .framer-tabs-nav {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    gap: 8px;
+    margin-bottom: 16px;
+    padding: 2px 2px 6px 2px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .framer-tabs-nav::-webkit-scrollbar {
+    display: none;
+  }
+  .framer-tab-btn {
+    flex-shrink: 0;
+    padding: 8px 16px;
+    font-size: 0.84rem;
+  }
+  .framer-tab-panel {
+    padding: 20px 16px;
+    gap: 18px;
+    border-radius: 16px;
+  }
+  .framer-tab-info h3 {
+    font-size: 1.25rem;
+    margin-bottom: 8px;
+  }
+  .framer-tab-info p {
+    font-size: 0.88rem;
+    line-height: 1.55;
+    margin-bottom: 14px;
+  }
+  .framer-tab-list {
+    gap: 10px;
+  }
+  .framer-tab-list-item {
+    font-size: 0.85rem;
+    align-items: flex-start;
+  }
+  .framer-tab-list-item svg {
+    margin-top: 2px;
+  }
+  .framer-tab-demo-cta {
+    padding: 18px 16px !important;
+    border-radius: 14px !important;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .framer-tab-demo-cta svg {
+    width: 26px !important;
+    height: 26px !important;
+    margin-bottom: 0 !important;
+  }
+  .framer-tab-demo-cta p {
+    font-size: 0.85rem !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+  }
+  .framer-tab-demo-cta .btn-framer-secondary {
+    margin-top: 4px !important;
+    width: 100%;
+    padding: 11px 16px;
+    font-size: 0.88rem;
+  }
+
+  /* 7. 6-Item Capability Grid — 2x3 compact Bento Grid on mobile! */
+  .framer-capability-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 16px;
+  }
+  .framer-cap-card {
+    padding: 15px 13px;
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+  .framer-cap-icon {
+    margin-bottom: 8px;
+  }
+  .framer-cap-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+  .framer-cap-title {
+    font-size: 0.92rem;
+    line-height: 1.25;
+    margin-bottom: 5px;
+  }
+  .framer-cap-desc {
+    font-size: 0.78rem;
+    line-height: 1.42;
+  }
+
+  /* 8. Comparison Matrix — Noryvex card first on mobile, compact rows */
+  .framer-comparison-grid {
+    gap: 14px;
+    margin-top: 16px;
+  }
+  .framer-comp-col.noryvex {
+    order: -1;
+  }
+  .framer-comp-col {
+    padding: 20px 16px;
+    border-radius: 16px;
+  }
+  .framer-comp-col-header {
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+  }
+  .framer-comp-col-title {
+    font-size: 1.15rem;
+  }
+  .framer-comp-list {
+    gap: 12px;
+  }
+  .framer-comp-row {
+    font-size: 0.86rem;
+    gap: 10px;
+  }
+
+  /* 9. Metrics Row — 3-column horizontal stat strip on mobile! */
+  .framer-metrics-row {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .framer-metric-box {
+    padding: 14px 6px;
+    border-radius: 14px;
+  }
+  .framer-metric-number {
+    font-size: clamp(1.2rem, 5.2vw, 1.65rem);
+    margin-bottom: 3px;
+  }
+  .framer-metric-label {
+    font-size: 0.7rem;
+    line-height: 1.25;
+  }
+
+  /* 10. Testimonials — Horizontal swipeable snap-carousel on mobile! */
+  .framer-testimonials-grid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 12px;
+    padding-bottom: 8px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .framer-testimonials-grid::-webkit-scrollbar {
+    display: none;
+  }
+  .framer-testimonial-card {
+    flex: 0 0 85%;
+    max-width: 85%;
+    scroll-snap-align: center;
+    padding: 20px 18px;
+    border-radius: 16px;
+  }
+  .framer-quote-text {
+    font-size: 0.9rem;
+    line-height: 1.55;
+    margin-bottom: 16px;
+  }
+  .framer-author-avatar {
+    width: 36px;
+    height: 36px;
+    font-size: 0.8rem;
+  }
+  .framer-author-name {
+    font-size: 0.88rem;
+  }
+  .framer-author-role {
+    font-size: 0.75rem;
+  }
+
+  /* 11. Tools Ticker — compact on mobile */
+  .framer-tools-section {
+    gap: 22px;
+    padding: 8px 0;
+  }
+  .framer-tools-title {
+    font-size: clamp(1.55rem, 6.2vw, 2rem);
+  }
+  .framer-tools-desc {
+    font-size: 0.9rem;
+  }
+  .framer-tools-cta .btn-framer-primary {
+    width: 100%;
+    padding: 13px 20px;
+    font-size: 0.94rem;
+  }
+  .tools-card {
+    width: 78px;
+    height: 58px;
+    border-radius: 11px;
+  }
+  .tools-card img {
+    width: 28px;
+    height: 28px;
+  }
+
+  /* 12. FAQ Accordion — compact mobile touch targets */
+  .framer-faq-container {
+    gap: 10px;
+  }
+  .framer-faq-item {
+    border-radius: 14px;
+  }
+  .framer-faq-trigger {
+    padding: 16px 16px;
+    font-size: 0.92rem;
+    gap: 12px;
+  }
+  .framer-faq-body {
+    padding: 0 16px 16px 16px;
+    font-size: 0.86rem;
+    line-height: 1.55;
+  }
+
+  /* 13. Zero-Risk Guarantee & Final CTA Banner */
+  .nrx-guarantee-card {
+    padding: 22px 16px;
+    border-radius: 18px;
+    gap: 20px;
+  }
+  .nrx-guarantee-box {
+    padding: 18px 16px;
+    border-radius: 14px;
+    gap: 12px;
+  }
+  .framer-cta-banner {
+    padding: 28px 18px;
+    border-radius: 18px;
+    min-height: auto;
+  }
+  .framer-cta-inner h2 {
+    font-size: clamp(1.5rem, 6vw, 1.9rem);
+    margin-bottom: 10px;
+  }
+  .framer-cta-inner p {
+    font-size: 0.88rem;
+    margin-bottom: 18px;
+  }
+  .framer-cta-actions {
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+  }
+  .framer-cta-actions .btn-framer-primary,
+  .framer-cta-actions .btn-framer-secondary {
+    width: 100%;
+    padding: 13px 18px;
+    font-size: 0.92rem;
+  }
+  .framer-cta-perks {
+    font-size: 0.75rem;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .cta-moving-grills {
+    height: 90px;
+    margin-top: 12px;
+  }
+}
+
+@media (max-width: 360px) {
+  .framer-capability-grid {
+    grid-template-columns: 1fr;
+  }
+  .hero-trust-strip {
+    grid-template-columns: 1fr;
+  }
+}
+
 
 

@@ -992,34 +992,83 @@ export default function LiveDemo({ setActivePage }) {
 
         /* ── Responsive ────────────────────────────── */
         @media (max-width: 1024px) {
-          .ld-hero-grid { grid-template-columns: 1fr; gap: 60px; }
-          .ld-right { order: -1; }
+          .ld-hero-grid { grid-template-columns: 1fr; gap: 36px; }
           .ld-float-label { display: none; }
-          .ld-how-grid { grid-template-columns: 1fr; gap: 16px; }
+          .ld-how-grid { grid-template-columns: 1fr; gap: 14px; margin-top: 24px; }
           .ld-how-arrow { display: none; }
         }
         @media (max-width: 768px) {
           .ld-hero {
-            padding: 100px 0 40px;
+            padding: 28px 0 36px;
           }
           .ld-headline {
-            font-size: clamp(2rem, 8vw, 2.6rem);
+            font-size: clamp(1.85rem, 7.5vw, 2.35rem);
+            line-height: 1.1;
           }
           .ld-sub {
-            font-size: 1rem;
-            margin-bottom: 24px;
+            font-size: 0.92rem;
+            margin-bottom: 18px;
+          }
+          /* Horizontal swipeable capability cards on mobile */
+          .ld-caps {
+            flex-direction: row;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 10px;
+            margin-bottom: 18px;
+            padding-bottom: 6px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+          }
+          .ld-caps::-webkit-scrollbar {
+            display: none;
+          }
+          .ld-cap-card {
+            flex: 0 0 82%;
+            max-width: 82%;
+            scroll-snap-align: center;
+            padding: 14px;
+          }
+          .ld-cap-card.active {
+            transform: none;
           }
           .ld-how {
-            padding: 60px 0;
+            padding: 40px 0;
+          }
+          .ld-how-card {
+            padding: 20px 18px;
+          }
+          .ld-how-num {
+            font-size: 2rem;
+            margin-bottom: 8px;
+          }
+          .ld-how-icon {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 12px;
           }
           .ld-cta {
-            padding: 80px 0;
+            padding: 48px 0;
           }
         }
         @media (max-width: 600px) {
-          .ld-phone-frame { width: 300px; height: 620px; }
+          .ld-phone-frame {
+            width: min(325px, calc(100vw - 32px));
+            height: 560px;
+            border-width: 7px;
+            border-radius: 36px;
+          }
+          .ld-avatar-wrap {
+            width: 96px;
+            height: 96px;
+          }
+          .ld-avatar-core {
+            width: 68px;
+            height: 68px;
+          }
           .ld-trust-row { gap: 8px; }
-          .ld-cta-btns { flex-direction: column; align-items: center; }
+          .ld-cta-btns { flex-direction: column; align-items: stretch; }
+          .ld-cta-btns .btn { width: 100%; }
         }
       `}</style>
     </div>

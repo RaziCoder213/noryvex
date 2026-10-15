@@ -85,7 +85,7 @@ export default function Solutions({ setActivePage }) {
           <h2 className="framer-section-title">What we build and manage for you.</h2>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: 'var(--card-gap)' }}>
+        <div className="solutions-services-grid">
           {services.map((svc, i) => (
             <div key={i} className="framer-bento-card" style={{ display: 'flex', flexDirection: 'column' }}>
               <div className="framer-bento-content">
@@ -110,11 +110,11 @@ export default function Solutions({ setActivePage }) {
             </div>
             <h2 className="framer-section-title">
               <ShieldAlert size={28} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '10px', color: 'var(--accent-neon)' }} />
-              HIPAA Compliance & Patient Data Security
+              HIPAA Compliance &amp; Patient Data Security
             </h2>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
+          <div className="solutions-security-grid">
             {securityPoints.map((sp, i) => (
               <div key={i} style={{
                 background: 'var(--bg-charcoal)',
@@ -123,12 +123,12 @@ export default function Solutions({ setActivePage }) {
                 padding: 'var(--card-padding)',
               }}>
                 <div style={{
-                  display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px'
+                  display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px'
                 }}>
                   <CheckCircle2 size={18} style={{ color: 'var(--accent-neon)', flexShrink: 0 }} />
                   <h4 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-white)', margin: 0 }}>{sp.title}</h4>
                 </div>
-                <p style={{ color: 'var(--text-gray)', fontSize: '0.9rem', lineHeight: 1.6, margin: 0 }}>
+                <p style={{ color: 'var(--text-gray)', fontSize: '0.88rem', lineHeight: 1.55, margin: 0 }}>
                   {sp.desc}
                 </p>
               </div>

@@ -185,8 +185,8 @@ export default function Contact({ addToast, initialTab }) {
 
         {/* ── DEMO REQUEST FORM ──────────────────────────── */}
         {activeView === 'form' && !submitted && (
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '40px', maxWidth: '900px', margin: '0 auto' }}>
-            <form onSubmit={handleFormSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div className="contact-form-grid">
+            <form onSubmit={handleFormSubmit} className="contact-form-card">
               <div className="contact-field">
                 <label>Your name *</label>
                 <div className="contact-input-wrap">
@@ -494,6 +494,23 @@ export default function Contact({ addToast, initialTab }) {
       </section>
 
       <style>{`
+        .contact-form-grid {
+          display: grid;
+          grid-template-columns: 1.1fr 0.9fr;
+          gap: 36px;
+          max-width: 920px;
+          margin: 0 auto;
+          align-items: start;
+        }
+        .contact-form-card {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+          background: var(--bg-dark);
+          border: 1px solid var(--border-light);
+          border-radius: 18px;
+          padding: 28px;
+        }
         .contact-field {
           display: flex;
           flex-direction: column;
@@ -530,10 +547,15 @@ export default function Contact({ addToast, initialTab }) {
         .contact-input-wrap input:focus {
           border-color: var(--accent-neon-border);
         }
-        @media (max-width: 768px) {
-          .contact-field + .contact-field { }
-          div[style*="gridTemplateColumns: '1fr 1fr'"] {
-            grid-template-columns: 1fr !important;
+        @media (max-width: 820px) {
+          .contact-form-grid {
+            grid-template-columns: 1fr;
+            gap: 20px;
+          }
+          .contact-form-card {
+            padding: 20px 16px;
+            border-radius: 16px;
+            gap: 14px;
           }
         }
       `}</style>
