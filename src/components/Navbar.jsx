@@ -82,7 +82,7 @@ export default function Navbar({ activePage, setActivePage }) {
         </a>
 
         {/* Desktop Navigation */}
-        <nav className="nav-menu" ref={navMenuRef}>
+        <nav className="nav-menu" ref={navMenuRef} aria-label="Main Navigation">
           {/* Sliding glider pill — travels between active links */}
           <div
             className="nav-glider"
@@ -93,27 +93,29 @@ export default function Navbar({ activePage, setActivePage }) {
             }}
           />
           {navLinks.map((link) => (
-            <button
+            <a
               key={link.id}
+              href={`/${link.id}`}
               data-navid={link.id}
-              onClick={() => handleNavClick(link.id)}
+              onClick={(e) => { e.preventDefault(); handleNavClick(link.id); }}
               className={`nav-link ${activePage === link.id ? 'active' : ''}`}
             >
               {link.name}
-            </button>
+            </a>
           ))}
         </nav>
 
         <div className="nav-actions">
-          <button 
-            onClick={() => handleNavClick('contact', 'trial')} 
+          <a 
+            href="/contact"
+            onClick={(e) => { e.preventDefault(); handleNavClick('contact', 'trial'); }} 
             className="btn btn-outline-neon btn-sm nav-cta"
           >
             Get Free Clinic Demo <ArrowUpRight size={16} />
-          </button>
+          </a>
           
           {/* Mobile Menu Toggle */}
-          <button className="mobile-toggle" onClick={() => setIsOpen(!isOpen)}>
+          <button className="mobile-toggle" onClick={() => setIsOpen(!isOpen)} aria-label="Toggle navigation menu">
             {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
@@ -123,21 +125,23 @@ export default function Navbar({ activePage, setActivePage }) {
       <div className={`mobile-nav ${isOpen ? 'open' : ''}`}>
         <div className="mobile-nav-links">
           {navLinks.map((link) => (
-            <button
+            <a
               key={link.id}
-              onClick={() => handleNavClick(link.id)}
+              href={`/${link.id}`}
+              onClick={(e) => { e.preventDefault(); handleNavClick(link.id); }}
               className={`mobile-link ${activePage === link.id ? 'active' : ''}`}
             >
               {link.name}
-            </button>
+            </a>
           ))}
-          <button
-            onClick={() => handleNavClick('contact', 'trial')}
+          <a
+            href="/contact"
+            onClick={(e) => { e.preventDefault(); handleNavClick('contact', 'trial'); }}
             className="btn btn-primary mobile-cta"
-            style={{ width: '100%', marginBottom: '12px' }}
+            style={{ width: '100%', marginBottom: '12px', textDecoration: 'none' }}
           >
             Get Free Clinic Demo <ArrowUpRight size={16} />
-          </button>
+          </a>
         </div>
       </div>
       
@@ -236,6 +240,7 @@ export default function Navbar({ activePage, setActivePage }) {
           z-index: 1;
           transition: color 0.2s ease;
           white-space: nowrap;
+          text-decoration: none;
         }
 
         .nav-link:hover {
@@ -268,6 +273,7 @@ export default function Navbar({ activePage, setActivePage }) {
           cursor: pointer;
           font-family: var(--font-sans);
           transition: all 0.2s var(--ease-out);
+          text-decoration: none;
         }
         .nav-cta:hover {
           background: #FFFFFF;
@@ -336,6 +342,7 @@ export default function Navbar({ activePage, setActivePage }) {
           align-items: center;
           justify-content: space-between;
           transition: var(--transition-fast);
+          text-decoration: none;
         }
         
         .mobile-link::after {

@@ -20,15 +20,15 @@ export default function NotFound({ setActivePage }) {
         </p>
 
         <div className="nrx-404-actions">
-          <button onClick={() => setActivePage('home')} className="nrx-404-btn primary">
+          <a href="/" onClick={(e) => { e.preventDefault(); setActivePage('home'); }} className="nrx-404-btn primary" style={{ textDecoration: 'none' }}>
             <Home size={18} />
             <span>Return to Home</span>
-          </button>
+          </a>
           
-          <button onClick={() => setActivePage('contact')} className="nrx-404-btn secondary">
+          <a href="/contact" onClick={(e) => { e.preventDefault(); setActivePage('contact'); }} className="nrx-404-btn secondary" style={{ textDecoration: 'none' }}>
             <ArrowLeft size={18} />
             <span>Book a Strategy Call</span>
-          </button>
+          </a>
         </div>
       </div>
 

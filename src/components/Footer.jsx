@@ -13,10 +13,10 @@ export default function Footer({ setActivePage, addToast }) {
     <footer className="footer-wrapper">
       <div className="container footer-container">
         <div className="footer-brand-section">
-          <div className="footer-logo-title" onClick={() => handleNavClick('home')}>
+          <a href="/" className="footer-logo-title" onClick={(e) => { e.preventDefault(); handleNavClick('home'); }} style={{ textDecoration: 'none' }}>
             <img src="/logo.png" alt="Noryvex Logo" className="footer-logo" />
             <span className="footer-title" style={{ textTransform: 'none', letterSpacing: 'normal' }}>Noryvex</span>
-          </div>
+          </a>
           <p className="footer-tagline">Never miss another dental patient call.</p>
           <p className="footer-desc">USA AI automation agency building custom 24/7 AI voice receptionists, dental clinic call automation, and intelligent CRM workflows across all 50 states.</p>
         </div>
@@ -24,21 +24,21 @@ export default function Footer({ setActivePage, addToast }) {
         <div className="footer-links-grid">
           <div className="footer-link-group">
             <span className="group-title">Company</span>
-            <button onClick={() => handleNavClick('home')} className="footer-btn-link">Home</button>
-            <button onClick={() => handleNavClick('solutions')} className="footer-btn-link">Solutions</button>
-            <button onClick={() => handleNavClick('live-demo')} className="footer-btn-link">Live Demo</button>
-            <button onClick={() => handleNavClick('calculator')} className="footer-btn-link">ROI Calculator</button>
-            <button onClick={() => handleNavClick('about')} className="footer-btn-link">About Us</button>
-            <button onClick={() => handleNavClick('contact')} className="footer-btn-link">Contact</button>
+            <a href="/" onClick={(e) => { e.preventDefault(); handleNavClick('home'); }} className="footer-btn-link">Home</a>
+            <a href="/solutions" onClick={(e) => { e.preventDefault(); handleNavClick('solutions'); }} className="footer-btn-link">Solutions</a>
+            <a href="/live-demo" onClick={(e) => { e.preventDefault(); handleNavClick('live-demo'); }} className="footer-btn-link">Live Demo</a>
+            <a href="/calculator" onClick={(e) => { e.preventDefault(); handleNavClick('calculator'); }} className="footer-btn-link">ROI Calculator</a>
+            <a href="/about" onClick={(e) => { e.preventDefault(); handleNavClick('about'); }} className="footer-btn-link">About Us</a>
+            <a href="/contact" onClick={(e) => { e.preventDefault(); handleNavClick('contact'); }} className="footer-btn-link">Contact</a>
           </div>
 
           <div className="footer-link-group">
             <span className="group-title">AI Solutions</span>
-            <button onClick={() => handleNavClick('solutions')} className="footer-btn-link">AI Voice Receptionists</button>
-            <button onClick={() => handleNavClick('solutions')} className="footer-btn-link">Dental Call Automation</button>
-            <button onClick={() => handleNavClick('solutions')} className="footer-btn-link">AI Workflow &amp; CRM Sync</button>
-            <button onClick={() => handleNavClick('solutions')} className="footer-btn-link">Custom AI Software</button>
-            <button onClick={() => handleNavClick('live-demo')} className="footer-btn-link">Interactive Voice Demo</button>
+            <a href="/solutions" onClick={(e) => { e.preventDefault(); handleNavClick('solutions'); }} className="footer-btn-link">AI Voice Receptionists</a>
+            <a href="/solutions" onClick={(e) => { e.preventDefault(); handleNavClick('solutions'); }} className="footer-btn-link">Dental Call Automation</a>
+            <a href="/solutions" onClick={(e) => { e.preventDefault(); handleNavClick('solutions'); }} className="footer-btn-link">AI Workflow &amp; CRM Sync</a>
+            <a href="/solutions" onClick={(e) => { e.preventDefault(); handleNavClick('solutions'); }} className="footer-btn-link">Custom AI Software</a>
+            <a href="/live-demo" onClick={(e) => { e.preventDefault(); handleNavClick('live-demo'); }} className="footer-btn-link">Interactive Voice Demo</a>
           </div>
 
           <div className="footer-link-group">
@@ -56,8 +56,8 @@ export default function Footer({ setActivePage, addToast }) {
 
           <div className="footer-link-group">
             <span className="group-title">Platform &amp; Legal</span>
-            <button onClick={() => handleNavClick('privacy')} className="footer-btn-link">Privacy Policy</button>
-            <button onClick={() => handleNavClick('terms')} className="footer-btn-link">Terms of Service</button>
+            <a href="/privacy" onClick={(e) => { e.preventDefault(); handleNavClick('privacy'); }} className="footer-btn-link">Privacy Policy</a>
+            <a href="/terms" onClick={(e) => { e.preventDefault(); handleNavClick('terms'); }} className="footer-btn-link">Terms of Service</a>
             <button onClick={() => handleNavClick('admin')} className="footer-btn-link" style={{ color: 'var(--accent-neon)', opacity: 0.85 }}>Admin Console</button>
           </div>
         </div>
@@ -67,8 +67,8 @@ export default function Footer({ setActivePage, addToast }) {
         <div className="container footer-bottom-container">
           <span className="copyright">© {currentYear} Noryvex AI Automation Agency. All rights reserved.</span>
           <div className="legal-links">
-            <button className="legal-link" onClick={() => handleNavClick('privacy')}>Privacy Policy</button>
-            <button className="legal-link" onClick={() => handleNavClick('terms')}>Terms of Service</button>
+            <a href="/privacy" className="legal-link" onClick={(e) => { e.preventDefault(); handleNavClick('privacy'); }}>Privacy Policy</a>
+            <a href="/terms" className="legal-link" onClick={(e) => { e.preventDefault(); handleNavClick('terms'); }}>Terms of Service</a>
             <button className="legal-link" onClick={() => handleNavClick('admin')}>Admin</button>
           </div>
         </div>
@@ -171,6 +171,7 @@ export default function Footer({ setActivePage, addToast }) {
           width: fit-content;
           transition: var(--transition-fast);
           padding: 0;
+          text-decoration: none;
         }
         
         .footer-btn-link:hover {

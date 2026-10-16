@@ -1,30 +1,34 @@
 {
   "company": {
     "name": "Noryvex",
-    "alternateNames": ["Noryvex AI", "TryNoryvex"],
-    "tagline": "Automate. Communicate. Grow.",
-    "description": "Noryvex is a specialized done-for-you AI development agency that builds, deploys, and manages custom AI Voice Agents, autonomous business receptionists, workflow automation pipelines, and enterprise software.",
+    "legalName": "Noryvex AI Automation Agency",
+    "alternateNames": ["Noryvex AI", "TryNoryvex", "Noryvex AI Automation Agency", "Noryvex Dental Voice AI"],
+    "tagline": "Never miss another dental patient call.",
+    "description": "Noryvex is a premier USA AI automation agency and managed AI receptionist provider founded by Lead AI Architect Muhammad Razi. We build, deploy, and manage custom 24/7 AI voice receptionists, HIPAA-compliant dental clinic call agents, CRM workflow automations, and bespoke artificial intelligence software across all 50 US states.",
     "website": "https://trynoryvex.com",
     "founded": "2026",
+    "areaServed": ["United States", "Canada", "United Kingdom"],
     "emails": {
       "general": "hello@trynoryvex.com",
       "founder": "razi@trynoryvex.com"
     },
     "founder": {
       "name": "Muhammad Razi",
-      "title": "Founder & Lead AI Architect / Full-Stack AI Developer",
+      "title": "Founder & Lead AI Architect",
       "linkedin": "https://www.linkedin.com/in/mrazi-dev/",
+      "github": "https://github.com/RaziCoder213",
       "email": "razi@trynoryvex.com"
     },
     "socials": {
       "companyLinkedin": "https://www.linkedin.com/company/noryvex",
-      "founderLinkedin": "https://www.linkedin.com/in/mrazi-dev/"
+      "founderLinkedin": "https://www.linkedin.com/in/mrazi-dev/",
+      "founderGithub": "https://github.com/RaziCoder213"
     },
     "stats": {
-      "agentsDeployed": "150+",
-      "clientRetention": "98%",
-      "systemUptime": "99.9%",
-      "targetLatency": "optimized for fast response"
+      "callCoverage": "24/7",
+      "voiceLatency": "<500ms",
+      "setupTime": "48 hours",
+      "demoOffer": "Free custom clinic demo built in 48 hours before any payment commitment"
     }
   }
 }

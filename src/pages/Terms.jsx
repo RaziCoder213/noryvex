@@ -9,7 +9,7 @@ export default function Terms({ setActivePage }) {
           <div className="legal-hero-icon"><FileText size={28} /></div>
           <span className="section-tag">Legal</span>
           <h1 className="legal-title">Terms of Service</h1>
-          <p className="legal-subtitle">Last updated: July 23, 2025</p>
+          <p className="legal-subtitle">Last updated: October 16, 2026</p>
         </div>
       </div>
 
@@ -18,16 +18,16 @@ export default function Terms({ setActivePage }) {
 
           <section className="legal-section">
             <h2>1. Acceptance of Terms</h2>
-            <p>By accessing or using the Noryvex website and services ("Services"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, please do not use our Services. These Terms apply to all visitors, users, and others who access or use our Services.</p>
+            <p>By accessing or using the Noryvex website (<a href="/" onClick={(e) => { if (setActivePage) { e.preventDefault(); setActivePage('home'); } }}>trynoryvex.com</a>) and services ("Services"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, please do not use our Services. These Terms apply to all visitors, users, and others who access or use our Services.</p>
           </section>
 
           <section className="legal-section">
             <h2>2. Description of Services</h2>
             <p>Noryvex provides AI-powered business solutions including, but not limited to:</p>
             <ul>
-              <li>AI Voice Agents and virtual receptionists</li>
+              <li>AI Voice Agents and 24/7 virtual receptionists for dental clinics and businesses</li>
               <li>Business process and workflow automation</li>
-              <li>CRM integrations and data pipeline engineering</li>
+              <li>Practice Management System (Dentrix, Eaglesoft, Open Dental) &amp; CRM integrations</li>
               <li>Custom software and SaaS development</li>
               <li>Web and mobile application development</li>
               <li>API integrations and system connectivity</li>
@@ -67,7 +67,7 @@ export default function Terms({ setActivePage }) {
             <h2>6. Payment Terms</h2>
             <p>All pricing and payment terms are outlined in individual client agreements. General terms include:</p>
             <ul>
-              <li>A deposit may be required before project commencement</li>
+              <li>Custom AI voice receptionist demo prototypes are built at no cost prior to service activation</li>
               <li>Invoices are due within the timeframe specified in the agreement</li>
               <li>Late payments may incur interest charges as specified in the contract</li>
               <li>Noryvex reserves the right to pause or terminate services for unpaid invoices</li>
@@ -114,9 +114,10 @@ export default function Terms({ setActivePage }) {
             <h2>14. Contact Us</h2>
             <p>For questions about these Terms, please reach out:</p>
             <div className="legal-contact-card">
-              <p><strong>Noryvex</strong></p>
+              <p><strong>Noryvex AI Automation Agency</strong></p>
               <p>Email: <a href="mailto:hello@trynoryvex.com">hello@trynoryvex.com</a></p>
               <p>LinkedIn: <a href="https://www.linkedin.com/company/noryvex" target="_blank" rel="noopener noreferrer">linkedin.com/company/noryvex</a></p>
+              <p>Contact Page: <a href="/contact" onClick={(e) => { if (setActivePage) { e.preventDefault(); setActivePage('contact'); } }}>trynoryvex.com/contact</a></p>
             </div>
           </section>
 
@@ -126,7 +127,7 @@ export default function Terms({ setActivePage }) {
       <style>{`
         .legal-page { min-height: 100vh; }
         .legal-hero {
-          padding: 120px 0 60px;
+          padding: 96px 0 48px;
           background: linear-gradient(180deg, rgba(199,255,61,0.04) 0%, transparent 100%);
           border-bottom: 1px solid var(--border-light);
           text-align: center;
@@ -140,13 +141,13 @@ export default function Terms({ setActivePage }) {
           color: var(--accent-neon);
           margin: 0 auto 20px;
         }
-        .legal-title { font-size: clamp(2.2rem, 5vw, 3.5rem); margin: 12px 0 8px; }
+        .legal-title { font-size: clamp(2rem, 5vw, 3.2rem); margin: 12px 0 8px; }
         .legal-subtitle { font-size: 0.9rem; color: var(--text-muted); }
-        .legal-body { padding: 80px 24px; }
+        .legal-body { padding: 64px 20px; }
         .legal-content { max-width: 780px; margin: 0 auto; }
-        .legal-section { margin-bottom: 48px; }
+        .legal-section { margin-bottom: 40px; }
         .legal-section h2 {
-          font-size: 1.25rem;
+          font-size: 1.2rem;
           color: var(--text-white);
           margin-bottom: 14px;
           padding-bottom: 10px;
@@ -162,9 +163,14 @@ export default function Terms({ setActivePage }) {
           background: rgba(199,255,61,0.03);
           border: 1px solid var(--border-light);
           border-radius: 12px;
-          padding: 24px; margin-top: 16px;
+          padding: 20px; margin-top: 16px;
         }
         .legal-contact-card p { margin-bottom: 8px; }
+        @media (max-width: 768px) {
+          .legal-hero { padding: 56px 0 36px; }
+          .legal-body { padding: 40px 16px; }
+          .legal-section { margin-bottom: 32px; }
+        }
       `}</style>
     </div>
   );

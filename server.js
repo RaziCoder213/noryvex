@@ -719,47 +719,77 @@ app.get('/favicon.ico', (req, res) => {
   res.status(404).end();
 });
 
-// Server-side SEO metadata map for crawlers hitting sub-routes directly
+// Server-side SEO metadata & semantic content map for crawlers hitting routes directly
 const SSR_ROUTE_META = {
   '/': {
     title: 'Noryvex — AI Automation Agency USA & 24/7 AI Voice Receptionists',
     description: 'Noryvex is a premier USA AI automation agency building custom 24/7 AI voice receptionists, dental clinic AI answering agents, and intelligent workflow automation. Free custom demo built in 48 hours.',
     canonical: 'https://trynoryvex.com/',
+    h1: 'Noryvex — USA AI Automation Agency &amp; 24/7 AI Voice Receptionist for Dental Clinics',
+    lead: 'Noryvex is a done-for-you AI automation agency and managed artificial intelligence voice receptionist provider serving dental clinics, medical practices, and high-growth businesses across all 50 US states. We engineer and manage custom AI voice receptionists that answer inbound calls 24/7, qualify callers, handle clinic FAQs, capture appointment requests, and sync directly with Dentrix, Eaglesoft, Open Dental, and your CRM.',
   },
   '/solutions': {
     title: 'AI Automation Solutions & Custom Voice AI Agents | Noryvex USA',
     description: 'Explore Noryvex artificial intelligence solutions: 24/7 AI Voice Receptionists, Dental Clinic Call Automation, CRM & PMS Workflow Sync (Dentrix, Eaglesoft, Open Dental), and Custom AI Software Development.',
     canonical: 'https://trynoryvex.com/solutions',
+    h1: 'AI Automation Solutions &amp; Custom 24/7 AI Voice Receptionists',
+    lead: 'Complete voice and workflow infrastructure built and managed by Noryvex: 24/7 AI Voice Receptionists, Automated Appointment Capture, Dental FAQ &amp; Insurance Handling, Emergency Call Escalation, and Direct Dentrix, Eaglesoft &amp; Open Dental PMS Sync.',
   },
   '/live-demo': {
     title: 'Live AI Voice Receptionist Demo — Hear Noryvex AI in Action',
     description: 'Experience our sub-500ms latency AI voice receptionist live in your browser. Hear how Noryvex AI answers calls, handles clinic FAQs, triages emergencies, and books appointments in real time.',
     canonical: 'https://trynoryvex.com/live-demo',
+    h1: 'Live AI Voice Receptionist Demo — Hear Noryvex AI in Action',
+    lead: 'Experience our sub-500ms latency AI voice receptionist live in your browser. Hear how Chloe answers patient calls, handles dental clinic FAQs, triages urgent emergencies, and captures appointment requests in real time.',
   },
   '/calculator': {
     title: 'Missed Call Revenue Calculator for Dental Clinics & Businesses | Noryvex',
     description: 'Calculate how much monthly revenue your dental practice or business loses to unanswered calls and voicemail. Free instant ROI calculator by Noryvex AI Automation Agency.',
     canonical: 'https://trynoryvex.com/calculator',
+    h1: 'Missed Call Revenue Calculator for Dental Clinics &amp; Businesses',
+    lead: 'Calculate how much monthly revenue your dental practice or service business loses to unanswered calls and voicemail with our transparent, step-by-step ROI calculator.',
   },
   '/about': {
     title: 'About Noryvex & Founder Muhammad Razi | USA AI Automation Agency',
     description: 'Meet Muhammad Razi, Founder & Lead AI Architect at Noryvex. Learn how our USA AI automation agency engineers founder-reviewed, HIPAA-compliant 24/7 AI voice receptionists in 48 hours.',
     canonical: 'https://trynoryvex.com/about',
+    h1: 'About Noryvex &amp; Founder Muhammad Razi — USA AI Automation Agency',
+    lead: 'Meet Muhammad Razi, Founder &amp; Lead AI Architect at Noryvex. Every AI voice receptionist and automation pipeline is founder-reviewed, sandbox-tested, and deployed within 48 hours under HIPAA-compliant security.',
   },
   '/contact': {
     title: 'Claim Your Free Custom AI Demo | Contact Noryvex AI Agency',
     description: 'Get a free custom AI voice receptionist demo built specifically for your clinic or business in 48 hours. Book a strategy call with Noryvex or request your risk-free prototype today.',
     canonical: 'https://trynoryvex.com/contact',
+    h1: 'Claim Your Free Custom AI Voice Receptionist Demo',
+    lead: 'We build a working custom AI receptionist demo using your real clinic or business name, services, hours, and FAQs within 48 hours at zero cost. Test it live before paying a single dollar.',
+  },
+  '/trial': {
+    title: 'Claim Your Free Custom AI Demo | Contact Noryvex AI Agency',
+    description: 'Get a free custom AI voice receptionist demo built specifically for your clinic or business in 48 hours. Book a strategy call with Noryvex or request your risk-free prototype today.',
+    canonical: 'https://trynoryvex.com/contact',
+    h1: 'Claim Your Free Custom AI Voice Receptionist Demo',
+    lead: 'We build a working custom AI receptionist demo using your real clinic or business name, services, hours, and FAQs within 48 hours at zero cost.',
+  },
+  '/call': {
+    title: 'Book a Strategy Call | Noryvex AI Automation Agency',
+    description: 'Book a 1-on-1 strategy call with Muhammad Razi at Noryvex to discuss custom 24/7 AI voice receptionists and workflow automation for your practice.',
+    canonical: 'https://trynoryvex.com/contact',
+    h1: 'Book a Strategy Call with Noryvex AI Automation Agency',
+    lead: 'Schedule a 15-minute discovery and strategy session to see how a custom 24/7 AI voice receptionist integrates with your clinic or business.',
   },
   '/privacy': {
     title: 'Privacy Policy & HIPAA Data Security | Noryvex AI',
     description: 'Read the Noryvex Privacy Policy — how we protect patient and business data using TLS 1.3 encryption, AES-256 storage, signed HIPAA BAAs, and zero public model training.',
     canonical: 'https://trynoryvex.com/privacy',
+    h1: 'Privacy Policy &amp; HIPAA Data Security — Noryvex',
+    lead: 'How Noryvex protects client and patient information using TLS 1.3 in-transit encryption, AES-256 storage, signed HIPAA Business Associate Agreements (BAAs), and strict access controls.',
   },
   '/terms': {
     title: 'Terms of Service | Noryvex AI Automation Agency',
     description: 'Read the Noryvex Terms of Service governing the use of our AI voice receptionists, workflow automation systems, and custom software services.',
     canonical: 'https://trynoryvex.com/terms',
+    h1: 'Terms of Service — Noryvex AI Automation Agency',
+    lead: 'Terms and conditions governing the use of the Noryvex website, AI voice receptionists, workflow automation systems, and custom software services.',
   },
 };
 
@@ -770,6 +800,13 @@ app.use((req, res, next) => {
   }
   if (req.path.startsWith('/assets/') || req.path.startsWith('/src/') || /\.[a-zA-Z0-9]+$/.test(req.path)) {
     return res.status(404).type('text/plain').send('Resource not found');
+  }
+
+  // Canonical trailing-slash redirect (e.g., /solutions/ -> /solutions) to prevent duplicate URLs
+  if (req.path.length > 1 && req.path.endsWith('/')) {
+    const targetPath = req.path.slice(0, -1).toLowerCase();
+    const query = req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '';
+    return res.redirect(301, targetPath + query);
   }
 
   // SPA Route handler: serve index.html with route-specific SEO tags injected for crawlers
@@ -783,26 +820,48 @@ app.use((req, res, next) => {
   const cleanPath = req.path === '/' ? '/' : req.path.replace(/\/$/, '').toLowerCase();
   const routeMeta = SSR_ROUTE_META[cleanPath];
 
-  if (routeMeta && fs.existsSync(indexFile)) {
+  if (fs.existsSync(indexFile)) {
     try {
       let html = fs.readFileSync(indexFile, 'utf8');
+
+      if (routeMeta) {
+        html = html
+          .replace(/<title>[\s\S]*?<\/title>/, `<title>${routeMeta.title}</title>`)
+          .replace(/<link rel="canonical" href="[^"]*"\s*\/?>/, `<link rel="canonical" href="${routeMeta.canonical}" />`)
+          .replace(/<meta name="description" content="[^"]*"\s*\/?>/, `<meta name="description" content="${routeMeta.description}" />`)
+          .replace(/<meta property="og:url" content="[^"]*"\s*\/?>/, `<meta property="og:url" content="${routeMeta.canonical}" />`)
+          .replace(/<meta property="og:title" content="[^"]*"\s*\/?>/, `<meta property="og:title" content="${routeMeta.title}" />`)
+          .replace(/<meta property="og:description" content="[^"]*"\s*\/?>/, `<meta property="og:description" content="${routeMeta.description}" />`)
+          .replace(/<meta name="twitter:url" content="[^"]*"\s*\/?>/, `<meta name="twitter:url" content="${routeMeta.canonical}" />`)
+          .replace(/<meta name="twitter:title" content="[^"]*"\s*\/?>/, `<meta name="twitter:title" content="${routeMeta.title}" />`)
+          .replace(/<meta name="twitter:description" content="[^"]*"\s*\/?>/, `<meta name="twitter:description" content="${routeMeta.description}" />`)
+          .replace(/<h1 id="ssr-heading">[\s\S]*?<\/h1>/, `<h1 id="ssr-heading">${routeMeta.h1}</h1>`)
+          .replace(/<p id="ssr-description">[\s\S]*?<\/p>/, `<p id="ssr-description">${routeMeta.lead}</p>`);
+        return res.status(200).type('html').send(html);
+      }
+
+      if (cleanPath === '/admin') {
+        html = html
+          .replace(/<title>[\s\S]*?<\/title>/, '<title>Admin Console | Noryvex</title>')
+          .replace(/<meta name="robots" content="[^"]*"\s*\/?>/, '<meta name="robots" content="noindex, nofollow" />')
+          .replace(/<meta name="googlebot" content="[^"]*"\s*\/?>/, '<meta name="googlebot" content="noindex, nofollow" />');
+        return res.status(200).type('html').send(html);
+      }
+
+      // Unknown route: return true HTTP 404 with noindex to prevent Soft-404 penalties in Google Search Console
       html = html
-        .replace(/<title>[\s\S]*?<\/title>/, `<title>${routeMeta.title}</title>`)
-        .replace(/<link rel="canonical" href="[^"]*"\s*\/?>/, `<link rel="canonical" href="${routeMeta.canonical}" />`)
-        .replace(/<meta name="description" content="[^"]*"\s*\/?>/, `<meta name="description" content="${routeMeta.description}" />`)
-        .replace(/<meta property="og:url" content="[^"]*"\s*\/?>/, `<meta property="og:url" content="${routeMeta.canonical}" />`)
-        .replace(/<meta property="og:title" content="[^"]*"\s*\/?>/, `<meta property="og:title" content="${routeMeta.title}" />`)
-        .replace(/<meta property="og:description" content="[^"]*"\s*\/?>/, `<meta property="og:description" content="${routeMeta.description}" />`)
-        .replace(/<meta name="twitter:url" content="[^"]*"\s*\/?>/, `<meta name="twitter:url" content="${routeMeta.canonical}" />`)
-        .replace(/<meta name="twitter:title" content="[^"]*"\s*\/?>/, `<meta name="twitter:title" content="${routeMeta.title}" />`)
-        .replace(/<meta name="twitter:description" content="[^"]*"\s*\/?>/, `<meta name="twitter:description" content="${routeMeta.description}" />`);
-      return res.type('html').send(html);
+        .replace(/<title>[\s\S]*?<\/title>/, '<title>404 — Page Not Found | Noryvex</title>')
+        .replace(/<meta name="robots" content="[^"]*"\s*\/?>/, '<meta name="robots" content="noindex, nofollow" />')
+        .replace(/<meta name="googlebot" content="[^"]*"\s*\/?>/, '<meta name="googlebot" content="noindex, nofollow" />')
+        .replace(/<h1 id="ssr-heading">[\s\S]*?<\/h1>/, '<h1 id="ssr-heading">404 — Page Not Found</h1>')
+        .replace(/<p id="ssr-description">[\s\S]*?<\/p>/, '<p id="ssr-description">The requested page does not exist. Return to the Noryvex homepage or contact our team.</p>');
+      return res.status(404).type('html').send(html);
     } catch (e) {
       console.error('Error injecting SSR meta tags:', e);
     }
   }
 
-  res.sendFile(indexFile);
+  res.status(routeMeta || cleanPath === '/admin' ? 200 : 404).sendFile(indexFile);
 });
 
 if (!process.env.VERCEL) {

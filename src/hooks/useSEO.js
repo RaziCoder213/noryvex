@@ -83,7 +83,25 @@ function setCanonical(url) {
 
 export default function useSEO(pageId) {
   useEffect(() => {
+    if (pageId === 'not-found') {
+      document.title = '404 — Page Not Found | Noryvex';
+      setMeta('robots', 'noindex, nofollow');
+      setMeta('googlebot', 'noindex, nofollow');
+      return;
+    }
+
+    if (pageId === 'admin') {
+      document.title = 'Admin Console | Noryvex';
+      setMeta('robots', 'noindex, nofollow');
+      setMeta('googlebot', 'noindex, nofollow');
+      return;
+    }
+
     const meta = PAGE_META[pageId] || PAGE_META.home;
+
+    // Ensure indexable pages have index, follow
+    setMeta('robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
+    setMeta('googlebot', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
 
     // Title
     document.title = meta.title;

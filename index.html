@@ -252,7 +252,7 @@
     }
     </script>
 
-    <!-- 3. WebSite + SearchAction -->
+    <!-- 3. WebSite -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -264,14 +264,6 @@
       "description": "USA AI Automation Agency building custom 24/7 AI voice receptionists, dental clinic call automation, and intelligent CRM workflows.",
       "publisher": {
         "@id": "https://trynoryvex.com/#organization"
-      },
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": {
-          "@type": "EntryPoint",
-          "urlTemplate": "https://trynoryvex.com/?s={search_term_string}"
-        },
-        "query-input": "required name=search_term_string"
       },
       "inLanguage": "en-US"
     }
@@ -450,26 +442,32 @@
     </script>
 
   </head>
-  <body>
+  <body style="margin:0;background-color:#08080a;color:#F8FAFC;">
     <div id="root">
-      <!-- Semantic Static Fallback for Search Engines and AI Crawlers -->
-      <header style="display:none;">
-        <nav aria-label="Primary Navigation">
-          <a href="https://trynoryvex.com/">Noryvex — AI Automation Agency USA</a>
-          <a href="https://trynoryvex.com/solutions">AI Voice Agents &amp; Automation Solutions</a>
-          <a href="https://trynoryvex.com/live-demo">Live AI Receptionist Demo</a>
-          <a href="https://trynoryvex.com/calculator">Missed Call Revenue Calculator</a>
-          <a href="https://trynoryvex.com/about">About Noryvex &amp; Founder Muhammad Razi</a>
-          <a href="https://trynoryvex.com/contact">Claim Free Custom AI Demo</a>
+      <!-- Semantic Pre-Hydration Content for Search Engines & AI Crawlers (Replaced by React on mount) -->
+      <header style="max-width:1160px;margin:0 auto;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;">
+        <a href="/" style="color:#F8FAFC;font-weight:700;text-decoration:none;font-size:1.15rem;">Noryvex</a>
+        <nav aria-label="Primary Navigation" style="display:flex;gap:16px;flex-wrap:wrap;">
+          <a href="/solutions" style="color:#94A3B8;text-decoration:none;">Solutions</a>
+          <a href="/live-demo" style="color:#94A3B8;text-decoration:none;">Live Demo</a>
+          <a href="/calculator" style="color:#94A3B8;text-decoration:none;">Calculator</a>
+          <a href="/about" style="color:#94A3B8;text-decoration:none;">About</a>
+          <a href="/contact" style="color:#94A3B8;text-decoration:none;">Contact</a>
         </nav>
       </header>
-      <main style="display:none;">
+      <main style="max-width:1160px;margin:0 auto;padding:64px 24px;">
         <section>
-          <h1>Noryvex — USA AI Automation Agency &amp; 24/7 AI Voice Receptionist for Dental Clinics</h1>
-          <p>Noryvex is a done-for-you AI automation agency and managed artificial intelligence voice receptionist provider serving dental clinics, medical practices, and high-growth businesses across all 50 US states. We engineer and manage custom AI voice receptionists that answer inbound calls 24/7, qualify callers, handle clinic FAQs, capture appointment requests, and sync directly with Dentrix, Eaglesoft, Open Dental, and your CRM. Get a free custom AI demo built for your practice in 48 hours — pay nothing unless you love it.</p>
-          <a href="https://trynoryvex.com/contact">Get Free Clinic Demo</a>
-          <a href="https://trynoryvex.com/live-demo">Hear Live AI Voice Demo</a>
-          <a href="https://trynoryvex.com/calculator">Calculate Missed Call Revenue Loss</a>
+          <h1 id="ssr-heading">Noryvex — USA AI Automation Agency &amp; 24/7 AI Voice Receptionist for Dental Clinics</h1>
+          <p id="ssr-description">Noryvex is a done-for-you AI automation agency and managed artificial intelligence voice receptionist provider serving dental clinics, medical practices, and high-growth businesses across all 50 US states. We engineer and manage custom AI voice receptionists that answer inbound calls 24/7, qualify callers, handle clinic FAQs, capture appointment requests, and sync directly with Dentrix, Eaglesoft, Open Dental, and your CRM. Get a free custom AI demo built for your practice in 48 hours — pay nothing unless you love it.</p>
+          <p>
+            <a href="/contact" style="color:#C7FF3D;">Get Free Clinic Demo</a> ·
+            <a href="/live-demo" style="color:#C7FF3D;">Hear Live AI Voice Demo</a> ·
+            <a href="/calculator" style="color:#C7FF3D;">Calculate Missed Call Revenue Loss</a> ·
+            <a href="/solutions" style="color:#C7FF3D;">Explore AI Automation Solutions</a> ·
+            <a href="/about" style="color:#C7FF3D;">About Noryvex &amp; Founder Muhammad Razi</a> ·
+            <a href="/privacy" style="color:#94A3B8;">Privacy Policy</a> ·
+            <a href="/terms" style="color:#94A3B8;">Terms of Service</a>
+          </p>
         </section>
         <section>
           <h2>Core Artificial Intelligence &amp; Automation Services</h2>

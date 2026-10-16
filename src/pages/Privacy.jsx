@@ -9,7 +9,7 @@ export default function Privacy({ setActivePage }) {
           <div className="legal-hero-icon"><Shield size={28} /></div>
           <span className="section-tag">Legal</span>
           <h1 className="legal-title">Privacy Policy</h1>
-          <p className="legal-subtitle">Last updated: July 23, 2025</p>
+          <p className="legal-subtitle">Last updated: October 16, 2026</p>
         </div>
       </div>
 
@@ -18,7 +18,7 @@ export default function Privacy({ setActivePage }) {
 
           <section className="legal-section">
             <h2>1. Introduction</h2>
-            <p>Welcome to Noryvex ("we", "our", or "us"). We are committed to protecting your personal information and your right to privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website or use our services.</p>
+            <p>Welcome to Noryvex ("we", "our", or "us"). We are committed to protecting your personal information and your right to privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website (<a href="/" onClick={(e) => { if (setActivePage) { e.preventDefault(); setActivePage('home'); } }}>trynoryvex.com</a>) or use our AI voice receptionist and workflow automation services.</p>
           </section>
 
           <section className="legal-section">
@@ -61,8 +61,8 @@ export default function Privacy({ setActivePage }) {
           </section>
 
           <section className="legal-section">
-            <h2>6. Data Security</h2>
-            <p>We implement appropriate technical and organizational security measures to protect your personal information from unauthorized access, disclosure, alteration, or destruction. However, no transmission over the internet is 100% secure, and we cannot guarantee absolute security.</p>
+            <h2>6. Data Security &amp; HIPAA Compliance</h2>
+            <p>We implement enterprise-grade technical and organizational security measures — including TLS 1.3 encryption in transit, AES-256 encryption at rest, and signed HIPAA Business Associate Agreements (BAAs) for dental and healthcare practices — to protect your personal and clinical information from unauthorized access, disclosure, alteration, or destruction. Client and patient call data is never used to train public AI models.</p>
           </section>
 
           <section className="legal-section">
@@ -109,9 +109,10 @@ export default function Privacy({ setActivePage }) {
             <h2>12. Contact Us</h2>
             <p>If you have any questions about this Privacy Policy, please contact us:</p>
             <div className="legal-contact-card">
-              <p><strong>Noryvex</strong></p>
+              <p><strong>Noryvex AI Automation Agency</strong></p>
               <p>Email: <a href="mailto:hello@trynoryvex.com">hello@trynoryvex.com</a></p>
               <p>LinkedIn: <a href="https://www.linkedin.com/company/noryvex" target="_blank" rel="noopener noreferrer">linkedin.com/company/noryvex</a></p>
+              <p>Contact Page: <a href="/contact" onClick={(e) => { if (setActivePage) { e.preventDefault(); setActivePage('contact'); } }}>trynoryvex.com/contact</a></p>
             </div>
           </section>
 
@@ -121,7 +122,7 @@ export default function Privacy({ setActivePage }) {
       <style>{`
         .legal-page { min-height: 100vh; }
         .legal-hero {
-          padding: 120px 0 60px;
+          padding: 96px 0 48px;
           background: linear-gradient(180deg, rgba(199,255,61,0.04) 0%, transparent 100%);
           border-bottom: 1px solid var(--border-light);
           text-align: center;
@@ -136,15 +137,15 @@ export default function Privacy({ setActivePage }) {
           margin: 0 auto 20px;
         }
         .legal-title {
-          font-size: clamp(2.2rem, 5vw, 3.5rem);
+          font-size: clamp(2rem, 5vw, 3.2rem);
           margin: 12px 0 8px;
         }
         .legal-subtitle { font-size: 0.9rem; color: var(--text-muted); }
-        .legal-body { padding: 80px 24px; }
+        .legal-body { padding: 64px 20px; }
         .legal-content { max-width: 780px; margin: 0 auto; }
-        .legal-section { margin-bottom: 48px; }
+        .legal-section { margin-bottom: 40px; }
         .legal-section h2 {
-          font-size: 1.25rem;
+          font-size: 1.2rem;
           color: var(--text-white);
           margin-bottom: 14px;
           padding-bottom: 10px;
@@ -160,10 +161,15 @@ export default function Privacy({ setActivePage }) {
           background: rgba(199,255,61,0.03);
           border: 1px solid var(--border-light);
           border-radius: 12px;
-          padding: 24px;
+          padding: 20px;
           margin-top: 16px;
         }
         .legal-contact-card p { margin-bottom: 8px; }
+        @media (max-width: 768px) {
+          .legal-hero { padding: 56px 0 36px; }
+          .legal-body { padding: 40px 16px; }
+          .legal-section { margin-bottom: 32px; }
+        }
       `}</style>
     </div>
   );
