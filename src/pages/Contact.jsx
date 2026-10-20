@@ -158,10 +158,10 @@ export default function Contact({ addToast, initialTab }) {
       <section className="framer-hero" style={{ padding: 'var(--hero-padding-top) 0 36px 0' }}>
         <div className="container framer-hero-content">
           <h1 className="framer-hero-title" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)' }}>
-            Let's get your practice set up.
+            Get Your Free Custom AI Receptionist Demo.
           </h1>
           <p className="framer-hero-desc" style={{ maxWidth: '560px' }}>
-            Request your free custom clinic demo or book a call with our AI architect. No commitment, no credit card.
+            We build a working 24/7 AI voice receptionist demo using your real clinic or business details in 48 hours — test it live before paying a dollar.
           </p>
         </div>
       </section>

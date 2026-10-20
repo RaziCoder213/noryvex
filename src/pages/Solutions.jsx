@@ -64,13 +64,13 @@ export default function Solutions({ setActivePage }) {
         <div className="container framer-hero-content">
           <div className="framer-pill-badge">
             <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--accent-neon)', boxShadow: '0 0 8px var(--accent-neon)' }} />
-            <span>Solutions</span>
+            <span>AI Automation Solutions</span>
           </div>
           <h1 className="framer-hero-title" style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)' }}>
-            Everything your practice needs.<br />Nothing it doesn't.
+            Custom AI Voice Receptionists &amp;<br />Clinic Workflow Automation.
           </h1>
           <p className="framer-hero-desc">
-            Done-for-you AI call handling, workflow automation, and custom software for dental clinics. We manage the entire process end-to-end.
+            Done-for-you 24/7 AI call answering, Dentrix/Eaglesoft/Open Dental sync, and custom AI software built and managed end-to-end across the USA.
           </p>
         </div>
       </section>
@@ -80,9 +80,9 @@ export default function Solutions({ setActivePage }) {
         <div className="framer-section-header">
           <div className="framer-eyebrow">
             <span className="dot" />
-            <span>Our Services</span>
+            <span>Our AI Services</span>
           </div>
-          <h2 className="framer-section-title">What we build and manage for you.</h2>
+          <h2 className="framer-section-title">AI voice agents &amp; automations we build and manage for you.</h2>
         </div>
 
         <div className="solutions-services-grid">

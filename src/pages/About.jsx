@@ -99,13 +99,13 @@ export default function About({ setActivePage }) {
         <div className="container framer-hero-content">
           <div className="framer-pill-badge">
             <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--accent-neon)', boxShadow: '0 0 8px var(--accent-neon)' }} />
-            <span>About Noryvex</span>
+            <span>About Noryvex AI Automation Agency</span>
           </div>
           <h1 className="framer-hero-title" style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)' }}>
-            Your practice deserves more<br />than voicemail.
+            The USA AI Automation Agency<br />built to replace clinic voicemail.
           </h1>
           <p className="framer-hero-desc" style={{ maxWidth: '620px' }}>
-            Noryvex builds and manages custom AI voice receptionists for dental clinics. We handle the entire lifecycle — from voice design to deployment to ongoing optimization.
+            Founded by Lead AI Architect Muhammad Razi, Noryvex builds and manages custom 24/7 AI voice receptionists and workflow automations for dental clinics and businesses across the United States.
           </p>
         </div>
       </section>

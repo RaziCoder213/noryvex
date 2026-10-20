@@ -24,9 +24,12 @@ import Calculator from './pages/Calculator';
 import { dbGetUnderConstruction } from './utils/dbHelper';
 
 export default function App() {
-  // Ensure light theme is completely removed on load
+  // Ensure light theme is completely removed on load & redirect *.vercel.app to primary domain
   useEffect(() => {
     document.documentElement.removeAttribute('data-theme');
+    if (typeof window !== 'undefined' && window.location.hostname.endsWith('.vercel.app')) {
+      window.location.replace(`https://trynoryvex.com${window.location.pathname}${window.location.search}${window.location.hash}`);
+    }
   }, []);
 
   const [activePage, setActivePage] = useState('home');

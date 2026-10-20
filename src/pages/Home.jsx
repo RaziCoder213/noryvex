@@ -150,11 +150,11 @@ export default function Home({ setActivePage }) {
           </div>
 
           <h1 className="framer-hero-title">
-            Never miss another<br />dental patient call.
+            Never miss another dental patient call with a <span style={{ color: '#C7FF3D' }}>24/7 AI Receptionist.</span>
           </h1>
 
           <p className="framer-hero-desc">
-            Noryvex is a done-for-you AI automation agency that builds and manages custom 24/7 AI voice receptionists — answering calls, handling clinic FAQs, capturing patient details, and booking appointments across all 50 US states.
+            Noryvex is a done-for-you USA AI automation agency that builds and manages custom 24/7 AI voice receptionists — answering calls, handling clinic FAQs, capturing patient details, and booking appointments across all 50 US states.
           </p>
 
           <div className="framer-hero-actions">
@@ -207,13 +207,13 @@ export default function Home({ setActivePage }) {
         <div className="framer-section-header">
           <div className="framer-eyebrow">
             <span className="dot" />
-            <span>What Noryvex Does</span>
+            <span>AI Voice &amp; Workflow Automation</span>
           </div>
           <h2 className="framer-section-title">
-            Your front desk, upgraded.
+            Your dental front desk, upgraded with Voice AI.
           </h2>
           <p className="framer-section-desc">
-            Replace missed calls and voicemail backlogs with an intelligent receptionist built specifically for your practice.
+            Replace missed calls and voicemail backlogs with an intelligent AI voice receptionist built specifically for your dental practice or service business.
           </p>
         </div>
 
